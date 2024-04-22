@@ -1,5 +1,101 @@
+"use client";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import Image from 'next/image'
+import planEduImage from '../../public/planedu.png'
+import Link from 'next/link';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+});
+
 export default function Home() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24"></main>
+    <main className="dark flex min-h-screen flex-col items-center  justify-between p-2 bg-[url('../../public/e.jpg')] fixed inset-0 bg-no-repeat bg-cover bg-center text-zinc-50">
+      <div>
+        <Image
+          src={planEduImage}
+          alt="PlanEdu Image"
+          width={200}
+        />
+      </div>
+      <Form {...form} >
+        {/* <div class="w-full md:w-1/2 lg:w-1/3"> <!-- ... --> </div> */}
+
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4 rounded-md backdrop-blur h-96 shadow-2xl m-1 w-full md:w-1/2 lg:w-1/3" >
+          <div>
+            <p className="text-[2rem]  font-bold text-center w-full">
+              Admin Login
+            </p>
+          </div>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input {...field} type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Link href="/" as="/" >
+            <p className="mt-5">Forget Your Id/Password!</p>
+          </Link>
+          <Button type="submit" className="w-full h-12 flex justify-center items-center">Submit</Button>
+
+        </form>
+      </Form>
+      <div className="flex justify-center items-center gap-10">
+        <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800">
+          <p >Employee Attdence </p>
+        </div>
+        <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800 ">
+          <p>Login as an Employee</p>
+        </div>
+      </div>
+    </main>
   );
 }
