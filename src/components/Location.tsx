@@ -32,7 +32,7 @@ const Location = () => {
         }
     };
     return (
-        <div className="dark flex min-h-screen flex-col items-center  justify-between p-2 bg-color">
+        <div className="dark flex p-2 ">
             <label>
                 <input type="checkbox" onChange={handleCheck} />
                 Share my location

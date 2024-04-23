@@ -21,10 +21,9 @@ const DateTime = () => {
     const time = currentDate.toLocaleTimeString();
 
     return (
-        <div>
-            <p>Day: {day}</p>
-            <p>Date: {date}</p>
-            <p>Time: {time}</p>
+        <div className='text-center'>
+            <p className='font-bold text-[2rem]'> {day}  {date}</p>
+            <p className='font-bold text-[2rem]'>{time}</p>
         </div>
     );
 };
