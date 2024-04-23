@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -33,10 +34,12 @@ export default function Home() {
       password: "",
     },
   });
+  const router = useRouter()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
+
   return (
     <main className="dark flex min-h-screen flex-col items-center  justify-between p-2 bg-[url('../../public/e.jpg')] fixed inset-0 bg-no-repeat bg-cover bg-center text-zinc-50">
       <div>
@@ -47,8 +50,6 @@ export default function Home() {
         />
       </div>
       <Form {...form} >
-        {/* <div class="w-full md:w-1/2 lg:w-1/3"> <!-- ... --> </div> */}
-
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4 rounded-md backdrop-blur h-96 shadow-2xl m-1 w-full md:w-1/2 lg:w-1/3" >
           <div>
             <p className="text-[2rem]  font-bold text-center w-full">
@@ -89,8 +90,8 @@ export default function Home() {
         </form>
       </Form>
       <div className="flex justify-center items-center gap-10">
-        <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800">
-          <p >Employee Attdence </p>
+        <div onClick={() => router.push('/attendence')} className="border p-4 cursor-pointer rounded-lg bg-cyan-800">
+          <p>Employee Attdence </p>
         </div>
         <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800 ">
           <p>Login as an Employee</p>
