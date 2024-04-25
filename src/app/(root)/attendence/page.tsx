@@ -1,9 +1,10 @@
 "use client"
-import React from 'react';
+import React, { useEffect } from 'react';
 import Location from '@/components/Location';
 import Camera from '@/components/Camera';
 import DateTime from '@/components/DateTime';
 import { z } from "zod";
+import axios from 'axios';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,14 @@ const Attendence = () => {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
     }
+
+    useEffect(() => {
+        axios.post("api/employees", { name: "Rajendra Patel", role: "CEO" }).then((res) => {
+            console.log(res.data)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }, [])
     return (
         <div className="dark flex min-h-screen flex-col items-center justify-center p-2 bg-zinc-400">
             <DateTime />
@@ -87,9 +96,6 @@ const Attendence = () => {
                     <Button type="submit" className="w-full h-12 flex justify-center items-center bg-green-900 hover:bg-green-700 text-white">Submit</Button>
                 </form>
             </Form>
-
-
-
         </div>
     )
 }
