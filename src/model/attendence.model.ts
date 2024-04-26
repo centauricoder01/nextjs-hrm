@@ -15,7 +15,10 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
       type: String,
       required: [true, "EmployeeId is required"],
     },
-    userId: { type: Schema.Types.ObjectId, ref: "Employee" },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "Employee",
+    },
     location: {
       type: String,
       required: [true, "Location is required"],

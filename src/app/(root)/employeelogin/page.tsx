@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const EmployeeLogin = () => {
-    return (
-        <div>page</div>
-    )
-}
+  return <div>page</div>;
+};
 
 export default EmployeeLogin;

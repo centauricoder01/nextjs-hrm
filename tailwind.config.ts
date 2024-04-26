@@ -21,6 +21,7 @@ const config = {
       // backgroundImage: {
       //   my_bg_image: "url('./public/home-img.png')",
       // },
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
