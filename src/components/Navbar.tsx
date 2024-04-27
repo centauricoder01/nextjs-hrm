@@ -49,15 +49,19 @@ const Navbar = () => {
                 </p>
               </Link>
               <hr />
-              <p className="flex justify-start items-center gap-2">
-                <FcLeave size={20} />
-                Leave
-              </p>
+              <Link href={"/console/leaves"}>
+                <p className="flex justify-start items-center gap-2">
+                  <FcLeave size={20} />
+                  Leave
+                </p>
+              </Link>
               <hr />
-              <p className="flex justify-start items-center gap-2">
-                <MdOutlineMessage size={20} />
-                Messages
-              </p>
+              <Link href={"/console/messages"}>
+                <p className="flex justify-start items-center gap-2">
+                  <MdOutlineMessage size={20} />
+                  Messages
+                </p>
+              </Link>
               <hr />
               <p className="flex justify-start items-center gap-2">
                 <MdOutlinePayments size={20} />
