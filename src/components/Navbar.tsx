@@ -14,6 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -27,20 +28,26 @@ const Navbar = () => {
             <SheetHeader>
               <SheetTitle className="mb-5">HRM</SheetTitle>
               {/* MAIN CONTENT START FROM HERE  */}
-              <p className="flex justify-start items-center gap-2">
-                <TfiDashboard size={20} />
-                Dashboard
-              </p>
+              <Link href={"/console"}>
+                <p className="flex justify-start items-center gap-2">
+                  <TfiDashboard size={20} />
+                  Dashboard
+                </p>
+              </Link>
               <hr />
-              <p className="flex justify-start items-center gap-2 ">
-                <IoPerson size={20} />
-                Add Employee
-              </p>
+              <Link href={"/console/addemployee"}>
+                <p className="flex justify-start items-center gap-2 ">
+                  <IoPerson size={20} />
+                  Add Employee
+                </p>
+              </Link>
               <hr />
-              <p className="flex justify-start items-center gap-2 ">
-                <FaUsersViewfinder size={20} />
-                View Employee
-              </p>
+              <Link href={"/console/viewemployee"}>
+                <p className="flex justify-start items-center gap-2 ">
+                  <FaUsersViewfinder size={20} />
+                  View Employee
+                </p>
+              </Link>
               <hr />
               <p className="flex justify-start items-center gap-2">
                 <FcLeave size={20} />

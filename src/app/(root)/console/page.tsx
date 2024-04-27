@@ -13,6 +13,7 @@ const page = () => {
           Today&#39;s Report
         </h1>
         <div className="flex flex-wrap gap-4 md:gap-10 justify-center items-center">
+          {/* ATTENDENCE REPORT  */}
           <BasicCartStructure>
             <p className="font-bold text-center mb-5 text-[1.2rem]">
               Attendence Report
@@ -46,6 +47,7 @@ const page = () => {
               ))}
             </div>
           </BasicCartStructure>
+          {/* EMPLOYEE ON LEAVE */}
           <BasicCartStructure>
             <p className="font-bold text-center mb-5 text-[1.2rem]">
               Employee on Leave
@@ -83,6 +85,7 @@ const page = () => {
               ))}
             </div>
           </BasicCartStructure>
+          {/* MESSAGE */}
           <BasicCartStructure>
             <p className="font-bold text-center mb-5 text-[1.2rem]">Messages</p>
             <div className="flex flex-col gap-5">
@@ -115,6 +118,7 @@ const page = () => {
               ))}
             </div>
           </BasicCartStructure>
+          {/* ANNOUCEMENTS */}
           <BasicCartStructure>
             <p className="font-bold text-center mb-5 text-[1.2rem]">
               Annoucements
