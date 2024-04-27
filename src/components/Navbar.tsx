@@ -42,7 +42,7 @@ const Navbar = () => {
                 </p>
               </Link>
               <hr />
-              <Link href={"/console/viewemployee"}>
+              <Link href={"/console/viewemployees"}>
                 <p className="flex justify-start items-center gap-2 ">
                   <FaUsersViewfinder size={20} />
                   View Employee

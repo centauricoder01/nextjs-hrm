@@ -14,12 +14,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const page = () => {
+const ViewEmployees = () => {
   const arr = [1, 2, 3, 4, 5, 6, 76, 8, 9, 0];
   return (
     <>
       <Navbar />
-      <div className=" border  bg-blue-300 m-5 p-5 rounded-md">
+      <div className=" bg-blue-300 m-5 p-5 rounded-md">
         <div className="sm:text-left text-center">
           <h1 className="font-bold mb-5 text-[2rem]">All Employees (65)</h1>
         </div>
@@ -49,7 +49,7 @@ const page = () => {
             <p className="font-bold mb-2">Rajendra Patel</p>
             <p className="font-bold mb-2">Software Engineer</p>
             <p className="font-bold mb-2">PE10164</p>
-            <Link href={"#"} passHref>
+            <Link href={"/console/singlemployee"} passHref>
               <p className="font-bold text-blue-500 hover:underline">
                 View Full Detail
               </p>
@@ -79,4 +79,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ViewEmployees;
