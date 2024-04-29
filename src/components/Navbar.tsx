@@ -35,6 +35,13 @@ const Navbar = () => {
                 </p>
               </Link>
               <hr />
+              <Link href={"/console/attendence"}>
+                <p className="flex justify-start items-center gap-2">
+                  <RiPresentationFill size={20} />
+                  Attendence
+                </p>
+              </Link>
+              <hr />
               <Link href={"/console/addemployee"}>
                 <p className="flex justify-start items-center gap-2 ">
                   <IoPerson size={20} />
@@ -63,16 +70,11 @@ const Navbar = () => {
                 </p>
               </Link>
               <hr />
-              <p className="flex justify-start items-center gap-2">
+              {/* <p className="flex justify-start items-center gap-2">
                 <MdOutlinePayments size={20} />
                 Payslip
               </p>
-              <hr />
-              <p className="flex justify-start items-center gap-2">
-                <RiPresentationFill size={20} />
-                Attendence
-              </p>
-              <hr />
+              <hr /> */}
             </SheetHeader>
           </SheetContent>
         </Sheet>
