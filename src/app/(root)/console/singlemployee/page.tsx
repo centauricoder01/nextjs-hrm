@@ -7,7 +7,7 @@ const SingleEmployee = () => {
   return (
     <>
       <Navbar />
-      <div className=" bg-blue-300 m-5 p-5 rounded-md flex justify-center items-center flex-col">
+      <div className=" bg-[#c3eeff] m-5 p-5 rounded-md flex justify-center items-center flex-col">
         <Image
           src={"/dummy.jpeg"}
           width={100}

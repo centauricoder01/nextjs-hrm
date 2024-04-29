@@ -59,7 +59,7 @@ const Navbar = () => {
               <Link href={"/console/leaves"}>
                 <p className="flex justify-start items-center gap-2">
                   <FcLeave size={20} />
-                  Leave
+                  Leave Request
                 </p>
               </Link>
               <hr />

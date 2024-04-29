@@ -45,7 +45,7 @@ const AddEmployee = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col justify-start items-center border bg-blue-300 m-5 p-5 rounded-md">
+      <div className="flex flex-col justify-start items-center border bg-[#c3eeff] m-5 p-5 rounded-md">
         <h1 className="text-[2rem] font-bold">Add Employee</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

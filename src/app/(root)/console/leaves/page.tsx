@@ -16,7 +16,7 @@ const Leaves = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-blue-300 m-5 p-5 rounded-md">
+      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
         <div className="sm:text-left text-center">
           <h1 className="font-bold mb-5 text-[2rem]">Leaves Requests</h1>
         </div>
