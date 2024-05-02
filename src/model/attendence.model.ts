@@ -29,11 +29,9 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
     },
     timeIn: {
       type: Date,
-      required: [true, "Time In is required"],
     },
     timeOut: {
       type: Date,
-      required: [true, "Time out is required"],
     },
   },
   {

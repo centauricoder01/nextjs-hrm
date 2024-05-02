@@ -1,13 +1,6 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-// This function can be marked `async` if using `await` inside
+// MIDDLEWARE RUNS BEFORE ANY PAGE RENDER EVEN BEFORE FRONTEND AND BACKEND. FIRST MIDDLEWARE RUNS AND AFTER THAT ALL OTHER PAGES RUNS.
 export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL("/home", request.url));
+  return NextResponse.next();
 }
-
-// See "Matching Paths" below to learn more
-export const config = {
-  //   matcher: "/about/:path*",
-  matcher: ["/about/:path*", "/dashboard/:path*"],
-};

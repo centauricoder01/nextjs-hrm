@@ -1,27 +1,52 @@
 import { connect } from "@/db/db";
+import { uploadOnCloudinary } from "@/helper/Cloudinary";
+import { fileUpload } from "@/helper/Multer";
 import EmployeeModel from "@/model/employee.model";
+import { writeFile } from "fs/promises";
+import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  // Connect to the database
+interface RequestWithFiles extends Request {
+  files: {
+    avatar: Express.Multer.File[];
+  };
+}
+export async function POST(request: RequestWithFiles) {
   await connect();
   try {
-    const body = await request.json();
-    const newEmployee = new EmployeeModel(body);
+    const data = await request.formData();
+    const file: File | null = data.get("image") as unknown as File;
 
-    await newEmployee.save();
-    return Response.json(
+    if (!file) {
+      return NextResponse.json({ success: false });
+    }
+
+    const byptes = await file.arrayBuffer();
+    const buffer = Buffer.from(byptes);
+    const path = `../../public/${file.name}`;
+
+    await writeFile(path, buffer);
+    console.log(`Open ${path} to see the uploaded file`);
+
+    // const avatar = await uploadOnCloudinary(avatarLocalPath);
+    // const body = await request.json();
+    // const newEmployee = new EmployeeModel(body);
+    // await newEmployee.save();
+
+    return NextResponse.json(
       {
         success: true,
-        responseBody: body,
+        responseBody: {
+          url: "Hi, I am url",
+        },
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error came in the employee response:", error);
-    return Response.json(
+    return NextResponse.json(
       {
         success: false,
         message: "Error came in the employee response",
+        error,
       },
       { status: 500 }
     );
