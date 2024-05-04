@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { CldUploadWidget } from "next-cloudinary";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -78,15 +79,21 @@ const Attendence = () => {
       mainObject.timeOut = currentDate.toLocaleTimeString();
     }
 
-    console.log(mainObject, "This is Main object");
-
     axios
       .post("/api/attendence", mainObject)
       .then((res) => {
         console.log(res);
+        toast(res.data.message, {
+          description: currentDate.toISOString(),
+          action: {
+            label: "Ok",
+            onClick: () => console.log("Ok"),
+          },
+        });
       })
       .catch((err) => {
         console.log(err);
+        toast(err.response.data.message);
       });
   }
 

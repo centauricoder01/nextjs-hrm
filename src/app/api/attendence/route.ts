@@ -59,35 +59,36 @@ export async function POST(request: Request) {
     }
 
     // checking if employee login again or not
+    if (body.attendenceOption === "TimeIn") {
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0); // Today's date at midnight (start of today)
 
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0); // Today's date at midnight (start of today)
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999); // End of today (just before midnight)
 
-    const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999); // End of today (just before midnight)
-
-    const getTodayAttendence = await AttendenceModel.find({
-      date: {
-        $gte: startOfToday,
-        $lte: endOfToday,
-      },
-    });
-
-    const employeeExists =
-      getTodayAttendence.find(
-        (employee) => employee.employeId === body.employId
-      ) !== undefined;
-
-    if (employeeExists) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `${findEmployee.fullName} has Already logged in for today`,
-          responseBody: null,
+      const getTodayAttendence = await AttendenceModel.find({
+        date: {
+          $gte: startOfToday,
+          $lte: endOfToday,
         },
-        { status: 404 }
-      );
-    }
+      });
+
+      const employeeExists =
+        getTodayAttendence.find(
+          (employee) => employee.employeId === body.employId
+        ) !== undefined;
+
+      if (employeeExists) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `${findEmployee.fullName} has Already logged in for today`,
+            responseBody: null,
+          },
+          { status: 404 }
+        );
+      }
+   }
 
     // Creating the object to save the data
     const saveEmployeeAttendence: MainObject = {
