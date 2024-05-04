@@ -19,6 +19,7 @@ interface FormInputProps {
   formlabel: string;
   selectValue: string[];
   selectPlaceholder: string;
+  width: string;
 }
 
 const FormSelect: React.FC<FormInputProps> = ({
@@ -27,6 +28,7 @@ const FormSelect: React.FC<FormInputProps> = ({
   formlabel,
   selectValue,
   selectPlaceholder,
+  width,
 }) => {
   return (
     <FormField
@@ -37,7 +39,7 @@ const FormSelect: React.FC<FormInputProps> = ({
           <FormLabel>{formlabel}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="w-[300px] h-12 bg-slate-200">
+              <SelectTrigger className={`${width} h-12 bg-slate-200`}>
                 <SelectValue placeholder={selectPlaceholder} />
               </SelectTrigger>
             </FormControl>

@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Location = ({ takelocation }) => {
+interface LocationProps {
+  takelocation: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+const Location: React.FC<LocationProps> = ({ takelocation }) => {
   const [location, setLocation] = useState("");
   const geocoding_Api = process.env.NEXT_PUBLIC_GEOCODING_API;
   const geocoding_Link = process.env.NEXT_PUBLIC_GEOCODING_LINK;
@@ -36,12 +40,17 @@ const Location = ({ takelocation }) => {
     }
   };
   return (
-    <div className="dark flex p-2 ">
-      <label>
+    <div className="">
+      <label className="border rounded-sm bg-orange-400 text-white p-2 flex gap-2 cursor-pointer items-center justify-center">
         <input type="checkbox" onChange={handleCheck} />
-        Share my location -
+        <p className="text-center">Share my location</p>
       </label>
-      {location && <p>{location}</p>}
+      {location && (
+        <p>
+          <span className="font-bold">Location : </span>
+          {location}
+        </p>
+      )}
     </div>
   );
 };

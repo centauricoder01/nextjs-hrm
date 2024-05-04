@@ -68,6 +68,7 @@ const AddEmployee = () => {
                 formlabel={"Gender"}
                 selectValue={["Male", "Female", "Others"]}
                 selectPlaceholder={"Choose Gender"}
+                width={"w-[300px]"}
               />
               <FormInput
                 control={form.control}
@@ -87,6 +88,7 @@ const AddEmployee = () => {
                 formlabel={"Marital Status"}
                 selectValue={["Married", "Unmarried"]}
                 selectPlaceholder={"Choose Marital Status"}
+                width={"w-[300px]"}
               />
               <FormInput
                 control={form.control}
@@ -122,6 +124,7 @@ const AddEmployee = () => {
                 control={form.control}
                 name={"department"}
                 formlabel={"Department"}
+                width={"w-[300px]"}
                 selectValue={[
                   "COUNSELLING/SALES",
                   "HUMAN-RESOURCE",
@@ -134,6 +137,7 @@ const AddEmployee = () => {
                 control={form.control}
                 name={"designation"}
                 formlabel={"Designation"}
+                width={"w-[300px]"}
                 selectValue={[
                   " Academic-Counsellor ",
                   " Administrator ",

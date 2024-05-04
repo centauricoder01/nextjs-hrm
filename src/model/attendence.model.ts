@@ -6,6 +6,7 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
     date: {
       type: Date,
       required: [true, "Date is required"],
+      index: true,
     },
     name: {
       type: String,
@@ -14,10 +15,12 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
     employeId: {
       type: String,
       required: [true, "EmployeeId is required"],
+      index: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "Employee",
+      index: true,
     },
     location: {
       type: String,
