@@ -4,7 +4,7 @@ import { IAttendence } from "@/types/modals.types";
 const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
   {
     date: {
-      type: Date,
+      type: String,
       required: [true, "Date is required"],
       index: true,
     },
@@ -22,19 +22,29 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
       ref: "Employee",
       index: true,
     },
-    location: {
+    timeInLocation: {
       type: String,
-      required: [true, "Location is required"],
+      default: null,
     },
-    selfie: {
+    timeOutLocation: {
       type: String,
-      required: [true, "Selfie is required"],
+      default: null,
+    },
+    timeInSelfie: {
+      type: String,
+      default: null,
+    },
+    timeOutSelfie: {
+      type: String,
+      default: null,
     },
     timeIn: {
-      type: Date,
+      type: String,
+      default: null,
     },
     timeOut: {
-      type: Date,
+      type: String,
+      default: null,
     },
   },
   {
@@ -43,7 +53,7 @@ const attendenceSchema: Schema<IAttendence> = new mongoose.Schema(
 );
 
 const AttendenceModel =
-  (mongoose.models.Employee as mongoose.Model<IAttendence>) ||
+  (mongoose.models.Attendence as mongoose.Model<IAttendence>) ||
   mongoose.model<IAttendence>("Attendence", attendenceSchema);
 
 export default AttendenceModel;

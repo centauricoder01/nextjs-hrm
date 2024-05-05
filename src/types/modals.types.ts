@@ -32,12 +32,14 @@ export interface IEmployee extends Document {
 }
 
 export interface IAttendence extends Document {
-  date: Date;
+  date: string;
   name: string;
   employeId: string;
   userId: Schema.Types.ObjectId;
-  location: string;
-  selfie: string;
-  timeIn: Date;
-  timeOut: Date;
+  timeInLocation: string;
+  timeOutLocation: string;
+  timeInSelfie: string;
+  timeOutSelfie: string;
+  timeIn: string;
+  timeOut: string;
 }

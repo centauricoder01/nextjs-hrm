@@ -66,7 +66,7 @@ const Attendence = () => {
   const currentDate = new Date();
   function onSubmit(values: z.infer<typeof formSchema>) {
     const mainObject: MainObject = {
-      date: currentDate.toISOString(),
+      date: currentDate.toISOString().split("T")[0],
       employId: values.employeeId,
       location: getLocation,
       selfie: resource?.url,
@@ -79,22 +79,41 @@ const Attendence = () => {
       mainObject.timeOut = currentDate.toLocaleTimeString();
     }
 
-    axios
-      .post("/api/attendence", mainObject)
-      .then((res) => {
-        console.log(res);
-        toast(res.data.message, {
-          description: currentDate.toISOString(),
-          action: {
-            label: "Ok",
-            onClick: () => console.log("Ok"),
-          },
+    if (values.attendenceOption === "TimeIn") {
+      axios
+        .post("/api/attendence", mainObject)
+        .then((res) => {
+          console.log(res);
+          toast(res.data.message, {
+            description: currentDate.toISOString(),
+            action: {
+              label: "Ok",
+              onClick: () => console.log("Ok"),
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast(err.response.data.message);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        toast(err.response.data.message);
-      });
+    } else {
+      axios
+        .patch("/api/attendence", mainObject)
+        .then((res) => {
+          console.log(res);
+          toast(res.data.message, {
+            description: currentDate.toISOString(),
+            action: {
+              label: "Ok",
+              onClick: () => console.log("Ok"),
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast(err.response.data.message);
+        });
+    }
   }
 
   return (
