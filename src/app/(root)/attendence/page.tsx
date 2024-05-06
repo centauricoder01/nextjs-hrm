@@ -9,7 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { CldUploadWidget } from "next-cloudinary";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -53,6 +54,8 @@ const Attendence = () => {
     CloudinaryUploadWidgetInfo | undefined
   >(undefined);
 
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,34 +87,35 @@ const Attendence = () => {
         .post("/api/attendence", mainObject)
         .then((res) => {
           console.log(res);
-          toast(res.data.message, {
-            description: currentDate.toISOString(),
-            action: {
-              label: "Ok",
-              onClick: () => console.log("Ok"),
-            },
+          toast({
+            title: "TimeIn Message",
+            description: res.data.message,
           });
         })
         .catch((err) => {
           console.log(err);
-          toast(err.response.data.message);
+          toast({
+            title: "Error Occured ",
+            variant: "destructive",
+            description: err.response.data.message,
+          });
         });
     } else {
       axios
         .patch("/api/attendence", mainObject)
         .then((res) => {
           console.log(res);
-          toast(res.data.message, {
-            description: currentDate.toISOString(),
-            action: {
-              label: "Ok",
-              onClick: () => console.log("Ok"),
-            },
+          toast({
+            title: "TimeOut Message",
+            description: res.data.message,
           });
         })
         .catch((err) => {
-          console.log(err);
-          toast(err.response.data.message);
+          toast({
+            variant: "destructive",
+            title: "Error Occured ",
+            description: err.response.data.message,
+          });
         });
     }
   }
@@ -185,6 +189,9 @@ const Attendence = () => {
           </Button>
         </form>
       </Form>
+      <Link href={"/"}>
+        <Button className="mt-2 bg-white text-black">Back</Button>
+      </Link>
     </div>
   );
 };

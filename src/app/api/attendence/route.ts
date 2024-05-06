@@ -201,7 +201,6 @@ export async function PATCH(request: Request) {
       (obj) => obj.employeId === body.employId
     );
 
-    console.log(foundObject, "Found Object");
     if (foundObject?.timeOut !== null) {
       return NextResponse.json(
         {
@@ -237,7 +236,7 @@ export async function PATCH(request: Request) {
     return Response.json(
       {
         success: true,
-        message: `${findEmployee.fullName} You have Not Logged in Today`,
+        message: `${findEmployee.fullName}, Logout Successfull For Today`,
         responseBody: updatedDocument,
       },
       { status: 200 }

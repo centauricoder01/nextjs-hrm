@@ -36,6 +36,7 @@ const AddEmployee = () => {
       aadharNumber: 0,
       state: "",
       emergencyContactNumber: 0,
+      role: "",
     },
   });
 
@@ -166,6 +167,14 @@ const AddEmployee = () => {
                 name={"password"}
                 formlabel={"Password"}
                 type="password"
+              />
+              <FormSelect
+                control={form.control}
+                name={"role"}
+                formlabel={"Role"}
+                selectValue={["Admin", "Manager", "Employee"]}
+                selectPlaceholder={"Choose Role"}
+                width={"w-[300px]"}
               />
             </div>
             <h1 className="font-bold text-[1.2rem] mt-10">

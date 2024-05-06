@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  email: z.string().email().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   password: z.string().min(6, {
@@ -30,7 +30,7 @@ export default function Home() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -51,16 +51,14 @@ export default function Home() {
           className="space-y-4 p-4 rounded-md backdrop-blur h-96 shadow-2xl m-1 w-full md:w-1/2 lg:w-1/3"
         >
           <div>
-            <p className="text-[2rem]  font-bold text-center w-full">
-              Admin Login
-            </p>
+            <p className="text-[2rem]  font-bold text-center w-full">LOGIN</p>
           </div>
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -92,16 +90,16 @@ export default function Home() {
           </Button>
         </form>
       </Form>
-      <div className="flex justify-center items-center gap-10">
+      <div className="flex justify-center items-center gap-10 ">
         <div
           onClick={() => router.push("/attendence")}
-          className="border p-4 cursor-pointer rounded-lg bg-cyan-800"
+          className="border p-4 cursor-pointer rounded-lg bg-cyan-800 w-[100%]"
         >
           <p>Employee Attdence </p>
         </div>
-        <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800 ">
+        {/* <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800 ">
           <p>Login as an Employee</p>
-        </div>
+        </div> */}
       </div>
     </main>
   );
