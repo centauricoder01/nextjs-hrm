@@ -134,6 +134,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message: error,
+        responseBody: null,
       },
       { status: 500 }
     );

@@ -15,6 +15,7 @@ export interface IEmployee extends Document {
   department: string;
   designation: string;
   email: string;
+  role: string;
   password: string;
   bankAccountNumber: number;
   bankIFSCCode: string;
@@ -23,12 +24,10 @@ export interface IEmployee extends Document {
   aadharNumber: Number;
   state: string;
   emergencyContactNumber: number;
+
   // METHOD STARTS FROM HERE
-  matchPassword(password: string): Promise<boolean>;
-  generateTempToken(): Promise<string>;
-  generateAccessToken(): Promise<string>;
-  generateRefreshToken(): Promise<string>;
-  removeSensitiveFields(): Promise<void>;
+  // isPasswordCorrect(password: string): Promise<boolean>;
+  // removeSensitiveFields(): Promise<void>;
 }
 
 export interface IAttendence extends Document {

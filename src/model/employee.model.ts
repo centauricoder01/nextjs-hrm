@@ -64,7 +64,11 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     type: String,
     required: [true, "Password is Required"],
   },
-
+  role: {
+    type: String,
+    required: [true, "Password is Required"],
+    enum: ["Admin", "Manager", "Employee"],
+  },
   // BANK DETAILS START FROM HERE
   bankAccountNumber: {
     type: Number,
@@ -98,11 +102,13 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
 
 employeeSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
   this.password = await bcrypt.hash(this.password, 10);
-
   next();
 });
+
+employeeSchema.methods.removeSensitiveFields = function () {
+  this.unset("password");
+};
 
 const EmployeeModel =
   (mongoose.models.Employee as mongoose.Model<IEmployee>) ||

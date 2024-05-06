@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import planEduImage from "../../public/planedu.png";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const formSchema = z.object({
   email: z.string().email().min(2, {
@@ -27,6 +29,7 @@ const formSchema = z.object({
 });
 
 export default function Home() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,7 +40,27 @@ export default function Home() {
   const router = useRouter();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    axios
+      .post("/api/authtication", values)
+      .then((res) => {
+        toast({
+          title: "Login Successfull",
+          description: `${res.data.responseBody.fullName}, Welcome to the Dashboard`,
+        });
+        localStorage.setItem(
+          "Employee_Info",
+          JSON.stringify(res.data.responseBody)
+        );
+        router.push("/console");
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          title: "Login Successfull",
+          description: `Sorry Sir/Mam, You got an Error. Please enter Correct Info`,
+        });
+        console.log(err);
+      });
   }
 
   return (

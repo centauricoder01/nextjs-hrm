@@ -5,7 +5,6 @@ import { TfiDashboard } from "react-icons/tfi";
 import { FcLeave } from "react-icons/fc";
 import { MdOutlineMessage } from "react-icons/md";
 import { FaUsersViewfinder } from "react-icons/fa6";
-import { MdOutlinePayments } from "react-icons/md";
 import { RiPresentationFill } from "react-icons/ri";
 import {
   Sheet,
