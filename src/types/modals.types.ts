@@ -1,6 +1,6 @@
 import { Document, Schema } from "mongoose";
 
-export interface IEmployee extends Document {
+export interface IEmployee {
   employeeId: string;
   profileImage: string;
   gender: string;
@@ -24,10 +24,6 @@ export interface IEmployee extends Document {
   aadharNumber: Number;
   state: string;
   emergencyContactNumber: number;
-
-  // METHOD STARTS FROM HERE
-  // isPasswordCorrect(password: string): Promise<boolean>;
-  // removeSensitiveFields(): Promise<void>;
 }
 
 export interface IAttendence extends Document {
