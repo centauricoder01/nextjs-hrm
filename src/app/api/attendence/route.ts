@@ -213,8 +213,8 @@ export async function PATCH(request: Request) {
       );
     }
     // Find the document with the matching employeId
-    const updatedDocument = await AttendenceModel.findOneAndUpdate(
-      { employeId: body.employId },
+    const updatedDocument = await AttendenceModel.findByIdAndUpdate(
+      { _id: foundObject._id },
       {
         timeOutLocation: body.location,
         timeOutSelfie: body.selfie,
@@ -253,3 +253,8 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  
+}
+

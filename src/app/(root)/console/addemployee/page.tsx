@@ -56,12 +56,14 @@ const AddEmployee = () => {
                 name={"employeeId"}
                 formlabel={"Employee ID"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"profileImage"}
                 formlabel={"Profile Image"}
                 type="file"
+                width={"w-80"}
               />
               <FormSelect
                 control={form.control}
@@ -76,12 +78,14 @@ const AddEmployee = () => {
                 name={"fullName"}
                 formlabel={"Full Name"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"birthDate"}
                 formlabel={"Date of Birth"}
                 type="date"
+                width={"w-80"}
               />
               <FormSelect
                 control={form.control}
@@ -96,30 +100,35 @@ const AddEmployee = () => {
                 name={"mobileNumber"}
                 formlabel={"Mobile Number"}
                 type="number"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"fullAddress"}
                 formlabel={"Full Address"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"joinDate"}
                 formlabel={"Joining Date"}
                 type="date"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"leaveDate"}
                 formlabel={"Leaving Date"}
                 type="date"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"reasonForExit"}
                 formlabel={"Reason For Exit"}
                 type="text"
+                width={"w-80"}
               />
               <FormSelect
                 control={form.control}
@@ -161,12 +170,14 @@ const AddEmployee = () => {
                 name={"email"}
                 formlabel={"Email"}
                 type="email"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"password"}
                 formlabel={"Password"}
                 type="password"
+                width={"w-80"}
               />
               <FormSelect
                 control={form.control}
@@ -186,42 +197,49 @@ const AddEmployee = () => {
                 name={"bankAccountNumber"}
                 formlabel={"Account Number"}
                 type="number"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"bankIFSCCode"}
                 formlabel={"IFSC CODE"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"bankName"}
                 formlabel={"Bank Name"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"panNumber"}
                 formlabel={"PAN Number"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"aadharNumber"}
                 formlabel={"Aadhar Number"}
                 type="number"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"state"}
                 formlabel={"State"}
                 type="text"
+                width={"w-80"}
               />
               <FormInput
                 control={form.control}
                 name={"emergencyContactNumber"}
                 formlabel={"Emergency Contact Number"}
                 type="text"
+                width={"w-80"}
               />
             </div>
             <Button

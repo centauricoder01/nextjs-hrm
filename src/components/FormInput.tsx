@@ -13,6 +13,7 @@ interface FormInputProps {
   name: string;
   formlabel: string;
   type: string;
+  width: string;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -20,6 +21,7 @@ const FormInput: React.FC<FormInputProps> = ({
   name,
   formlabel,
   type,
+  width,
 }) => {
   return (
     <FormField
@@ -30,7 +32,7 @@ const FormInput: React.FC<FormInputProps> = ({
           <FormLabel>{formlabel}</FormLabel>
           <FormControl>
             <Input
-              className="w-80 m-auto bg-slate-200"
+              className={`${width} m-auto bg-slate-200`}
               {...field}
               type={type}
             />
