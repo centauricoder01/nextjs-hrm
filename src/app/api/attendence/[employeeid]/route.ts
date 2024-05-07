@@ -1,21 +1,21 @@
 import { connect } from "@/db/db";
 import AttendenceModel from "@/model/attendence.model";
-import EmployeeModel from "@/model/employee.model";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, context: any) {
+interface Params {
+  employeeid: string;
+}
+export async function GET(request: Request, { params }: { params: Params }) {
   // Connect to the database
   await connect();
 
-  console.log("YES, I am in Single Attendence");
   try {
-    //   const { userId } = await request.json();
-    const { params } = context;
-    const getAttendenceById = await AttendenceModel.findById({ _id: params });
+    const id = params.employeeid;
+    const getAttendenceById = await AttendenceModel.find({ userId: id });
     return NextResponse.json(
       {
         success: true,
-        message: "GET REQUEST SUCCESSFULL",
+        message: "We got you the Employee Attendence",
         responseBody: getAttendenceById,
       },
       { status: 200 }

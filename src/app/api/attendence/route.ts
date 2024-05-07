@@ -255,6 +255,29 @@ export async function PATCH(request: Request) {
 }
 
 export async function GET(request: Request) {
-  
-}
+  // Connect to the database
+  await connect();
 
+  try {
+    const getAttendenceByDate = await AttendenceModel.find();
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "We got you All Attendence Date",
+        responseBody: getAttendenceByDate,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error came in the attendence by Date response:", error);
+    return Response.json(
+      {
+        success: false,
+        message: error,
+        responseBody: null,
+      },
+      { status: 500 }
+    );
+  }
+}
