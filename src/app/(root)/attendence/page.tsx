@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Location from "@/components/Location";
-import Camera from "@/components/Camera";
 import DateTime from "@/components/DateTime";
 import { z } from "zod";
 import axios from "axios";

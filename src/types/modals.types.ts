@@ -5,12 +5,12 @@ export interface IEmployee {
   profileImage: string;
   gender: string;
   fullName: string;
-  birthDate: Date;
+  birthDate: string;
   maritalStatus: boolean;
   mobileNumber: number;
   fullAddress: string;
-  joinDate: Date;
-  leaveDate: Date;
+  joinDate: string;
+  leaveDate: string;
   reasonForExit: string;
   department: string;
   designation: string;
@@ -21,7 +21,7 @@ export interface IEmployee {
   bankIFSCCode: string;
   bankName: string;
   panNumber: string;
-  aadharNumber: Number;
+  aadharNumber?: Number;
   state: string;
   emergencyContactNumber: number;
 }

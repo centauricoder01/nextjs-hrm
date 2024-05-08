@@ -33,7 +33,6 @@ const View_Attendence = () => {
   const [localStorageValue, setLocalStorageValue] =
     useState<EmployeeInfo | null>(null);
   const [getAttendence, setGetAttendence] = useState<attendenceBluePrint[]>();
-  const [imageSource, setImageSource] = useState<string>();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -88,24 +87,22 @@ const View_Attendence = () => {
                 <TableCell>{ele.timeIn}</TableCell>
                 <TableCell>{ele.timeInLocation}</TableCell>
                 <TableCell>
-                  {/* <Image
+                  <Image
                     src={ele.timeInSelfie}
                     alt="Image"
                     width={50}
                     height={50}
-                  /> */}
-                  something
+                  />
                 </TableCell>
                 <TableCell>{ele.timeOut}</TableCell>
                 <TableCell>{ele.timeOutLocation}</TableCell>
                 <TableCell>
-                  {/* <Image
+                  <Image
                     src={ele.timeOutSelfie}
                     alt="Image"
                     width={50}
                     height={50}
-                  /> */}
-                  something
+                  />
                 </TableCell>
               </TableRow>
             ))}

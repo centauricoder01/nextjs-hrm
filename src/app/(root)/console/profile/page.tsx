@@ -1,98 +1,136 @@
 "use client";
 import Navbar from "@/components/Navbar";
+import { IEmployee } from "@/types/modals.types";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Profile = () => {
-  const getRole = JSON.parse(localStorage.getItem("Employee_Info") || "");
+  const [userValue, setUserValue] = useState<IEmployee>();
+  const [imageSource, setImageSource] = useState<string>();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedData = localStorage.getItem("Employee_Info");
+      if (storedData) {
+        const employeeInfo: IEmployee = JSON.parse(storedData);
+        setUserValue({
+          ...employeeInfo,
+          birthDate: employeeInfo.birthDate
+            ? new Date(employeeInfo.birthDate).toLocaleDateString()
+            : "",
+          joinDate: employeeInfo.joinDate
+            ? new Date(employeeInfo.joinDate).toLocaleDateString()
+            : "undefined",
+          leaveDate: employeeInfo.leaveDate
+            ? new Date(employeeInfo.leaveDate).toLocaleDateString()
+            : "undefined",
+        });
+        setImageSource(employeeInfo.profileImage);
+      }
+    }
+  }, []);
   return (
     <>
       <Navbar />
       <div className=" bg-[#c3eeff] m-5 p-5 rounded-md flex justify-center items-center flex-col">
-        <Image
-          src={getRole.profileImage}
-          width={100}
-          height={100}
-          className="rounded-full mb-2"
-          alt="Avatar"
-        />
+        {imageSource && (
+          <Image
+            src={imageSource}
+            width={100}
+            height={100}
+            className="rounded-full mb-2"
+            alt="Avatar"
+          />
+        )}
+
         <div className="flex flex-wrap justify-center items-center gap-2">
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             EmployeeId -{" "}
-            <span className="font-bold">{getRole.employeeId} </span>
+            <span className="font-bold">{userValue?.employeeId} </span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Name - <span className="font-bold">{getRole.fullName}</span>
+            Name - <span className="font-bold">{userValue?.fullName}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Gender - <span className="font-bold">{getRole.gender}</span>
+            Gender - <span className="font-bold">{userValue?.gender}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Birth Date - <span className="font-bold">{getRole.birthDate}</span>
+            Birth Date -{" "}
+            <span className="font-bold">{userValue?.birthDate}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Marital Status -{" "}
             <span className="font-bold">
-              {getRole.maritalStatus ? "Married" : "Unmarried"}
+              {userValue?.maritalStatus ? "Married" : "Unmarried"}
             </span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Mobile Number -{" "}
-            <span className="font-bold">{getRole.mobileNumber}</span>
+            <span className="font-bold">{userValue?.mobileNumber}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Address - <span className="font-bold">{getRole.fullAddress}</span>
+            Address -{" "}
+            <span className="font-bold">{userValue?.fullAddress}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Joining Date - <span className="font-bold">{getRole.joinDate}</span>
+            Joining Date -{" "}
+            <span className="font-bold">{userValue?.joinDate}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Leave Date -{" "}
             <span className="font-bold">
-              {getRole.leaveDate ? getRole.leaveDate : "Null"}
+              {userValue?.leaveDate ? userValue?.leaveDate : "Null"}
             </span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Reave For Leave -{" "}
             <span className="font-bold">
-              {getRole.reasonForExit ? getRole.reasonForExit : "Null"}
+              {userValue?.reasonForExit ? userValue?.reasonForExit : "Null"}
             </span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Department - <span className="font-bold">{getRole.department}</span>
+            Department -{" "}
+            <span className="font-bold">{userValue?.department}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Degisnation -{" "}
-            <span className="font-bold">{getRole.designation}</span>
+            <span className="font-bold">{userValue?.designation}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Email - <span className="font-bold">{getRole.email}</span>
+            Email - <span className="font-bold">{userValue?.email}</span>
           </p>
 
           {/* <h1>Bank Details </h1> */}
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             BANK ACCOUNT NUMBER -{" "}
-            <span className="font-bold">{getRole.bankAccountNumber}</span>
+            <span className="font-bold">{userValue?.bankAccountNumber}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             BANK IFSC CODE -{" "}
-            <span className="font-bold">{getRole.bankIFSCCode}</span>
+            <span className="font-bold">{userValue?.bankIFSCCode}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            BANK NAME -<span className="font-bold">{getRole.bankName}</span>
+            BANK NAME -<span className="font-bold">{userValue?.bankName}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            PAN -<span className="font-bold">{getRole.panNumber}</span>
+            PAN -<span className="font-bold">{userValue?.panNumber}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            AADHAR NO -<span className="font-bold">{getRole.aadharNumber}</span>
+            AADHAR NO -
+            <span className="font-bold">
+              {" "}
+              {userValue?.aadharNumber !== undefined
+                ? userValue.aadharNumber.toString()
+                : "Not Provided"}
+            </span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            STATE - <span className="font-bold">{getRole.state}</span>
+            STATE - <span className="font-bold">{userValue?.state}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             EMERGENCY CONTACT NO -{" "}
-            <span className="font-bold">{getRole.emergencyContactNumber}</span>
+            <span className="font-bold">
+              {userValue?.emergencyContactNumber}
+            </span>
           </p>
         </div>
       </div>

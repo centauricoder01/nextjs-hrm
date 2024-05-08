@@ -23,7 +23,7 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     required: [true, "FullName is required"],
   },
   birthDate: {
-    type: Date,
+    type: String,
   },
   maritalStatus: {
     type: Boolean,
@@ -37,11 +37,11 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     required: [true, "Address is required"],
   },
   joinDate: {
-    type: Date,
+    type: String,
     required: [true, "Please Provide Joining Date."],
   },
   leaveDate: {
-    type: Date,
+    type: String,
   },
   reasonForExit: {
     type: String,
