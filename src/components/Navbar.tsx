@@ -31,9 +31,11 @@ const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const getRole = JSON.parse(localStorage.getItem("Employee_Info") || "");
-    setUserValue(getRole);
-    setImageSource(getRole.profileImage);
+    if (typeof window !== "undefined") {
+      const getRole = JSON.parse(localStorage.getItem("Employee_Info") || "");
+      setUserValue(getRole);
+      setImageSource(getRole.profileImage);
+    }
   }, []);
 
   if (userValue) {
