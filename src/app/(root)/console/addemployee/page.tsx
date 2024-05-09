@@ -1,6 +1,6 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,8 +9,28 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
+import UploadImage from "@/components/uploadImage";
+
+interface CloudinaryUploadWidgetInfo {
+  public_id: string;
+  secure_url: string;
+  url: string;
+  [key: string]: any;
+}
 
 const AddEmployee = () => {
+  const [profileImage, setProfileImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [aadharImage, setAadharImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [panCardImage, setPanCardImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [relativeAadhaarImage, setRelativeAadhaarImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
   const form = useForm<z.infer<typeof employeeDetailValidation>>({
     resolver: zodResolver(employeeDetailValidation),
     defaultValues: {
@@ -35,12 +55,28 @@ const AddEmployee = () => {
       panNumber: "",
       aadharNumber: 0,
       state: "",
+      aadhaar: "",
+      pancard: "",
+      relativeAadhaar: "",
       emergencyContactNumber: 0,
       role: "",
+      office: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof employeeDetailValidation>) {
+    values.profileImage =
+      profileImage?.secure_url ??
+      "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
+    values.aadhaar =
+      aadharImage?.secure_url ??
+      "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
+    values.pancard =
+      panCardImage?.secure_url ??
+      "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
+    values.relativeAadhaar =
+      relativeAadhaarImage?.secure_url ??
+      "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
     console.log(values);
   }
   return (
@@ -58,13 +94,18 @@ const AddEmployee = () => {
                 type="text"
                 width={"w-80"}
               />
-              <FormInput
-                control={form.control}
-                name={"profileImage"}
-                formlabel={"Profile Image"}
-                type="file"
-                width={"w-80"}
-              />
+
+              <div className="w-80  flex justify-between flex-col">
+                <label>Upload Profile Pic</label>
+                <UploadImage
+                  buttonName={"Upload picture"}
+                  handleImage={setProfileImage}
+                  classValue={
+                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                  }
+                />
+              </div>
+
               <FormSelect
                 control={form.control}
                 name={"gender"}
@@ -187,6 +228,14 @@ const AddEmployee = () => {
                 selectPlaceholder={"Choose Role"}
                 width={"w-[300px]"}
               />
+              <FormSelect
+                control={form.control}
+                name={"office"}
+                formlabel={"Office"}
+                selectValue={["Delhi", "Bangalore"]}
+                selectPlaceholder={"Choose Office"}
+                width={"w-[300px]"}
+              />
             </div>
             <h1 className="font-bold text-[1.2rem] mt-10">
               Bank Details of Employee
@@ -215,20 +264,6 @@ const AddEmployee = () => {
               />
               <FormInput
                 control={form.control}
-                name={"panNumber"}
-                formlabel={"PAN Number"}
-                type="text"
-                width={"w-80"}
-              />
-              <FormInput
-                control={form.control}
-                name={"aadharNumber"}
-                formlabel={"Aadhar Number"}
-                type="number"
-                width={"w-80"}
-              />
-              <FormInput
-                control={form.control}
                 name={"state"}
                 formlabel={"State"}
                 type="text"
@@ -236,11 +271,56 @@ const AddEmployee = () => {
               />
               <FormInput
                 control={form.control}
-                name={"emergencyContactNumber"}
-                formlabel={"Emergency Contact Number"}
+                name={"panNumber"}
+                formlabel={"PAN Number"}
                 type="text"
                 width={"w-80"}
               />
+              <div className="w-80  flex justify-between flex-col">
+                <label>Upload pancard Pic</label>
+                <UploadImage
+                  buttonName={"Upload Pancard"}
+                  handleImage={setPanCardImage}
+                  classValue={
+                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                  }
+                />
+              </div>
+              <FormInput
+                control={form.control}
+                name={"aadharNumber"}
+                formlabel={"Aadhar Number"}
+                type="number"
+                width={"w-80"}
+              />
+              <div className="w-80  flex justify-between flex-col">
+                <label>Upload Aadhaar Pic</label>
+                <UploadImage
+                  buttonName={"Upload Aadhaar Card"}
+                  handleImage={setAadharImage}
+                  classValue={
+                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                  }
+                />
+              </div>
+
+              <FormInput
+                control={form.control}
+                name={"emergencyContactNumber"}
+                formlabel={"Emergency Contact Number (Relative)"}
+                type="text"
+                width={"w-80"}
+              />
+              <div className="w-80  flex justify-between flex-col">
+                <label>Upload Relative Aadhaar card Pic</label>
+                <UploadImage
+                  buttonName={"Upload Aadhaar Card"}
+                  handleImage={setRelativeAadhaarImage}
+                  classValue={
+                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                  }
+                />
+              </div>
             </div>
             <Button
               type="submit"

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import FormSelect from "@/components/FormSelect";
+import UploadImage from "@/components/uploadImage";
 
 // TYPE INFERENCES
 interface CloudinaryUploadWidgetInfo {
@@ -154,32 +155,13 @@ const Attendence = () => {
             )}
           />
           <Location takelocation={setGetLocation} />
-
-          <CldUploadWidget
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-            onSuccess={(result, { widget }) => {
-              if (typeof result?.info === "object") {
-                setResource(result?.info);
-              }
-              widget.close();
-            }}
-          >
-            {({ open }) => {
-              function handleOnClick() {
-                setResource(undefined);
-                open();
-              }
-              return (
-                <button
-                  className="border p-2 font-bold bg-blue-500 text-white rounded-sm w-full"
-                  onClick={handleOnClick}
-                  type="button"
-                >
-                  Give a Selfie
-                </button>
-              );
-            }}
-          </CldUploadWidget>
+          <UploadImage
+            buttonName={"Upload Image"}
+            handleImage={setResource}
+            classValue={
+              "border p-2 font-bold bg-blue-500 text-white rounded-sm w-full"
+            }
+          />
           <Button
             type="submit"
             className="w-full h-12 flex justify-center items-center bg-green-900 hover:bg-green-700 text-white"

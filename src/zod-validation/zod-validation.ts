@@ -43,6 +43,10 @@ export const employeeDetailValidation = z.object({
   aadharNumber: z.coerce.number().min(11, "Aadhar number must be 11 Digit"),
   state: z.string(),
   role: z.string(),
+  office: z.string(),
+  aadhaar: z.string(),
+  pancard: z.string(),
+  relativeAadhaar: z.string(),
   emergencyContactNumber: z.coerce
     .number()
     .min(10, "Mobile number must be atleast 10 character"),
