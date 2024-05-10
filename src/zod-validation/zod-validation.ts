@@ -22,9 +22,7 @@ export const employeeDetailValidation = z.object({
   }),
   joinDate: z.coerce.date(),
   leaveDate: z.coerce.date(),
-  reasonForExit: z.string().min(5, {
-    message: "Address must be atleast 5 Character",
-  }),
+  reasonForExit: z.string(),
   department: z.string(),
   designation: z.string(),
   email: z.string().email(),
@@ -44,9 +42,9 @@ export const employeeDetailValidation = z.object({
   state: z.string(),
   role: z.string(),
   office: z.string(),
-  aadhaar: z.string(),
-  pancard: z.string(),
-  relativeAadhaar: z.string(),
+  aadhaarImage: z.string(),
+  pancardImage: z.string(),
+  relativeAadhaarImage: z.string(),
   emergencyContactNumber: z.coerce
     .number()
     .min(10, "Mobile number must be atleast 10 character"),

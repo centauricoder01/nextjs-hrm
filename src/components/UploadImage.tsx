@@ -12,8 +12,6 @@ const UploadImage: React.FC<uploadProps> = ({
   handleImage,
   classValue,
 }) => {
-  console.log(classValue, "ClassVaue");
-
   return (
     <>
       <CldUploadWidget
@@ -33,7 +31,6 @@ const UploadImage: React.FC<uploadProps> = ({
           return (
             <button
               className={`${classValue}`}
-              // className="bg-white text-black"
               onClick={handleOnClick}
               type="button"
             >

@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
-import UploadImage from "@/components/uploadImage";
+import UploadImage from "@/components/UploadImage";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 
 interface CloudinaryUploadWidgetInfo {
   public_id: string;
@@ -19,6 +21,8 @@ interface CloudinaryUploadWidgetInfo {
 }
 
 const AddEmployee = () => {
+  const { toast } = useToast();
+
   const [profileImage, setProfileImage] = useState<
     CloudinaryUploadWidgetInfo | undefined
   >(undefined);
@@ -55,9 +59,9 @@ const AddEmployee = () => {
       panNumber: "",
       aadharNumber: 0,
       state: "",
-      aadhaar: "",
-      pancard: "",
-      relativeAadhaar: "",
+      aadhaarImage: "",
+      pancardImage: "",
+      relativeAadhaarImage: "",
       emergencyContactNumber: 0,
       role: "",
       office: "",
@@ -68,17 +72,36 @@ const AddEmployee = () => {
     values.profileImage =
       profileImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
-    values.aadhaar =
+    values.aadhaarImage =
       aadharImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
-    values.pancard =
+    values.pancardImage =
       panCardImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
-    values.relativeAadhaar =
+    values.relativeAadhaarImage =
       relativeAadhaarImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
-    console.log(values);
+
+    axios
+      .post("/api/employees", values)
+      .then((res) => {
+        console.log(res.data.message);
+        toast({
+          title: "Message",
+          description: res.data.message,
+          variant: "default",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          title: "Message",
+          description: err.response.data.message,
+          variant: "destructive",
+        });
+      });
   }
+
   return (
     <div>
       <Navbar />
@@ -101,7 +124,7 @@ const AddEmployee = () => {
                   buttonName={"Upload picture"}
                   handleImage={setProfileImage}
                   classValue={
-                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                    "border p-2 font-bold bg-slate-200 text-left text-black rounded-sm h-[3rem]"
                   }
                 />
               </div>
@@ -160,7 +183,7 @@ const AddEmployee = () => {
               <FormInput
                 control={form.control}
                 name={"leaveDate"}
-                formlabel={"Leaving Date"}
+                formlabel={"Exit Date"}
                 type="date"
                 width={"w-80"}
               />
@@ -282,7 +305,7 @@ const AddEmployee = () => {
                   buttonName={"Upload Pancard"}
                   handleImage={setPanCardImage}
                   classValue={
-                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                    "border p-2 font-bold bg-slate-200 text-left text-black rounded-sm h-[3rem]"
                   }
                 />
               </div>
@@ -299,7 +322,7 @@ const AddEmployee = () => {
                   buttonName={"Upload Aadhaar Card"}
                   handleImage={setAadharImage}
                   classValue={
-                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                    "border p-2 font-bold bg-slate-200 text-left text-black rounded-sm h-[3rem]"
                   }
                 />
               </div>
@@ -317,7 +340,7 @@ const AddEmployee = () => {
                   buttonName={"Upload Aadhaar Card"}
                   handleImage={setRelativeAadhaarImage}
                   classValue={
-                    "border p-2 font-bold bg-white-100 text-black rounded-sm"
+                    "border p-2 font-bold bg-slate-200 text-left text-black rounded-sm h-[3rem]"
                   }
                 />
               </div>

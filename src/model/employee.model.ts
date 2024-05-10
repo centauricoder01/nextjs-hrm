@@ -26,7 +26,7 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     type: String,
   },
   maritalStatus: {
-    type: Boolean,
+    type: String,
   },
   mobileNumber: {
     type: Number,
@@ -94,6 +94,10 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     type: String,
     required: [true, "state is required"],
   },
+  aadhaarImage: { type: String },
+  pancardImage: { type: String },
+  relativeAadhaarImage: { type: String },
+  office: { type: String, required: [true, "Office is required"] },
   emergencyContactNumber: {
     type: Number,
     required: [true, "Emergency Contact Number is required"],

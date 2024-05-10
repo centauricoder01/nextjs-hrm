@@ -7,7 +7,6 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { CldUploadWidget } from "next-cloudinary";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import {
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import FormSelect from "@/components/FormSelect";
-import UploadImage from "@/components/uploadImage";
+import UploadImage from "@/components/UploadImage";
 
 // TYPE INFERENCES
 interface CloudinaryUploadWidgetInfo {

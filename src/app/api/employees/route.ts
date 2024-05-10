@@ -5,24 +5,24 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   await connect();
   try {
-    // const body = await request.json();
-    // const newEmployee = new EmployeeModel(body);
-    // await newEmployee.save();
-    // return NextResponse.json(
-    //   {
-    //     success: true,
-    //     responseBody: {
-    //       data: body,
-    //     },
-    //   },
-    //   { status: 200 }
-    // );
+    const body = await request.json();
+    console.log(body, "This is body ");
+    const newEmployee = new EmployeeModel(body);
+    await newEmployee.save();
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Employee Added Successfully",
+        responseBody: null,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: "Error came in the employee response",
-        error,
+        message: "Some Error Occured",
+        responseBody: error,
       },
       { status: 500 }
     );
@@ -31,10 +31,15 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const value = await EmployeeModel.find();
+    const value = await EmployeeModel.find(
+      {},
+      { password: 0, aadhaarImage: 0, pancardImage: 0, relativeAadhaarImage: 0 }
+    );
+
     return Response.json(
       {
         success: true,
+        message: "All Employees Fetched Successfully",
         responseBody: value,
       },
       { status: 200 }
@@ -44,7 +49,8 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: false,
-        message: "Error came in the employee response",
+        message: "Some Error Occured",
+        responseBody: error,
       },
       { status: 500 }
     );

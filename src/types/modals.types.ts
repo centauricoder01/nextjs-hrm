@@ -6,7 +6,7 @@ export interface IEmployee {
   gender: string;
   fullName: string;
   birthDate: string;
-  maritalStatus: boolean;
+  maritalStatus: string;
   mobileNumber: number;
   fullAddress: string;
   joinDate: string;
@@ -23,6 +23,10 @@ export interface IEmployee {
   panNumber: string;
   aadharNumber?: Number;
   state: string;
+  aadhaarImage: string;
+  pancardImage: string;
+  relativeAadhaarImage: string;
+  office: string;
   emergencyContactNumber: number;
 }
 
