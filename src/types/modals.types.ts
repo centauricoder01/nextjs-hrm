@@ -21,7 +21,7 @@ export interface IEmployee {
   bankIFSCCode: string;
   bankName: string;
   panNumber: string;
-  aadharNumber?: Number;
+  aadharNumber: number;
   state: string;
   aadhaarImage: string;
   pancardImage: string;

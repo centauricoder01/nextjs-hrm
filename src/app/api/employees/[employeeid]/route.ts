@@ -12,7 +12,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
   try {
     const id = params.employeeid;
 
-    const getAttendenceById = await EmployeeModel.find({ userId: id });
+    const getAttendenceById = await EmployeeModel.findOne({ _id: id });
 
     if (!getAttendenceById) {
       return NextResponse.json(

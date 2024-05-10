@@ -1,8 +1,9 @@
+"use client";
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 // PAGINATION LINK START FROM HERE
 import {
   Pagination,
@@ -13,9 +14,30 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import axios from "axios";
+
+interface employeeBluePrint {
+  _id: string;
+  profileImage: string;
+  fullName: string;
+  employeId: string;
+  designation: string;
+  employeeId: string;
+}
 
 const ViewEmployees = () => {
   const arr = [1, 2, 3, 4, 5, 6, 76, 8, 9, 0];
+  const [getEmployees, setGetEmployees] = useState<employeeBluePrint[]>([]);
+  useEffect(() => {
+    axios
+      .get("/api/employees")
+      .then((res) => {
+        setGetEmployees(res.data.responseBody);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <>
       <Navbar />
@@ -33,23 +55,23 @@ const ViewEmployees = () => {
             Search
           </button>
         </div>
-        {arr.map((ele, i) => (
+        {getEmployees.map((ele, i) => (
           <div
             key={i}
             className="border flex flex-col justify-between sm:flex-row items-center p-2 rounded-md bg-white shadow-2xl mb-4"
           >
             <Image
-              src={"/dummy.jpeg"}
+              src={ele.profileImage}
               width={70}
               height={70}
               className="rounded-full mb-2"
               alt="Avatar"
             />
 
-            <p className="font-bold mb-2">Rajendra Patel</p>
-            <p className="font-bold mb-2">Software Engineer</p>
-            <p className="font-bold mb-2">PE10164</p>
-            <Link href={"/console/singlemployee"} passHref>
+            <p className="font-bold mb-2">{ele.fullName}</p>
+            <p className="font-bold mb-2">{ele.designation}</p>
+            <p className="font-bold mb-2">{ele.employeeId}</p>
+            <Link href={`/console/viewemployees/${ele._id}`} passHref>
               <p className="font-bold text-blue-500 hover:underline">
                 View Full Detail
               </p>
