@@ -270,7 +270,7 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error came in the attendence by Date response:", error);
+    console.error("Error came in the get all attendence response:", error);
     return Response.json(
       {
         success: false,

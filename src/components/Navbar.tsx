@@ -60,35 +60,35 @@ const Navbar = () => {
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/attendence"}>
+                  <Link href={"/console/admin/attendence"}>
                     <p className="flex justify-start items-center gap-2">
                       <RiPresentationFill size={20} />
                       Attendence
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/addemployee"}>
+                  <Link href={"/console/admin/addemployee"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <IoPerson size={20} />
                       Add Employee
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/viewemployees"}>
+                  <Link href={"/console/admin/viewemployees"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <FaUsersViewfinder size={20} />
                       View Employee
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/leaves"}>
+                  <Link href={"/console/admin/leaves"}>
                     <p className="flex justify-start items-center gap-2">
                       <FcLeave size={20} />
                       Leave Requests
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/messages"}>
+                  <Link href={"/console/admin/messages"}>
                     <p className="flex justify-start items-center gap-2">
                       <MdOutlineMessage size={20} />
                       Messages
@@ -99,21 +99,21 @@ const Navbar = () => {
               ) : (
                 <SheetHeader>
                   <SheetTitle className="mb-5">HRM</SheetTitle>
-                  <Link href={"/console/employee-dashboard"}>
+                  <Link href={"/console/employee/employee-dashboard"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <IoIosHome size={20} />
                       Home
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/profile"}>
+                  <Link href={"/console/employee/profile"}>
                     <p className="flex justify-start items-center gap-2">
                       <MdOutlineCollections size={20} />
                       Profile
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/leave-application"}>
+                  <Link href={"/console/employee/leave-application"}>
                     <p className="flex justify-start items-center gap-2">
                       <MdTimeToLeave size={20} />
                       Leave Application
@@ -121,14 +121,14 @@ const Navbar = () => {
                   </Link>
                   <hr />
 
-                  <Link href={"/console/view-attendence"}>
+                  <Link href={"/console/employee/view-attendence"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <IoMdTimer size={20} />
                       View Attendence
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/send-message"}>
+                  <Link href={"/console/employee/send-message"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <FaMessage size={20} />
                       Send Message
