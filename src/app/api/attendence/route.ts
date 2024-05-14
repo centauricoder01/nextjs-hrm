@@ -259,17 +259,19 @@ export async function GET(request: Request) {
   await connect();
 
   try {
-    // const getAttendenceByDate = await AttendenceModel.find();
-    let { page = 1, limit = 10 } = await request.json();
-    page = parseInt(page);
-    limit = parseInt(limit);
+    const url = new URL(request.url);
+    const searcParams = new URLSearchParams(url.searchParams);
+    let page = searcParams.get("page");
+    let limit = searcParams.get("limit");
+    const pageNumber = parseInt(page ?? "1", 10);
+    const limitNumber = parseInt(limit ?? "10", 10);
 
-    const skip = (page - 1) * limit;
+    const skip = (pageNumber - 1) * limitNumber;
 
     // Query the database
     const attendanceRecords = await AttendenceModel.find()
       .skip(skip)
-      .limit(limit);
+      .limit(limitNumber);
 
     // Get the total count of records
     const totalCount = await AttendenceModel.countDocuments();
@@ -277,11 +279,11 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "We got you All Attendence Date",
+        message: "We got you All Attendence data",
         responseBody: {
           data: attendanceRecords,
           totalRecords: totalCount,
-          totalPages: Math.ceil(totalCount / limit),
+          totalPages: Math.ceil(totalCount / limitNumber),
           currentPage: page,
         },
       },
