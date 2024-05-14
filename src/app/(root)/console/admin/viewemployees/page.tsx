@@ -26,7 +26,6 @@ interface employeeBluePrint {
 }
 
 const ViewEmployees = () => {
-  const arr = [1, 2, 3, 4, 5, 6, 76, 8, 9, 0];
   const [getEmployees, setGetEmployees] = useState<employeeBluePrint[]>([]);
   useEffect(() => {
     axios
@@ -43,7 +42,9 @@ const ViewEmployees = () => {
       <Navbar />
       <div className=" bg-[#c3eeff] m-5 p-5 rounded-md">
         <div className="sm:text-left text-center">
-          <h1 className="font-bold mb-5 text-[2rem]">All Employees (65)</h1>
+          <h1 className="font-bold mb-5 text-[2rem]">
+            All Employees {getEmployees.length}{" "}
+          </h1>
         </div>
 
         <div className="flex justify-between items-center gap-5">
@@ -71,7 +72,7 @@ const ViewEmployees = () => {
             <p className="font-bold mb-2">{ele.fullName}</p>
             <p className="font-bold mb-2">{ele.designation}</p>
             <p className="font-bold mb-2">{ele.employeeId}</p>
-            <Link href={`/console/viewemployees/${ele._id}`} passHref>
+            <Link href={`/console/admin/viewemployees/${ele._id}`} passHref>
               <p className="font-bold text-blue-500 hover:underline">
                 View Full Detail
               </p>

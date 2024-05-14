@@ -259,13 +259,31 @@ export async function GET(request: Request) {
   await connect();
 
   try {
-    const getAttendenceByDate = await AttendenceModel.find();
+    // const getAttendenceByDate = await AttendenceModel.find();
+    let { page = 1, limit = 10 } = await request.json();
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const skip = (page - 1) * limit;
+
+    // Query the database
+    const attendanceRecords = await AttendenceModel.find()
+      .skip(skip)
+      .limit(limit);
+
+    // Get the total count of records
+    const totalCount = await AttendenceModel.countDocuments();
 
     return NextResponse.json(
       {
         success: true,
         message: "We got you All Attendence Date",
-        responseBody: getAttendenceByDate,
+        responseBody: {
+          data: attendanceRecords,
+          totalRecords: totalCount,
+          totalPages: Math.ceil(totalCount / limit),
+          currentPage: page,
+        },
       },
       { status: 200 }
     );

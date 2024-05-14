@@ -31,6 +31,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
+    await connect();
     const value = await EmployeeModel.find(
       {},
       { password: 0, aadhaarImage: 0, pancardImage: 0, relativeAadhaarImage: 0 }
