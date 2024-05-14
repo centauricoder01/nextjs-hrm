@@ -52,7 +52,7 @@ export default function Home() {
           JSON.stringify(res.data.responseBody)
         );
         if (res.data.responseBody.role === "Employee") {
-          router.push("/console/employee-dashboard");
+          router.push("/console/employee/employee-dashboard");
         } else {
           router.push("/console");
         }

@@ -54,11 +54,12 @@ const View_Attendence = () => {
     }
   }, [localStorageValue]);
 
+  console.log(getAttendence);
   return (
     <>
       <Navbar />
 
-      <h1 className="font-bold text-[1.4rem] w-[90%] m-auto border mt-10">
+      <h1 className="font-bold text-[1.4rem] w-[90%] m-auto mt-10">
         Attendence Report
       </h1>
       <div className="w-[90%] m-auto border-lg mt-5">
@@ -87,22 +88,30 @@ const View_Attendence = () => {
                 <TableCell>{ele.timeIn}</TableCell>
                 <TableCell>{ele.timeInLocation}</TableCell>
                 <TableCell>
-                  <Image
-                    src={ele.timeInSelfie}
-                    alt="Image"
-                    width={50}
-                    height={50}
-                  />
+                  {ele.timeInSelfie === null ? (
+                    "Image Not Provided"
+                  ) : (
+                    <Image
+                      src={ele.timeInSelfie}
+                      alt="Image"
+                      width={50}
+                      height={50}
+                    />
+                  )}
                 </TableCell>
-                <TableCell>{ele.timeOut}</TableCell>
+                <TableCell>{ele?.timeOut}</TableCell>
                 <TableCell>{ele.timeOutLocation}</TableCell>
                 <TableCell>
-                  <Image
-                    src={ele.timeOutSelfie}
-                    alt="Image"
-                    width={50}
-                    height={50}
-                  />
+                  {ele.timeOutSelfie === null ? (
+                    "Image Not Provided"
+                  ) : (
+                    <Image
+                      src={ele.timeOutSelfie}
+                      alt="Image"
+                      width={50}
+                      height={50}
+                    />
+                  )}
                 </TableCell>
               </TableRow>
             ))}

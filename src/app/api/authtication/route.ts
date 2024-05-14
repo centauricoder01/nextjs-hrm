@@ -1,7 +1,6 @@
 import { connect } from "@/db/db";
 import EmployeeModel from "@/model/employee.model";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
