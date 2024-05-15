@@ -1,3 +1,5 @@
+import DonutChart from "@/components/DonutChart";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -7,19 +9,37 @@ const Employee_Dashboard = () => {
   return (
     <>
       <Navbar />
+      <LoadingSpinner />
       <div className="bg-[#89deff] m-5 p-5 rounded-md">
-        <div className=" flex justify-between items-center gap-5">
-          <div className="border-gray-100	bg-white p-4 rounded-sm shadow-xl w-1/4">
-            <p className="font-bold text-[1.5rem]">Total Leaves</p>
-            <p className="text-blue-700 font-bold text-[1.2rem]">12</p>
+        {/* CHART IMPLEMENTATION START FROM HERE  */}
+        <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
+          <div className="w-2/5">
+            <h1 className="text-[2rem] font-bold">Total Leaves</h1>
+            <DonutChart
+              label={[
+                "Sick Leave",
+                "Causal Leave",
+                "Privilage Leave",
+                "Half-Day Leave",
+                "Quater Leave",
+                "Compensate leave",
+              ]}
+              numberData={[6, 12, 2, 4, 5, 3]}
+            />
           </div>
-          <div className="border-gray-100	bg-white p-4 rounded-sm shadow-xl w-1/4">
-            <p className="font-bold text-[1.5rem]">Leaves Taken</p>
-            <p className="text-blue-700 font-bold text-[1.2rem]">3</p>
-          </div>
-          <div className="border-gray-100	bg-white p-4 rounded-sm shadow-xl w-1/4">
-            <p className="font-bold text-[1.5rem]">Leave Left </p>
-            <p className="text-blue-800 font-bold text-[1.2rem]">9</p>
+          <div className="w-2/5">
+            <h1 className="text-[2rem] font-bold">Leaves Left</h1>
+            <DonutChart
+              label={[
+                "Sick Leave",
+                "Causal Leave",
+                "Privilage Leave",
+                "Half-Day Leave",
+                "Quater Leave",
+                "Compensate leave",
+              ]}
+              numberData={[4, 5, 1, 4, 1, 2]}
+            />
           </div>
         </div>
         <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">

@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   await connect();
   try {
     const body = await request.json();
-    console.log(body, "This is body ");
     const newEmployee = new EmployeeModel(body);
     await newEmployee.save();
     return NextResponse.json(

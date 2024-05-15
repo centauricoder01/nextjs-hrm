@@ -8,6 +8,7 @@ const Console = () => {
   return (
     <>
       <Navbar />
+
       <div className="  bg-[#c3eeff] m-5 p-5 rounded-md">
         <h1 className="text-left text-[3rem] font-bold mb-5">Overview</h1>
         <div className="flex flex-wrap gap-4 justify-start items-center mb-4">

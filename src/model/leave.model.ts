@@ -21,6 +21,7 @@ const leaveSchema: Schema<ILeave> = new mongoose.Schema({
   userId: { type: Schema.Types.ObjectId, ref: "Employee", index: true },
   leaveStatus: {
     type: String,
+    default: "Pending",
     enum: ["Pending", "Rejected", "OnHold"],
   },
 });

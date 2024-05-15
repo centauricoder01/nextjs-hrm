@@ -76,6 +76,7 @@ const Leave_Application = () => {
                 "Privilege Leave",
                 "Half Day Leave",
                 "Quater (1/4) Leave",
+                "Compensate leave",
               ]}
               selectPlaceholder={"Choose Type"}
               width={"w-full"}
