@@ -43,11 +43,21 @@ export interface IAttendence extends Document {
   timeOut: string;
 }
 
-export interface ILeave extends Document {
+export interface ILeaveApplication extends Document {
   leaveType: string;
   reason: string;
   startingDate: Date;
   endingDate: Date;
   userId: Schema.Types.ObjectId;
   leaveStatus: string;
+}
+
+export interface ILeaveData extends Document {
+  userId: Schema.Types.ObjectId;
+  remainingCompensateLeave: number;
+  remainingSickLeave: number;
+  remainingCausalLeave: number;
+  remainingPrivilegeLeave: number;
+  remainingHalfdayLeave: number;
+  remainingQuarterLeave: number;
 }

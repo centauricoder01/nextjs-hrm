@@ -74,7 +74,7 @@ const Leave_Application = () => {
                 "Sick Leave",
                 "Casual Leave",
                 "Privilege Leave",
-                "Half Day Leave",
+                "Half-Day Leave",
                 "Quater (1/4) Leave",
                 "Compensate leave",
               ]}

@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useState } from "react";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 const formSchema = z.object({
   email: z.string().email().min(2, {
@@ -30,6 +32,7 @@ const formSchema = z.object({
 
 export default function Home() {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +43,7 @@ export default function Home() {
   const router = useRouter();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     axios
       .post("/api/authtication", values)
       .then((res) => {
@@ -52,12 +56,15 @@ export default function Home() {
           JSON.stringify(res.data.responseBody)
         );
         if (res.data.responseBody.role === "Employee") {
+          setLoading(false);
           router.push("/console/employee/employee-dashboard");
         } else {
+          setLoading(false);
           router.push("/console");
         }
       })
       .catch((err) => {
+        setLoading(false);
         toast({
           variant: "destructive",
           title: "Login Successfull",
@@ -113,7 +120,7 @@ export default function Home() {
             type="submit"
             className="w-full h-12 flex justify-center items-center"
           >
-            Submit
+            {loading ? <LoadingSpinner /> : "Submit"}
           </Button>
         </form>
       </Form>
@@ -124,9 +131,6 @@ export default function Home() {
         >
           <p>Employee Attdence </p>
         </div>
-        {/* <div className="border p-4 cursor-pointer rounded-lg bg-cyan-800 ">
-          <p>Login as an Employee</p>
-        </div> */}
       </div>
     </main>
   );

@@ -1,5 +1,4 @@
 import DonutChart from "@/components/DonutChart";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -9,7 +8,7 @@ const Employee_Dashboard = () => {
   return (
     <>
       <Navbar />
-      <LoadingSpinner />
+
       <div className="bg-[#89deff] m-5 p-5 rounded-md">
         {/* CHART IMPLEMENTATION START FROM HERE  */}
         <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
