@@ -6,66 +6,52 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   // Connect to the database
   await connect();
+
   try {
     const body = await request.json();
 
     // *****  CREATING THE LEAVE DATA FOR THE EMPLOYEE  *****
-    const findLeaveDataById = await leaveDataModel.findOne({
+    let findLeaveDataById = await leaveDataModel.findOne({
       userId: body.userId,
     });
 
-    // IF USER DATA DOESN'T EXIT IN THE DATABASE
+    // IF USER DATA DOESN'T EXIST IN THE DATABASE
     if (!findLeaveDataById) {
-      const addEmployeeLeaveDetails = new leaveDataModel({
+      findLeaveDataById = new leaveDataModel({
         userId: body.userId,
       });
-      await addEmployeeLeaveDetails.save();
+      await findLeaveDataById.save();
     }
 
+    // Create the leave application
     const leaveApplication = new leaveModel(body);
     await leaveApplication.save();
 
-    let leaveWarning = false;
+    // Mapping of leave types to their corresponding fields
+    const leaveTypeFieldMap: { [key: string]: keyof typeof findLeaveDataById } =
+      {
+        "Sick Leave": "remainingSickLeave",
+        "Casual Leave": "remainingCausalLeave",
+        "Privilege Leave": "remainingPrivilegeLeave",
+        "Half-Day Leave": "remainingHalfdayLeave",
+        "Quater (1/4) Leave": "remainingQuarterLeave",
+        "Compensate leave": "remainingCompensateLeave",
+      };
 
-    if (
-      body.leaveType === "Sick Leave" &&
-      findLeaveDataById?.remainingSickLeave <= 0
-    ) {
-      leaveWarning = true;
-    } else if (
-      body.leaveType === "Casual Leave" &&
-      findLeaveDataById?.remainingCausalLeave <= 0
-    ) {
-      leaveWarning = true;
-    } else if (
-      body.leaveType === "Privilege Leave" &&
-      findLeaveDataById?.remainingPrivilegeLeave <= 0
-    ) {
-      leaveWarning = true;
-    } else if (
-      body.leaveType === "Half-Day Leave" &&
-      findLeaveDataById?.remainingHalfdayLeave <= 0
-    ) {
-      leaveWarning = true;
-    } else if (
-      body.leaveType === "Quater (1/4) Leave" &&
-      findLeaveDataById?.remainingQuarterLeave <= 0
-    ) {
-      leaveWarning = true;
-    } else if (
-      body.leaveType === "Compensate leave" &&
-      findLeaveDataById?.remainingCompensateLeave <= 0
-    ) {
+    let leaveWarning = false;
+    const leaveField = leaveTypeFieldMap[body.leaveType];
+
+    // Check if the leave type field exists and the remaining leave is greater than 0
+    if (leaveField && findLeaveDataById[leaveField] <= 0) {
       leaveWarning = true;
     }
 
-    console.log(leaveWarning, "Leave warning");
     return NextResponse.json(
       {
         success: true,
         message: leaveWarning
-          ? `Warning: You don't have enough ${body.leaveType}, Please Be carefull before applying.`
-          : `Leave reqeust Has been created successfully`,
+          ? `Warning: You don't have enough ${body.leaveType}, please be careful before applying.`
+          : `Leave request has been created successfully.`,
         responseBody: null,
       },
       { status: 200 }
@@ -75,7 +61,36 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: error,
+        message: error || "An error occurred",
+        responseBody: null,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(request: Request) {
+  // Connect to the database
+  await connect();
+  try {
+    const AllLeaveApplication = await leaveModel.find().populate({
+      path: "userId",
+      select: "fullName profileImage",
+    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "All Leave Application Fetched Successfully",
+        responseBody: AllLeaveApplication,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error in the Leave Data response:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: error || "An error occurred",
         responseBody: null,
       },
       { status: 500 }
