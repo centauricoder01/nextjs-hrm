@@ -26,25 +26,48 @@ export async function POST(request: Request) {
 
     // Mapping of leave types to their corresponding fields
     const leaveTypeFieldMap: { [key: string]: keyof typeof findLeaveDataById } =
-      {
-        "Sick Leave": "remainingSickLeave",
-        "Casual Leave": "remainingCausalLeave",
-        "Privilege Leave": "remainingPrivilegeLeave",
-        "Half-Day Leave": "remainingHalfdayLeave",
-        "Quater (1/4) Leave": "remainingQuarterLeave",
-        "Compensate leave": "remainingCompensateLeave",
-      };
+    {
+      "Sick Leave": "remainingSickLeave",
+      "Casual Leave": "remainingCausalLeave",
+      "Privilege Leave": "remainingPrivilegeLeave",
+      "Half-Day Leave": "remainingHalfdayLeave",
+      "Quater (1/4) Leave": "remainingQuarterLeave",
+      "Compensate leave": "remainingCompensateLeave",
+    };
 
     const checkingLeaveAvailablity = leaveTypeFieldMap[body.leaveType];
 
+    // ********************************************
+
+    const startDate = new Date(body.startingDate);
+    const endDate = new Date(body.endingDate);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      throw new Error("Invalid date provided");
+    }
+
+    // Calculate the difference in milliseconds
+    const differenceInMilliseconds: number =
+      endDate.getTime() - startDate.getTime();
+
+    // Convert the difference from milliseconds to days
+
+    const differenceInDays = Math.ceil(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
+
+    // *******************************************
+    console.log(findLeaveDataById[checkingLeaveAvailablity] < differenceInDays);
+    // console.log(differenceInDays);
     if (
       checkingLeaveAvailablity &&
-      findLeaveDataById[checkingLeaveAvailablity] <= 0
+      findLeaveDataById[checkingLeaveAvailablity] <= 0 ||
+      findLeaveDataById[checkingLeaveAvailablity] < differenceInDays
     ) {
       return NextResponse.json(
         {
           success: true,
-          message: `Leave Cannot be Granted, as you taken all the ${body.leaveType}`,
+          message: `Leave Cannot be Granted, You have Taken or You are Take more than ${body.leaveType} than you should take.`,
           responseBody: null,
         },
         { status: 200 }
