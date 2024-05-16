@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     const leaveField = leaveTypeFieldMap[body.leaveType];
 
     // Check if the leave type field exists and the remaining leave is greater than 0
-    if (leaveField && findLeaveDataById[leaveField] <= 0) {
+    if (leaveField && findLeaveDataById[leaveField] <= 1) {
       leaveWarning = true;
     }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       {
         success: true,
         message: leaveWarning
-          ? `Warning: You don't have enough ${body.leaveType}, please be careful before applying.`
+          ? `Warning: Your ${body.leaveType} is About to expire, please be careful before applying.`
           : `Leave request has been created successfully.`,
         responseBody: null,
       },
@@ -176,7 +176,7 @@ export async function PATCH(request: Request) {
       "Causal Leave": "remainingCausalLeave",
       "Privilege Leave": "remainingPrivilegeLeave",
       "Halfday Leave": "remainingHalfdayLeave",
-      "Quarter Leave": "remainingQuarterLeave",
+      "Quater (1/4)- Leave": "remainingQuarterLeave",
     };
     const leaveField = leaveTypeFieldMap[getLeaveTypeOfEmployee];
 
@@ -185,8 +185,26 @@ export async function PATCH(request: Request) {
       // Cast to any to bypass TypeScript error and then to number
       const leaveData = findLeaveDataById.toObject() as any;
 
+      const startDate = new Date(updatedApplication.startingDate);
+      const endDate = new Date(updatedApplication.endingDate);
+
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        throw new Error("Invalid date provided");
+      }
+
+      // Calculate the difference in milliseconds
+      const differenceInMilliseconds: number =
+        endDate.getTime() - startDate.getTime();
+
+      // Convert the difference from milliseconds to days
+
+      const differenceInDays = Math.ceil(
+        differenceInMilliseconds / (1000 * 60 * 60 * 24)
+      );
+
       // Decrement the leave by one
-      leaveData[leaveField] = (leaveData[leaveField] as number) - 1;
+      leaveData[leaveField] =
+        (leaveData[leaveField] as number) - differenceInDays;
 
       await findLeaveDataById.updateOne(
         {
@@ -198,8 +216,8 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           success: true,
-          message: `${getLeaveTypeOfEmployee} has been decremented by one.`,
-          responseBody: findLeaveDataById,
+          message: `${getLeaveTypeOfEmployee} has been decremented by ${differenceInDays}.`,
+          responseBody: null,
         },
         { status: 200 }
       );
