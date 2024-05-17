@@ -26,14 +26,14 @@ export async function POST(request: Request) {
 
     // Mapping of leave types to their corresponding fields
     const leaveTypeFieldMap: { [key: string]: keyof typeof findLeaveDataById } =
-    {
-      "Sick Leave": "remainingSickLeave",
-      "Casual Leave": "remainingCausalLeave",
-      "Privilege Leave": "remainingPrivilegeLeave",
-      "Half-Day Leave": "remainingHalfdayLeave",
-      "Quater (1/4) Leave": "remainingQuarterLeave",
-      "Compensate leave": "remainingCompensateLeave",
-    };
+      {
+        "Sick Leave": "remainingSickLeave",
+        "Causal Leave": "remainingCausalLeave",
+        "Privilege Leave": "remainingPrivilegeLeave",
+        "Halfday Leave": "remainingHalfdayLeave",
+        "Quater (1/4) Leave": "remainingQuarterLeave",
+        "Compensate leave": "remainingCompensateLeave",
+      };
 
     const checkingLeaveAvailablity = leaveTypeFieldMap[body.leaveType];
 
@@ -57,17 +57,16 @@ export async function POST(request: Request) {
     );
 
     // *******************************************
-    console.log(findLeaveDataById[checkingLeaveAvailablity] < differenceInDays);
-    // console.log(differenceInDays);
+
     if (
-      checkingLeaveAvailablity &&
-      findLeaveDataById[checkingLeaveAvailablity] <= 0 ||
+      (checkingLeaveAvailablity &&
+        findLeaveDataById[checkingLeaveAvailablity] <= 0) ||
       findLeaveDataById[checkingLeaveAvailablity] < differenceInDays
     ) {
       return NextResponse.json(
         {
           success: true,
-          message: `Leave Cannot be Granted, You have Taken or You are Take more than ${body.leaveType} than you should take.`,
+          message: `Leave Cannot be Granted, You have Taken or You are Taking more  ${body.leaveType} than you should take.`,
           responseBody: null,
         },
         { status: 200 }

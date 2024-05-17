@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormSelect from "@/components/FormSelect";
 import FormInput from "@/components/FormInput";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+
+interface localStorageValue {
+  _id: string;
+}
 
 const formSchema = z.object({
   leaveType: z
@@ -23,34 +28,79 @@ const formSchema = z.object({
     .refine((value) => value !== "", {
       message: "Reason is required",
     }),
-  startingDate: z.coerce.date().refine((date) => date !== null, {
+  startingDate: z.string().refine((value) => value !== "", {
     message: "Starting Date is required",
   }),
-  endDate: z.coerce.date().refine((date) => date !== null, {
+  endingDate: z.string().refine((value) => value !== "", {
     message: "Ending Date is required",
   }),
+  userId: z.string(),
 });
 
 const Leave_Application = () => {
   const { toast } = useToast();
-  const today = new Date();
+  const today = new Date().toISOString();
+  const [employeeUserId, setEmployeeUserId] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       leaveType: "",
       reason: "",
       startingDate: today,
-      endDate: today,
+      endingDate: today,
+      userId: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "This is Values");
-    toast({
-      title: "Application Successfull",
-      description: `HR Will contact to you sooner...`,
-    });
+    const { startingDate, endingDate } = values;
+
+    // Convert the date strings to full ISO 8601 format
+    const startDateISO = new Date(startingDate).toISOString();
+    const endDateISO = new Date(endingDate).toISOString();
+
+    values.startingDate = startDateISO;
+    values.endingDate = endDateISO;
+    values.userId = employeeUserId;
+
+    if (values.startingDate === values.endingDate) {
+      toast({
+        title: "Same Data Not Allowed",
+        description: `Staring Date and Ending Date is Same by default, Please Increase the ending data by 1 or more.`,
+        variant: "destructive",
+      });
+    }
+    axios
+      .post("/api/leave-applications", values)
+      .then((res) => {
+        toast({
+          title: "Message",
+          description: `${res.data.message}`,
+          className: "border bg-green-300",
+        });
+        form.reset({
+          leaveType: "",
+          reason: "",
+          startingDate: today,
+          endingDate: today,
+          userId: "",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedData = localStorage.getItem("Employee_Info");
+      if (storedData) {
+        const employeeInfo: localStorageValue = JSON.parse(storedData);
+        setEmployeeUserId(employeeInfo._id);
+      }
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -72,9 +122,9 @@ const Leave_Application = () => {
               formlabel={"Leave Type"}
               selectValue={[
                 "Sick Leave",
-                "Casual Leave",
+                "Causal Leave",
                 "Privilege Leave",
-                "Half-Day Leave",
+                "Halfday Leave",
                 "Quater (1/4) Leave",
                 "Compensate leave",
               ]}
@@ -97,7 +147,7 @@ const Leave_Application = () => {
             />
             <FormInput
               control={form.control}
-              name={"endDate"}
+              name={"endingDate"}
               formlabel={"Ending Date "}
               type="date"
               width={"w-full"}

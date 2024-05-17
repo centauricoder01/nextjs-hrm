@@ -1,14 +1,37 @@
+"use client";
 import DonutChart from "@/components/DonutChart";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { IEmployee } from "@/types/modals.types";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+interface localStorageValue {
+  _id: string;
+}
 
 const Employee_Dashboard = () => {
   const arr = [1, 2, 3, 4, 5];
+  const [leaveData, setLeaveData] = useState<number[] | null>(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedData = localStorage.getItem("Employee_Info");
+      if (storedData) {
+        const employeeInfo: localStorageValue = JSON.parse(storedData);
+        axios
+          .get(`/api/leave-applications/${employeeInfo._id}`)
+          .then((res) => {
+            setLeaveData(res.data.responseBody);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }
+  }, []);
   return (
     <>
       <Navbar />
-
       <div className="bg-[#89deff] m-5 p-5 rounded-md">
         {/* CHART IMPLEMENTATION START FROM HERE  */}
         <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
@@ -37,7 +60,7 @@ const Employee_Dashboard = () => {
                 "Quater Leave",
                 "Compensate leave",
               ]}
-              numberData={[4, 5, 1, 4, 1, 2]}
+              numberData={leaveData === null ? [6, 12, 2, 4, 5, 3] : leaveData}
             />
           </div>
         </div>
