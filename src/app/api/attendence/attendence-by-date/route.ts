@@ -3,21 +3,22 @@ import AttendenceModel from "@/model/attendence.model";
 import EmployeeModel from "@/model/employee.model";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   // Connect to the database
   await connect();
   try {
-    const body = await request.json();
+    const todayDate = new Date().toISOString().split("T")[0];
+    console.log(todayDate);
 
     const getAttendenceByDate = await AttendenceModel.find({
-      date: body.date,
+      date: todayDate,
     });
 
     return NextResponse.json(
       {
         success: true,
         message: "We got you All Attendence",
-        responseBody: getAttendenceByDate,
+        responseBody: getAttendenceByDate.length,
       },
       { status: 200 }
     );

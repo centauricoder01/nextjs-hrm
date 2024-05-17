@@ -119,38 +119,7 @@ const Console = () => {
             </BasicCartStructure>
           )}
 
-          {/* ANNOUCEMENTS  */}
-          <BasicCartStructure>
-            <p className="font-bold text-left mb-5 text-[1.3rem] text-yellow-300 shadow-2xl">
-              Annoucements
-            </p>
-            <div className="flex flex-col gap-5">
-              {arr.map((ele, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center p-4 rounded-md bg-slate-300"
-                >
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ratione animi atque tempora perspiciatis consequatur ipsum
-                    voluptas harum odio libero unde.
-                  </p>
-                  <button
-                    className="
-                    min-h-full
-                    p-2
-                    rounded-full
-                    bg-red-800
-                    text-white
-
-                  "
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
-          </BasicCartStructure>
+       
         </div>
       </div>
     </>

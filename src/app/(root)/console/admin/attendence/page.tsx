@@ -128,7 +128,7 @@ const Attendence = () => {
         </div>
         <div>
           {attendenceData.length === 0 ? (
-            <LoadingSpinner />
+            <p>No Data Available</p>
           ) : (
             <>
               <Table>
