@@ -2,7 +2,6 @@
 import DonutChart from "@/components/DonutChart";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { IEmployee } from "@/types/modals.types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -13,6 +12,7 @@ interface localStorageValue {
 const Employee_Dashboard = () => {
   const arr = [1, 2, 3, 4, 5];
   const [leaveData, setLeaveData] = useState<number[] | null>(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedData = localStorage.getItem("Employee_Info");
@@ -21,7 +21,16 @@ const Employee_Dashboard = () => {
         axios
           .get(`/api/leave-applications/${employeeInfo._id}`)
           .then((res) => {
-            setLeaveData(res.data.responseBody);
+            const val = [
+              res.data.responseBody.remainingSickLeave,
+              res.data.responseBody.remainingCausalLeave,
+              res.data.responseBody.remainingCompensateLeave,
+              res.data.responseBody.remainingHalfdayLeave,
+              res.data.responseBody.remainingPrivilegeLeave,
+              res.data.responseBody.remainingQuarterLeave,
+            ];
+
+            setLeaveData(val);
           })
           .catch((err) => {
             console.log(err);
@@ -40,12 +49,12 @@ const Employee_Dashboard = () => {
             <h1 className="text-[2rem] font-bold">Total Leaves</h1>
             <DonutChart
               label={[
+                "Sick Leave",
                 "Causal Leave",
                 "Compensate leave",
                 "Half-Day Leave",
                 "Privilage Leave",
                 "Quater Leave",
-                "Sick Leave",
               ]}
               numberData={[12, 12, 5, 15, 3, 6]}
             />
@@ -54,12 +63,12 @@ const Employee_Dashboard = () => {
             <h1 className="text-[2rem] font-bold">Leaves Left</h1>
             <DonutChart
               label={[
+                "Sick Leave",
                 "Causal Leave",
                 "Compensate leave",
                 "Half-Day Leave",
                 "Privilage Leave",
                 "Quater Leave",
-                "Sick Leave",
               ]}
               numberData={
                 leaveData === null ? [12, 12, 5, 15, 3, 6] : leaveData

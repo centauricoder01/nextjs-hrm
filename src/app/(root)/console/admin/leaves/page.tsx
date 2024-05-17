@@ -19,21 +19,25 @@ interface IUser {
   fullName: string;
 }
 
-interface IleaveApplication {
+interface ILeaveApplication {
   userId: IUser; // Reference to IUser interface
   leaveType: string;
   reason: string;
   startingDate: string;
   endingDate: string;
   leaveStatus: string;
+  _id: string;
 }
 
 const Leaves = () => {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const [leaveApplication, setLeaveApplication] =
-    useState<IleaveApplication[]>();
+    useState<ILeaveApplication[]>();
 
   useEffect(() => {
+    fetchLeaveApplications();
+  }, []);
+
+  const fetchLeaveApplications = () => {
     axios
       .get("/api/leave-applications")
       .then((res) => {
@@ -42,7 +46,27 @@ const Leaves = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
+
+  const updateLeaveStatus = (id: string, leaveStatus: string) => {
+    const body = { id, leaveStatus };
+    axios
+      .patch("/api/leave-applications", body)
+      .then((res) => {
+        if (res.status === 200) {
+          setLeaveApplication((prevLeaveApplications) =>
+            prevLeaveApplications?.map((leaveApplication) =>
+              leaveApplication._id === id
+                ? { ...leaveApplication, leaveStatus }
+                : leaveApplication
+            )
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -52,7 +76,7 @@ const Leaves = () => {
           <h1 className="font-bold mb-5 text-[2rem]">Leaves Requests</h1>
         </div>
         <div>
-          {leaveApplication?.length === 0 ? (
+          {!leaveApplication ? (
             <LoadingSpinner />
           ) : (
             <Table>
@@ -63,13 +87,13 @@ const Leaves = () => {
                   <TableHead>From</TableHead>
                   <TableHead>To</TableHead>
                   <TableHead>Reason</TableHead>
+                  <TableHead>Leave Type</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {leaveApplication?.map((ele, i) => {
-                  // Extract the date parts
+                {leaveApplication.map((ele, i) => {
                   const startingDate = ele.startingDate.split("T")[0];
                   const endingDate = ele.endingDate.split("T")[0];
 
@@ -88,10 +112,33 @@ const Leaves = () => {
                       <TableCell>{startingDate}</TableCell>
                       <TableCell>{endingDate}</TableCell>
                       <TableCell>{ele.reason}</TableCell>
+                      <TableCell>{ele.leaveType}</TableCell>
                       <TableCell>{ele.leaveStatus}</TableCell>
                       <TableCell className="text-center">
-                        <Button className="mr-3 bg-orange-700">Approve</Button>
-                        <Button className="mr-3 bg-green-700">Reject</Button>
+                        {ele.leaveStatus === "Pending" ? (
+                          <>
+                            <Button
+                              className="mr-3 bg-orange-700"
+                              onClick={() =>
+                                updateLeaveStatus(ele._id, "Approved")
+                              }
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              className="mr-3 bg-green-700"
+                              onClick={() =>
+                                updateLeaveStatus(ele._id, "Rejected")
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        ) : (
+                          <Button className="mr-3 bg-black text-white">
+                            No Action Needed
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   );

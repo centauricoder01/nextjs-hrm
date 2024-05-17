@@ -26,21 +26,11 @@ export async function GET(request: Request, { params }: { params: Params }) {
       );
     }
 
-    // Convert Mongoose document to plain JavaScript object
-    const leaveDataObject = findLeaveDataById.toObject();
-
-    const leaveValues = Object.entries(leaveDataObject)
-      .filter(
-        ([key, value]) =>
-          key.startsWith("remaining") && typeof value === "number"
-      )
-      .map(([key, value]) => value);
-
     return NextResponse.json(
       {
         success: true,
         message: `Attendance Detail of the Employee.`,
-        responseBody: leaveValues,
+        responseBody: findLeaveDataById,
       },
       { status: 200 }
     );
