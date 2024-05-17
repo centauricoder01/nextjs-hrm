@@ -1,6 +1,6 @@
 import { connect } from "@/db/db";
-import leaveDataModel from "@/model/leave-data.model";
 import { NextResponse } from "next/server";
+import leaveApplicationModel from "@/model/leave-application.model";
 
 interface Params {
   employeeid: string;
@@ -10,16 +10,16 @@ export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await connect();
     const id = params.employeeid;
-    const findLeaveDataById = await leaveDataModel.findOne({
+    const findLeaveApplicationsById = await leaveApplicationModel.find({
       userId: id,
     });
 
-    if (!findLeaveDataById) {
+    if (!findLeaveApplicationsById) {
       return NextResponse.json(
         {
           success: true,
           message:
-            "Please Provide Correct EmployeeID Or Leave Data is Not Available",
+            "Please Provide Correct EmployeeID Or Leave Application is Not Available",
           responseBody: null,
         },
         { status: 200 }
@@ -29,13 +29,13 @@ export async function GET(request: Request, { params }: { params: Params }) {
     return NextResponse.json(
       {
         success: true,
-        message: `Leave Detail of the Employee.`,
-        responseBody: findLeaveDataById,
+        message: `Application Detail of the Employee.`,
+        responseBody: findLeaveApplicationsById,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in the Leave Data response:", error);
+    console.error("Error in the Leave Application response:", error);
     return NextResponse.json(
       {
         success: false,

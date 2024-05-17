@@ -1,6 +1,6 @@
 "use client";
 import { RiMenuAddFill } from "react-icons/ri";
-import { IoPerson } from "react-icons/io5";
+import { IoPerson, IoBookmarks } from "react-icons/io5";
 import { TfiDashboard } from "react-icons/tfi";
 import { FcLeave } from "react-icons/fc";
 import { IoMdTimer, IoIosHome } from "react-icons/io";
@@ -9,6 +9,8 @@ import {
   MdOutlineCollections,
   MdTimeToLeave,
 } from "react-icons/md";
+// import { FcLeave } from "react-icons/fc";
+
 import { FaUsersViewfinder, FaMessage } from "react-icons/fa6";
 import { RiPresentationFill } from "react-icons/ri";
 import {
@@ -113,10 +115,17 @@ const Navbar = () => {
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/employee/leave-application"}>
+                  <Link href={"/console/employee/apply-for-leave"}>
                     <p className="flex justify-start items-center gap-2">
                       <MdTimeToLeave size={20} />
-                      Leave Application
+                      Apply for Leave
+                    </p>
+                  </Link>
+                  <hr />
+                  <Link href={"/console/employee/leave-application"}>
+                    <p className="flex justify-start items-center gap-2">
+                      <IoBookmarks size={20} />
+                      Leave Applications
                     </p>
                   </Link>
                   <hr />
