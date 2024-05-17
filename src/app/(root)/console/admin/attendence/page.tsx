@@ -1,7 +1,8 @@
+"use client";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,53 +11,179 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { useToast } from "@/components/ui/use-toast";
+
+interface Iattendencedata {
+  _id: string;
+  date: string;
+  name: string;
+  employeId: string;
+  userId: string;
+  timeInLocation: string;
+  timeOutLocation: string;
+  timeInSelfie: string;
+  timeOutSelfie: string;
+  timeIn: string;
+  timeOut: string;
+}
 
 const Attendence = () => {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const [attendenceData, setAttendenceData] = useState<Iattendencedata[]>();
+  const [originalAttendenceData, setOriginalAttendenceData] =
+    useState<Iattendencedata[]>();
+  const [filterName, setFilterName] = useState("");
+  const [filterDate, setFilterDate] = useState("");
+  const { toast } = useToast();
+
+  function handleFilterButton() {
+    if (filterDate === "" && filterName === "") {
+      return toast({
+        title: "Message",
+        description: "Please Enter at least one Filter ",
+        variant: "destructive",
+      });
+    }
+
+    const filteredData = originalAttendenceData?.filter((item) => {
+      const matchesName = filterName
+        ? item.name.toLowerCase().includes(filterName.toLowerCase())
+        : true;
+      const matchesDate = filterDate ? item.date === filterDate : true;
+      return matchesName && matchesDate;
+    });
+
+    setAttendenceData(filteredData);
+  }
+
+  function handleResetButton() {
+    setFilterName("");
+    setFilterDate("");
+    setAttendenceData(originalAttendenceData);
+  }
+
+  useEffect(() => {
+    axios
+      .get(`/api/attendence`)
+      .then((res) => {
+        setAttendenceData(res.data.responseBody.data);
+        setOriginalAttendenceData(res.data.responseBody.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
       <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
         <div className="sm:text-left text-center">
-          <h1 className="font-bold mb-5 text-[2rem]">
-            Today&apos;s Attendence
-          </h1>
+          <h1 className="font-bold mb-5 text-[2rem]">Attendence Details</h1>
+        </div>
+        <div className="flex justify-between items-center w-full border p-2 mb-10 bg-white rounded">
+          <div className="flex gap-5 items-center w-[30%]">
+            <label>Filter by Name</label>
+            <input
+              type="text"
+              placeholder="Name"
+              className="bg-blue-300 p-2 rounded w-[68%]"
+              value={filterName}
+              onChange={(e) => setFilterName(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-5 items-center w-[30%]">
+            <label>Filter by Date</label>
+            <input
+              type="date"
+              className="bg-blue-300 p-2 rounded w-[70%]"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+            />
+          </div>
+          <button
+            className="w-[20%] bg-blue-700 text-white rounded p-2"
+            onClick={handleFilterButton}
+          >
+            Submit
+          </button>
+          <button
+            className="w-[10%] bg-green-700 text-white rounded p-2"
+            onClick={handleResetButton}
+          >
+            Reset Filter
+          </button>
         </div>
         <div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>EmployeeId</TableHead>
-                <TableHead>Selfie</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Time In</TableHead>
-                <TableHead>Time Out</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {arr.map((ele, i) => (
-                <TableRow key={i}>
-                  <TableCell>29 April 2024</TableCell>
-                  <TableCell>Rajendra Patel</TableCell>
-                  <TableCell>PE10164</TableCell>
-                  <TableCell>
-                    <Image
-                      src={"/dummy.jpeg"}
-                      width={70}
-                      height={70}
-                      className="rounded-sm"
-                      alt="Avatar"
-                    />
-                  </TableCell>
-                  <TableCell>Jabalpur, Madhya Pradesh</TableCell>
-                  <TableCell>09:34 AM</TableCell>
-                  <TableCell>06:44 PM</TableCell>
+          {attendenceData?.length === 0 ? (
+            <p>Data Not Available</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>EmployeeId</TableHead>
+                  <TableHead>Time In</TableHead>
+                  <TableHead>Time-in Selfie</TableHead>
+                  <TableHead>Time-in Location</TableHead>
+                  <TableHead>Time Out</TableHead>
+                  <TableHead>Time-Out Selfie</TableHead>
+                  <TableHead>Time-Out Location</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {attendenceData?.map((ele, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{ele.date}</TableCell>
+                    <TableCell>{ele.name}</TableCell>
+                    <TableCell>{ele.employeId}</TableCell>
+                    <TableCell>{ele.timeIn}</TableCell>
+                    <TableCell>
+                      <Image
+                        src={ele.timeInSelfie}
+                        width={70}
+                        height={70}
+                        className="rounded-sm"
+                        alt="Avatar"
+                      />
+                    </TableCell>
+                    <TableCell className="w-[20rem]">
+                      {ele.timeInLocation}
+                    </TableCell>
+                    <TableCell>
+                      {ele.timeOut === null ? (
+                        <p className="font-bold text-red-700">Not Logout</p>
+                      ) : (
+                        ele.timeOut
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {ele.timeOutSelfie === null ? (
+                        <p className="font-bold text-red-700">Not Logout</p>
+                      ) : (
+                        <Image
+                          src={ele.timeOutSelfie}
+                          width={70}
+                          height={70}
+                          className="rounded-sm"
+                          alt="Avatar"
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell className="w-[20rem]">
+                      {ele.timeOutLocation === null ? (
+                        <p className="font-bold text-red-700">Not Logout</p>
+                      ) : (
+                        ele.timeOutLocation
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </>

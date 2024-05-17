@@ -89,7 +89,7 @@ const View_Attendence = () => {
                 <TableCell>{ele.timeInLocation}</TableCell>
                 <TableCell>
                   {ele.timeInSelfie === null ? (
-                    "Image Not Provided"
+                    <p className="font-bold">Not Logout</p>
                   ) : (
                     <Image
                       src={ele.timeInSelfie}
@@ -99,11 +99,24 @@ const View_Attendence = () => {
                     />
                   )}
                 </TableCell>
-                <TableCell>{ele?.timeOut}</TableCell>
-                <TableCell>{ele.timeOutLocation}</TableCell>
+                <TableCell>
+                  {" "}
+                  {ele?.timeOut === null ? (
+                    <p className="font-bold">Not Logout</p>
+                  ) : (
+                    ele?.timeOut
+                  )}
+                </TableCell>
+                <TableCell>
+                  {ele.timeOutLocation === null ? (
+                    <p className="font-bold">Not Logout</p>
+                  ) : (
+                    ele.timeOutLocation
+                  )}
+                </TableCell>
                 <TableCell>
                   {ele.timeOutSelfie === null ? (
-                    "Image Not Provided"
+                    <p className="font-bold">Not Logout</p>
                   ) : (
                     <Image
                       src={ele.timeOutSelfie}

@@ -85,7 +85,6 @@ const AddEmployee = () => {
     axios
       .post("/api/employees", values)
       .then((res) => {
-        console.log(res.data.message);
         toast({
           title: "Message",
           description: res.data.message,

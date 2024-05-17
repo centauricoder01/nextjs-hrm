@@ -40,9 +40,6 @@ const Navbar = () => {
     }
   }, []);
 
-  if (userValue) {
-    // router.push("/dashboard");
-  }
   return (
     <div>
       <div className="flex justify-between items-center gap-10 bg-blue-500 p-5">
@@ -90,13 +87,6 @@ const Navbar = () => {
                     </p>
                   </Link>
                   <hr />
-                  <Link href={"/console/admin/messages"}>
-                    <p className="flex justify-start items-center gap-2">
-                      <MdOutlineMessage size={20} />
-                      Messages
-                    </p>
-                  </Link>
-                  <hr />
                 </SheetHeader>
               ) : (
                 <SheetHeader>
@@ -134,13 +124,6 @@ const Navbar = () => {
                     <p className="flex justify-start items-center gap-2 ">
                       <IoMdTimer size={20} />
                       View Attendence
-                    </p>
-                  </Link>
-                  <hr />
-                  <Link href={"/console/employee/send-message"}>
-                    <p className="flex justify-start items-center gap-2 ">
-                      <FaMessage size={20} />
-                      Send Message
                     </p>
                   </Link>
                   <hr />

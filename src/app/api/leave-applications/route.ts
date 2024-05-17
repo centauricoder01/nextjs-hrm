@@ -114,7 +114,7 @@ export async function GET(request: Request) {
   try {
     const AllLeaveApplication = await leaveModel.find().populate({
       path: "userId",
-      select: "fullName profileImage",
+      select: "fullName profileImage designation",
     });
     return NextResponse.json(
       {
@@ -265,4 +265,3 @@ export async function PATCH(request: Request) {
     );
   }
 }
-
