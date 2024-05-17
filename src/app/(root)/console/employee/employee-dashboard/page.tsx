@@ -29,6 +29,7 @@ const Employee_Dashboard = () => {
       }
     }
   }, []);
+
   return (
     <>
       <Navbar />
@@ -39,28 +40,30 @@ const Employee_Dashboard = () => {
             <h1 className="text-[2rem] font-bold">Total Leaves</h1>
             <DonutChart
               label={[
-                "Sick Leave",
                 "Causal Leave",
-                "Privilage Leave",
-                "Half-Day Leave",
-                "Quater Leave",
                 "Compensate leave",
+                "Half-Day Leave",
+                "Privilage Leave",
+                "Quater Leave",
+                "Sick Leave",
               ]}
-              numberData={[6, 12, 2, 4, 5, 3]}
+              numberData={[12, 12, 5, 15, 3, 6]}
             />
           </div>
           <div className="w-2/5">
             <h1 className="text-[2rem] font-bold">Leaves Left</h1>
             <DonutChart
               label={[
-                "Sick Leave",
                 "Causal Leave",
-                "Privilage Leave",
-                "Half-Day Leave",
-                "Quater Leave",
                 "Compensate leave",
+                "Half-Day Leave",
+                "Privilage Leave",
+                "Quater Leave",
+                "Sick Leave",
               ]}
-              numberData={leaveData === null ? [6, 12, 2, 4, 5, 3] : leaveData}
+              numberData={
+                leaveData === null ? [12, 12, 5, 15, 3, 6] : leaveData
+              }
             />
           </div>
         </div>

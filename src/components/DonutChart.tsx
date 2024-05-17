@@ -32,7 +32,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ label, numberData }) => {
                 borderWidth: 1,
               },
             ],
-          }, 
+          },
           options: {
             responsive: true,
           },

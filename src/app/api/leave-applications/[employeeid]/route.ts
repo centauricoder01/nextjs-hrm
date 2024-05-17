@@ -1,7 +1,6 @@
 import { connect } from "@/db/db";
 import leaveDataModel from "@/model/leave-data.model";
 import { NextResponse } from "next/server";
-import { ILeaveData } from "@/types/modals.types";
 
 interface Params {
   employeeid: string;
@@ -20,18 +19,28 @@ export async function GET(request: Request, { params }: { params: Params }) {
         {
           success: true,
           message:
-            "Please Provide Correct EmployeeID Or Leave Data is Available",
+            "Please Provide Correct EmployeeID Or Leave Data is Not Available",
           responseBody: null,
         },
         { status: 200 }
       );
     }
 
+    // Convert Mongoose document to plain JavaScript object
+    const leaveDataObject = findLeaveDataById.toObject();
+
+    const leaveValues = Object.entries(leaveDataObject)
+      .filter(
+        ([key, value]) =>
+          key.startsWith("remaining") && typeof value === "number"
+      )
+      .map(([key, value]) => value);
+
     return NextResponse.json(
       {
         success: true,
-        message: `Attendence Detail of the Employee.`,
-        responseBody: findLeaveDataById,
+        message: `Attendance Detail of the Employee.`,
+        responseBody: leaveValues,
       },
       { status: 200 }
     );
