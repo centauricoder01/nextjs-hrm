@@ -4,101 +4,162 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-// PAGINATION LINK START FROM HERE
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import axios from "axios";
 
-interface employeeBluePrint {
+interface EmployeeBluePrint {
   _id: string;
   profileImage: string;
   fullName: string;
-  employeId: string;
-  designation: string;
   employeeId: string;
+  designation: string;
 }
 
 const ViewEmployees = () => {
-  const [getEmployees, setGetEmployees] = useState<employeeBluePrint[]>([]);
+  const [employees, setEmployees] = useState<EmployeeBluePrint[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [employeesPerPage] = useState(2);
+
   useEffect(() => {
     axios
       .get("/api/employees")
       .then((res) => {
-        setGetEmployees(res.data.responseBody);
+        setEmployees(res.data.responseBody);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  const handleSearch = () => {
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  const filteredEmployees = employees.filter((employee) =>
+    employee.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Get current employees
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = filteredEmployees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <>
       <Navbar />
-      <div className=" bg-[#c3eeff] m-5 p-5 rounded-md">
+      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
         <div className="sm:text-left text-center">
           <h1 className="font-bold mb-5 text-[2rem]">
-            All Employees {getEmployees.length}{" "}
+            All Employees {filteredEmployees.length}
           </h1>
         </div>
 
         <div className="flex justify-between items-center gap-5">
           <Input
             className="w-full mb-5 mt-5 bg-white"
-            placeholder="Search Empoloyee"
+            placeholder="Search Employee"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="border bg-green-800 rounded-lg shadow-slate-500 text-white p-2.5 hover:bg-green-600">
+          <button
+            className="border bg-green-800 rounded-lg shadow-slate-500 text-white p-2.5 hover:bg-green-600"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>
-        {getEmployees.map((ele, i) => (
+
+        {currentEmployees.map((employee, i) => (
           <div
             key={i}
             className="border flex flex-col justify-between sm:flex-row items-center p-2 rounded-md bg-white shadow-2xl mb-4"
           >
             <Image
-              src={ele.profileImage}
+              src={employee.profileImage}
               width={70}
               height={70}
               className="rounded-full mb-2"
               alt="Avatar"
             />
 
-            <p className="font-bold mb-2">{ele.fullName}</p>
-            <p className="font-bold mb-2">{ele.designation}</p>
-            <p className="font-bold mb-2">{ele.employeeId}</p>
-            <Link href={`/console/admin/viewemployees/${ele._id}`} passHref>
+            <p className="font-bold mb-2">{employee.fullName}</p>
+            <p className="font-bold mb-2">{employee.designation}</p>
+            <p className="font-bold mb-2">{employee.employeeId}</p>
+            <Link
+              href={`/console/admin/viewemployees/${employee._id}`}
+              passHref
+            >
               <p className="font-bold text-blue-500 hover:underline">
                 View Full Detail
               </p>
             </Link>
           </div>
         ))}
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" className="text-white" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" className="text-white">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis className="text-white" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" className="text-white" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+
+        <Pagination
+          employeesPerPage={employeesPerPage}
+          totalEmployees={filteredEmployees.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
       </div>
     </>
+  );
+};
+
+interface PaginationProps {
+  employeesPerPage: number;
+  totalEmployees: number;
+  paginate: (pageNumber: number) => void;
+  currentPage: number;
+}
+
+const Pagination: React.FC<PaginationProps> = ({
+  employeesPerPage,
+  totalEmployees,
+  paginate,
+  currentPage,
+}) => {
+  const totalPages = Math.ceil(totalEmployees / employeesPerPage);
+
+  return (
+    <div className="flex justify-center mt-4">
+      <nav>
+        <ul className="pagination flex space-x-2 items-center">
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              className="page-link px-3 py-1 border rounded-lg bg-blue-500 text-white hover:bg-blue-800"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+          </li>
+          <li className="page-number px-3 py-1">
+            Page {currentPage} of {totalPages}
+          </li>
+          <li
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
+          >
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              className="page-link px-3 py-1 border rounded-lg bg-blue-500 text-white hover:bg-blue-800"
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 };
 

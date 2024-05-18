@@ -3,30 +3,97 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import { IEmployee } from "@/types/modals.types";
+import { IEmployee, IEmployeeWithEdits } from "@/types/modals.types";
 
 const SingleEmployee = () => {
   const { employeeid } = useParams<{ employeeid: string }>();
-  const [SingleEmployeeInfo, setSingleEmployeeInfo] = useState<IEmployee>();
+  const router = useRouter();
+  const [singleEmployeeInfo, setSingleEmployeeInfo] =
+    useState<IEmployee | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState<IEmployeeWithEdits>({
+    _id: "",
+    profileImage: "",
+    fullName: "",
+    employeeId: "",
+    designation: "",
+    birthDate: "",
+    joinDate: "",
+    maritalStatus: "",
+    mobileNumber: 0,
+    fullAddress: "",
+    leaveDate: "",
+    reasonForExit: "",
+    department: "",
+    email: "",
+    bankAccountNumber: 0,
+    bankIFSCCode: "",
+    bankName: "",
+    panNumber: "",
+    aadharNumber: 0,
+    state: "",
+    emergencyContactNumber: 0,
+    gender: "",
+    role: "",
+    password: "",
+  });
 
   useEffect(() => {
     axios
       .get(`/api/employees/${employeeid}`)
       .then((res) => {
         setSingleEmployeeInfo(res.data.responseBody);
+        setFormData(res.data.responseBody);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [employeeid]);
 
-  if (!SingleEmployeeInfo) {
-    return <h1>Loading... </h1>;
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    axios
+      .patch(`/api/employees/${employeeid}`, formData)
+      .then((res) => {
+        setSingleEmployeeInfo(res.data.responseBody);
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDelete = () => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this employee?"
+    );
+    if (confirmDelete) {
+      axios
+        .delete(`/api/employees/${employeeid}`)
+        .then(() => {
+          router.push("/console/admin/viewemployees");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  if (!singleEmployeeInfo) {
+    return <h1>Loading...</h1>;
   }
-  const birthDate = new Date(SingleEmployeeInfo?.birthDate);
-  const joiningDate = new Date(SingleEmployeeInfo?.joinDate);
+
+  const birthDate = new Date(singleEmployeeInfo.birthDate);
+  const joiningDate = new Date(singleEmployeeInfo.joinDate);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -36,165 +103,360 @@ const SingleEmployee = () => {
   return (
     <>
       <Navbar />
-      <div className=" bg-[#c3eeff] m-5 p-5 rounded-md flex justify-center items-center flex-col">
+      <div className="bg-[#c3eeff] m-5 p-5 rounded-md flex justify-center items-center flex-col">
         <Image
-          src={SingleEmployeeInfo.profileImage}
-          width={100}
-          height={100}
+          src={singleEmployeeInfo.profileImage}
+          width={200}
+          height={200}
           className="rounded-full mb-2"
           alt="Avatar"
         />
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            EmployeeId -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.employeeId} </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Name -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.fullName}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Gender -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.gender}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Birth Date -{" "}
-            <span className="font-bold">
-              {birthDate.toLocaleDateString("en-US", options)}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Marital Status -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.maritalStatus}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Mobile Number -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.mobileNumber}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Address -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.fullAddress}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Joining Date -{" "}
-            <span className="font-bold">
-              {joiningDate.toLocaleDateString("en-US", options)}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Leave Date -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.leaveDate}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Reave For Leave -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.reasonForExit}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Department -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.department}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Degisnation -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.designation}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            Email -{" "}
-            <span className="font-bold">{SingleEmployeeInfo?.email}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            password - <span className="font-bold">null</span>
-          </p>
-        </div>
 
-        {/* <h1>Bank Details </h1> */}
+        {isEditing ? (
+          <form
+            className="w-full flex flex-wrap gap-2 justify-center items-center"
+            onSubmit={handleEditSubmit}
+          >
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Full Name"
+            />
+            <input
+              type="text"
+              name="designation"
+              value={formData.designation}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Designation"
+            />
+            <input
+              type="text"
+              name="fullAddress"
+              value={formData.fullAddress}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Full Address"
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Email"
+            />
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Department"
+            />
+            {/* Add other input fields similarly */}
+            <input
+              type="text"
+              name="employeeId"
+              value={formData.employeeId}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Employee ID"
+            />
+            <input
+              type="text"
+              name="gender"
+              value={formData.gender}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Gender"
+            />
+            <input
+              type="date"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Birth Date"
+            />
+            <input
+              type="text"
+              name="maritalStatus"
+              value={formData.maritalStatus}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Marital Status"
+            />
+            <input
+              type="number"
+              name="mobileNumber"
+              value={formData.mobileNumber}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Mobile Number"
+            />
+            <input
+              type="text"
+              name="reasonForExit"
+              value={formData.reasonForExit}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Reason for Exit"
+            />
+            <input
+              type="date"
+              name="joinDate"
+              value={formData.joinDate}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Joining Date"
+            />
+            <input
+              type="date"
+              name="leaveDate"
+              value={formData.leaveDate}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Leave Date"
+            />
+            <input
+              type="number"
+              name="bankAccountNumber"
+              value={formData.bankAccountNumber}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Bank Account Number"
+            />
+            <input
+              type="text"
+              name="bankIFSCCode"
+              value={formData.bankIFSCCode}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Bank IFSC Code"
+            />
+            <input
+              type="text"
+              name="bankName"
+              value={formData.bankName}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Bank Name"
+            />
+            <input
+              type="text"
+              name="panNumber"
+              value={formData.panNumber}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="PAN Number"
+            />
+            <input
+              type="number"
+              name="aadharNumber"
+              value={formData.aadharNumber}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Aadhar Number"
+            />
+            <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="State"
+            />
+            <input
+              type="number"
+              name="emergencyContactNumber"
+              value={formData.emergencyContactNumber}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder="Emergency Contact Number"
+            />
 
-        <h1 className="font-bold text-left m-5 text-[1.5rem]">
-          Bank Details and other Info.
-        </h1>
+            <button
+              type="submit"
+              className="bg-green-600 hover:bg-green-900 text-white text-[1.2rem] p-3 rounded w-full sm:w-[30%]"
+            >
+              Save
+            </button>
+          </form>
+        ) : (
+          <>
+            <div className="flex flex-wrap justify-center items-center gap-2">
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                EmployeeId -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.employeeId}{" "}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Name -{" "}
+                <span className="font-bold">{singleEmployeeInfo.fullName}</span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Gender -{" "}
+                <span className="font-bold">{singleEmployeeInfo.gender}</span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Birth Date -{" "}
+                <span className="font-bold">
+                  {birthDate.toLocaleDateString("en-US", options)}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Marital Status -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.maritalStatus}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Mobile Number -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.mobileNumber}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Address -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.fullAddress}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Joining Date -{" "}
+                <span className="font-bold">
+                  {joiningDate.toLocaleDateString("en-US", options)}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Leave Date -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.leaveDate}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Reason For Leave -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.reasonForExit}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Department -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.department}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Designation -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.designation}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Email -{" "}
+                <span className="font-bold">{singleEmployeeInfo.email}</span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Password - <span className="font-bold">null</span>
+              </p>
+            </div>
+            <h1 className="font-bold text-left m-5 text-[1.5rem]">
+              Bank Details and other Info.
+            </h1>
 
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            BANK ACCOUNT NUMBER -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.bankAccountNumber}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            BANK IFSC CODE -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.bankIFSCCode}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            BANK NAME -
-            <span className="font-bold">{SingleEmployeeInfo?.bankName}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            PAN -
-            <span className="font-bold">{SingleEmployeeInfo?.panNumber}</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            AADHAR NO -
-            <span className="font-bold">
-              {SingleEmployeeInfo?.aadharNumber}
-            </span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            STATE - <span className="font-bold">MADHYA PRADESH</span>
-          </p>
-          <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-            EMERGENCY CONTACT NO -{" "}
-            <span className="font-bold">
-              {SingleEmployeeInfo?.emergencyContactNumber}
-            </span>
-          </p>
-        </div>
-        <h1 className="font-bold text-left m-5 text-[1.5rem]">
-          Aadhaar and Pan Image.
-        </h1>
-        <div className="flex flex-wrap justify-center items-center gap-5">
-          <div className="text-center border-2 border-black rounded-sm">
-            <p>Personal Aadhaar card</p>
-            <Image
-              src={SingleEmployeeInfo?.aadhaarImage}
-              alt="Aadhaar Image"
-              width={300}
-              height={150}
-              className="rounded-sm"
-            />
-          </div>
-          <div className="text-center border-2 border-black rounded-sm">
-            <p>Personal Pancard</p>
-            <Image
-              src={SingleEmployeeInfo?.pancardImage}
-              alt="pan Image"
-              width={300}
-              height={150}
-              className="rounded-sm"
-            />
-          </div>
-          <div className="text-center border-2 border-black rounded-sm">
-            <p>Relative Aadhaar Card</p>
-            <Image
-              src={SingleEmployeeInfo?.relativeAadhaarImage}
-              alt="relateive Image"
-              width={300}
-              height={150}
-              className="rounded-sm"
-            />
-          </div>
-        </div>
+            <div className="flex flex-wrap justify-center items-center gap-2">
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Bank Account Number -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.bankAccountNumber}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Bank IFSC Code -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.bankIFSCCode}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Bank Name -{" "}
+                <span className="font-bold">{singleEmployeeInfo.bankName}</span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                PAN -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.panNumber}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Aadhar No -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.aadharNumber}
+                </span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                State -{" "}
+                <span className="font-bold">{singleEmployeeInfo.state}</span>
+              </p>
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Emergency Contact No -{" "}
+                <span className="font-bold">
+                  {singleEmployeeInfo.emergencyContactNumber}
+                </span>
+              </p>
+            </div>
+            <h1 className="font-bold text-left m-5 text-[1.5rem]">
+              Aadhaar and Pan Image.
+            </h1>
+            <div className="flex flex-wrap justify-center items-center gap-5">
+              <div className="text-center border-2 border-black rounded-sm">
+                <p>Personal Aadhaar card</p>
+                <Image
+                  src={singleEmployeeInfo.aadhaarImage}
+                  alt="Aadhaar Image"
+                  width={300}
+                  height={150}
+                  className="rounded-sm"
+                />
+              </div>
+              <div className="text-center border-2 border-black rounded-sm">
+                <p>Personal Pancard</p>
+                <Image
+                  src={singleEmployeeInfo.pancardImage}
+                  alt="Pan Image"
+                  width={300}
+                  height={150}
+                  className="rounded-sm"
+                />
+              </div>
+              <div className="text-center border-2 border-black rounded-sm">
+                <p>Relative Aadhaar Card</p>
+                <Image
+                  src={singleEmployeeInfo.relativeAadhaarImage}
+                  alt="Relative Aadhaar Image"
+                  width={300}
+                  height={150}
+                  className="rounded-sm"
+                />
+              </div>
+            </div>
+          </>
+        )}
         <div className="flex justify-center items-center gap-5 mt-10">
-          <Button className="bg-green-600 hover:bg-green-900 text-white text-[1.2rem] w-40 p-5">
-            Edit
+          <Button
+            className="bg-green-600 hover:bg-green-900 text-white text-[1.2rem] w-40 p-5"
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {isEditing ? "Cancel" : "Edit"}
           </Button>
-          <Button className="bg-red-600 hover:bg-red-900 text-white text-[1.2rem] w-40 p-5">
+          <Button
+            className="bg-red-600 hover:bg-red-900 text-white text-[1.2rem] w-40 p-5"
+            onClick={handleDelete}
+          >
             Delete
           </Button>
         </div>

@@ -1,34 +1,63 @@
 import { Document, Schema } from "mongoose";
 
+// In your types/modals.types.ts file
 export interface IEmployee {
-  employeeId: string;
+  _id: string;
   profileImage: string;
-  gender: string;
   fullName: string;
+  employeeId: string;
+  designation: string;
   birthDate: string;
+  joinDate: string;
   maritalStatus: string;
   mobileNumber: number;
   fullAddress: string;
-  joinDate: string;
   leaveDate: string;
   reasonForExit: string;
   department: string;
-  designation: string;
   email: string;
-  role: string;
-  password: string;
   bankAccountNumber: number;
   bankIFSCCode: string;
   bankName: string;
   panNumber: string;
   aadharNumber: number;
   state: string;
+  emergencyContactNumber: number;
+  gender: string;
+  role: string;
+  password: string;
   aadhaarImage: string;
   pancardImage: string;
   relativeAadhaarImage: string;
-  office: string;
-  emergencyContactNumber: number;
 }
+
+export interface IEmployeeWithEdits {
+  _id: string;
+  profileImage: string;
+  fullName: string;
+  employeeId: string;
+  designation: string;
+  birthDate: string;
+  joinDate: string;
+  maritalStatus: string;
+  mobileNumber: number;
+  fullAddress: string;
+  leaveDate: string;
+  reasonForExit: string;
+  department: string;
+  email: string;
+  bankAccountNumber: number;
+  bankIFSCCode: string;
+  bankName: string;
+  panNumber: string;
+  aadharNumber: number;
+  state: string;
+  emergencyContactNumber: number;
+  gender: string;
+  role: string;
+  password: string;
+}
+
 
 export interface IAttendence extends Document {
   date: string;
