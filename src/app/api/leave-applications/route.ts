@@ -208,7 +208,34 @@ export async function PATCH(request: Request) {
     };
     const leaveField = leaveTypeFieldMap[getLeaveTypeOfEmployee];
 
-    if (leaveField && findLeaveDataById[leaveField] > 0) {
+    console.log(leaveField, "leaveField");
+
+    if (
+      leaveField === "remainingHalfdayLeave" ||
+      (leaveField === "remainingQuarterLeave" &&
+        findLeaveDataById[leaveField] > 0)
+    ) {
+      const leaveData = findLeaveDataById.toObject() as any;
+
+      // Decrement the leave by one
+      leaveData[leaveField] = (leaveData[leaveField] as number) - 1;
+
+      await findLeaveDataById.updateOne(
+        {
+          [leaveField]: leaveData[leaveField],
+        },
+        { new: true }
+      );
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `${getLeaveTypeOfEmployee} has been decremented by 1.`,
+          responseBody: null,
+        },
+        { status: 200 }
+      );
+    } else if (leaveField && findLeaveDataById[leaveField] > 0) {
       // Decrement the leave by one
       // Cast to any to bypass TypeScript error and then to number
       const leaveData = findLeaveDataById.toObject() as any;
@@ -240,9 +267,6 @@ export async function PATCH(request: Request) {
         },
         { new: true }
       );
-
-      console.log(leaveData, "leaveData");
-      console.log(findLeaveDataById, "findLeaveDataById");
 
       return NextResponse.json(
         {

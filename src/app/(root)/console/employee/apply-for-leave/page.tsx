@@ -63,10 +63,14 @@ const Leave_Application = () => {
     values.endingDate = endDateISO;
     values.userId = employeeUserId;
 
-    if (values.startingDate === values.endingDate) {
-      toast({
-        title: "Same Data Not Allowed",
-        description: `Staring Date and Ending Date is Same by default, Please Increase the ending data by 1 or more.`,
+    if (
+      values.startingDate === values.endingDate &&
+      values.leaveType !== "Halfday Leave" &&
+      values.leaveType !== "Quater (1/4) Leave"
+    ) {
+      return toast({
+        title: "Same Date Not Allowed",
+        description: `Starting Date and Ending Date are the same. Please increase the ending date by 1 or more.`,
         variant: "destructive",
       });
     }
