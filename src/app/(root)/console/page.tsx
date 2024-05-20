@@ -25,6 +25,9 @@ const Console = () => {
   const [leaveApplication, setLeaveApplication] =
     useState<ILeaveApplication[]>();
 
+  const [totalEmployee, setTotalEmployees] = useState(0);
+  const [totalAttendence, setTotalAttendence] = useState(0);
+
   useEffect(() => {
     axios
       .get("/api/leave-applications")
@@ -49,6 +52,19 @@ const Console = () => {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("/api/all-data")
+      .then((res) => {
+        console.log(res.data.responseBody);
+        setTotalEmployees(res.data.responseBody.totalEmployee);
+        setTotalAttendence(res.data.responseBody.totalAttendence);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -59,7 +75,7 @@ const Console = () => {
             <h1 className="font-bold text-[1.2rem] text-green-800">
               Total Employees
             </h1>
-            <p className="font-bold text-[1.1rem]">65</p>
+            <p className="font-bold text-[1.1rem]">{totalEmployee}</p>
           </div>
           <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
             <h1 className="font-bold text-[1.2rem] text-red-800">
@@ -73,7 +89,7 @@ const Console = () => {
             <h1 className="font-bold text-[1.2rem] text-blue-800">
               Today&apos;s Attendance
             </h1>
-            <p className="font-bold text-[1.1rem]">60</p>
+            <p className="font-bold text-[1.1rem]">{totalAttendence}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-4 md:gap-10 justify-center items-center">

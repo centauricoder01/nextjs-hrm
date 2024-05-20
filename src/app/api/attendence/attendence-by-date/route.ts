@@ -1,6 +1,5 @@
 import { connect } from "@/db/db";
 import AttendenceModel from "@/model/attendence.model";
-import EmployeeModel from "@/model/employee.model";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -8,7 +7,6 @@ export async function GET(request: Request) {
   await connect();
   try {
     const todayDate = new Date().toISOString().split("T")[0];
-    console.log(todayDate);
 
     const getAttendenceByDate = await AttendenceModel.find({
       date: todayDate,
