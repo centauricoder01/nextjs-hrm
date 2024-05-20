@@ -63,6 +63,7 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
+
     // Get the current date
     const currentDate = new Date();
     const formattedCurrentDate = currentDate.toISOString().split("T")[0];
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
       date: body.date,
       name: findEmployee.fullName,
       employeId: body.employId,
-      userId: findEmployee._id,
+      userId: new mongoose.Types.ObjectId(findEmployee._id),
       timeInLocation: body.location,
       timeInSelfie: body.selfie,
     };

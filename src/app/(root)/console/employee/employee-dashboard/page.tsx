@@ -56,7 +56,7 @@ const Employee_Dashboard = () => {
                 "Privilage Leave",
                 "Quater Leave",
               ]}
-              numberData={[12, 12, 5, 15, 3, 6]}
+              numberData={[6, 12, 12, 5, 15, 3]}
             />
           </div>
           <div className="w-2/5">
@@ -71,13 +71,13 @@ const Employee_Dashboard = () => {
                 "Quater Leave",
               ]}
               numberData={
-                leaveData === null ? [12, 12, 5, 15, 3, 6] : leaveData
+                leaveData === null ? [6, 12, 12, 5, 15, 3] : leaveData
               }
             />
           </div>
         </div>
         <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">
-          <div className="border bg-white p-5 h-96 w-[48%] overflow-y-scroll overflow-x-hidden rounded-sm">
+          <div className="border bg-white p-5 h-96 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
             <h1 className="font-bold ">Notification</h1>
             {arr.map((e) => (
               <div className="mt-2 shadow-lg p-2 rounded-sm" key={e}>
@@ -89,24 +89,6 @@ const Employee_Dashboard = () => {
                 <div className="flex justify-between mt-5">
                   <p>HR-Admin</p>
                   <p>12 May 2024</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="bg-white p-5 h-96 w-[48%] overflow-y-scroll overflow-x-hidden rounded-sm">
-            <h1 className="font-bold">Messages</h1>
-            {arr.map((e) => (
-              <div key={e} className="mt-5 shadow-lg p-2 rounded-sm">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Repudiandae obcaecati quis excepturi quisquam eveniet
-                  expedita, modi commodi suscipit aut accusantium.
-                </p>
-                <div className="flex justify-between mt-5">
-                  <p>HR-Admin</p>
-                  <div>
-                    <Button>Reply</Button>
-                  </div>
                 </div>
               </div>
             ))}

@@ -1,6 +1,5 @@
 "use client";
 import BasicCartStructure from "@/components/BasicCartStructure";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import Image from "next/image";
@@ -23,7 +22,6 @@ interface ILeaveApplication {
 }
 
 const Console = () => {
-  let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [leaveApplication, setLeaveApplication] =
     useState<ILeaveApplication[]>();
 
@@ -31,11 +29,20 @@ const Console = () => {
     axios
       .get("/api/leave-applications")
       .then((res) => {
-        const filteredLeaveAppliation = res.data.responseBody.filter(
-          (application: ILeaveApplication) =>
-            application.leaveStatus === "Approved"
+        const today = new Date();
+        const filteredLeaveApplication = res.data.responseBody.filter(
+          (application: ILeaveApplication) => {
+            const startingDate = new Date(application.startingDate);
+            const endingDate = new Date(application.endingDate);
+
+            return (
+              application.leaveStatus === "Approved" &&
+              today >= startingDate &&
+              today <= endingDate
+            );
+          }
         );
-        setLeaveApplication(filteredLeaveAppliation);
+        setLeaveApplication(filteredLeaveApplication);
       })
       .catch((err) => {
         console.log(err);
@@ -45,8 +52,7 @@ const Console = () => {
   return (
     <>
       <Navbar />
-
-      <div className="  bg-[#c3eeff] m-5 p-5 rounded-md">
+      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
         <h1 className="text-left text-[3rem] font-bold mb-5">Overview</h1>
         <div className="flex flex-wrap gap-4 justify-start items-center mb-4">
           <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
@@ -65,23 +71,22 @@ const Console = () => {
           </div>
           <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
             <h1 className="font-bold text-[1.2rem] text-blue-800">
-              Today&apos;s Attendence
+              Today&apos;s Attendance
             </h1>
             <p className="font-bold text-[1.1rem]">60</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-4 md:gap-10 justify-center items-center">
           {/* EMPLOYEE ON LEAVE */}
-
-          {leaveApplication?.length === undefined ? (
-            <LoadingSpinner />
+          {leaveApplication?.length === 0 ? (
+            <p className="mt-5 font-bold">No Employees are on Leave...</p>
           ) : (
             <BasicCartStructure>
               <p className="font-bold text-left mb-5 text-[1.2rem] text-red-800">
                 Employee on Leave
               </p>
               <div className="flex flex-col gap-5">
-                {leaveApplication.map((ele, i) => {
+                {leaveApplication?.map((ele, i) => {
                   const startingDate = ele.startingDate.split("T")[0];
                   const endingDate = ele.endingDate.split("T")[0];
                   return (
@@ -92,7 +97,7 @@ const Console = () => {
                       <div className="flex justify-center items-center gap-3">
                         <div>
                           <Image
-                            src={ele.userId.profileImage}
+                            src={ele.userId?.profileImage}
                             width={70}
                             height={70}
                             className="rounded-full"
@@ -100,11 +105,11 @@ const Console = () => {
                           />
                         </div>
                         <div>
-                          <p>{ele.userId.fullName}</p>
-                          <p>{ele.userId.designation}</p>
+                          <p>{ele.userId?.fullName}</p>
+                          <p>{ele.userId?.designation}</p>
                         </div>
                       </div>
-                      <div className=" w-1/2 flex flex-col gap-2">
+                      <div className="w-1/2 flex flex-col gap-2">
                         <p className="bg-red-500 text-center text-white rounded-full p-2">
                           {startingDate} - {endingDate}
                         </p>
@@ -118,8 +123,6 @@ const Console = () => {
               </div>
             </BasicCartStructure>
           )}
-
-       
         </div>
       </div>
     </>

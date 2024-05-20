@@ -112,15 +112,21 @@ export async function GET(request: Request) {
   // Connect to the database
   await connect();
   try {
-    const AllLeaveApplication = await leaveModel.find().populate({
+    const allLeaveApplications = await leaveModel.find().populate({
       path: "userId",
       select: "fullName profileImage designation",
     });
+
+    // Filter out leave applications where the user has been deleted
+    const filteredLeaveApplications = allLeaveApplications.filter(
+      (application) => application.userId !== null
+    );
+
     return NextResponse.json(
       {
         success: true,
-        message: "All Leave Application Fetched Successfully",
-        responseBody: AllLeaveApplication,
+        message: "All Leave Applications Fetched Successfully",
+        responseBody: filteredLeaveApplications,
       },
       { status: 200 }
     );
@@ -193,7 +199,7 @@ export async function PATCH(request: Request) {
 
     // Create a mapping of leave type strings to the corresponding field names
     const leaveTypeFieldMap: { [key: string]: keyof ILeaveData } = {
-      "Compensate Leave": "remainingCompensateLeave",
+      "Compensate leave": "remainingCompensateLeave",
       "Sick Leave": "remainingSickLeave",
       "Causal Leave": "remainingCausalLeave",
       "Privilege Leave": "remainingPrivilegeLeave",
@@ -234,6 +240,9 @@ export async function PATCH(request: Request) {
         },
         { new: true }
       );
+
+      console.log(leaveData, "leaveData");
+      console.log(findLeaveDataById, "findLeaveDataById");
 
       return NextResponse.json(
         {

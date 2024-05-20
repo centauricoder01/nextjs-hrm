@@ -29,6 +29,7 @@ export interface IEmployee {
   aadhaarImage: string;
   pancardImage: string;
   relativeAadhaarImage: string;
+  office: string;
 }
 
 export interface IEmployeeWithEdits {
@@ -57,7 +58,6 @@ export interface IEmployeeWithEdits {
   role: string;
   password: string;
 }
-
 
 export interface IAttendence extends Document {
   date: string;

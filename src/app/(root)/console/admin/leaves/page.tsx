@@ -76,8 +76,8 @@ const Leaves = () => {
           <h1 className="font-bold mb-5 text-[2rem]">Leaves Requests</h1>
         </div>
         <div>
-          {!leaveApplication ? (
-            <LoadingSpinner />
+          {leaveApplication?.length === 0 ? (
+            <p>No Leave Request are there...</p>
           ) : (
             <Table>
               <TableHeader>
@@ -93,7 +93,7 @@ const Leaves = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {leaveApplication.map((ele, i) => {
+                {leaveApplication?.map((ele, i) => {
                   const startingDate = ele.startingDate.split("T")[0];
                   const endingDate = ele.endingDate.split("T")[0];
 
@@ -101,14 +101,14 @@ const Leaves = () => {
                     <TableRow key={i}>
                       <TableCell className="font-medium">
                         <Image
-                          src={ele.userId.profileImage}
+                          src={ele?.userId?.profileImage}
                           width={70}
                           height={70}
                           className="rounded-full mb-2"
                           alt="Avatar"
                         />
                       </TableCell>
-                      <TableCell>{ele.userId.fullName}</TableCell>
+                      <TableCell>{ele?.userId?.fullName}</TableCell>
                       <TableCell>{startingDate}</TableCell>
                       <TableCell>{endingDate}</TableCell>
                       <TableCell>{ele.reason}</TableCell>
