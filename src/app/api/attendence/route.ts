@@ -260,33 +260,13 @@ export async function GET(request: Request) {
   await connect();
 
   try {
-    const url = new URL(request.url);
-    const searcParams = new URLSearchParams(url.searchParams);
-    let page = searcParams.get("page");
-    let limit = searcParams.get("limit");
-    const pageNumber = parseInt(page ?? "1", 10);
-    const limitNumber = parseInt(limit ?? "10", 10);
-
-    const skip = (pageNumber - 1) * limitNumber;
-
-    // Query the database
-    const attendanceRecords = await AttendenceModel.find()
-      .skip(skip)
-      .limit(limitNumber);
-
-    // Get the total count of records
-    const totalCount = await AttendenceModel.countDocuments();
+    const attendanceRecords = await AttendenceModel.find();
 
     return NextResponse.json(
       {
         success: true,
         message: "We got you All Attendence data",
-        responseBody: {
-          data: attendanceRecords,
-          totalRecords: totalCount,
-          totalPages: Math.ceil(totalCount / limitNumber),
-          currentPage: page,
-        },
+        responseBody: attendanceRecords,
       },
       { status: 200 }
     );

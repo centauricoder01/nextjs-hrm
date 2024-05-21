@@ -38,7 +38,7 @@ const Attendence = () => {
   const [filterDate, setFilterDate] = useState("");
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const handleFilterButton = () => {
     if (filterDate === "" && filterName === "") {
@@ -65,15 +65,16 @@ const Attendence = () => {
     setFilterName("");
     setFilterDate("");
     setAttendenceData(originalAttendenceData);
-    setCurrentPage(1); // Reset to the first page after resetting
+    setCurrentPage(1);
   };
 
   useEffect(() => {
     axios
       .get(`/api/attendence`)
       .then((res) => {
-        setAttendenceData(res.data.responseBody.data);
-        setOriginalAttendenceData(res.data.responseBody.data);
+        console.log(res.data.responseBody);
+        setAttendenceData(res.data.responseBody);
+        setOriginalAttendenceData(res.data.responseBody);
       })
       .catch((err) => {
         console.log(err);
@@ -155,8 +156,8 @@ const Attendence = () => {
                       <TableCell>
                         <Image
                           src={ele.timeInSelfie}
-                          width={70}
-                          height={70}
+                          width={100}
+                          height={100}
                           className="rounded-sm"
                           alt="Avatar"
                         />
@@ -177,8 +178,8 @@ const Attendence = () => {
                         ) : (
                           <Image
                             src={ele.timeOutSelfie}
-                            width={70}
-                            height={70}
+                            width={100}
+                            height={100}
                             className="rounded-sm"
                             alt="Avatar"
                           />

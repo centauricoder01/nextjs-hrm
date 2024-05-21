@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Location from "@/components/Location";
 import DateTime from "@/components/DateTime";
 import { z } from "zod";
@@ -20,6 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import FormSelect from "@/components/FormSelect";
 import UploadImage from "@/components/UploadImage";
+import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 // TYPE INFERENCES
 interface CloudinaryUploadWidgetInfo {
@@ -52,6 +54,8 @@ const Attendence = () => {
   const [resource, setResource] = useState<
     CloudinaryUploadWidgetInfo | undefined
   >(undefined);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const { toast } = useToast();
 
@@ -67,6 +71,7 @@ const Attendence = () => {
 
   const currentDate = new Date();
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     const mainObject: MainObject = {
       date: currentDate.toISOString().split("T")[0],
       employId: values.employeeId,
@@ -74,6 +79,19 @@ const Attendence = () => {
       selfie: resource?.url,
       attendanceOption: values.attendenceOption,
     };
+
+    function hasEmptyValues(obj: MainObject): boolean {
+      return Object.values(obj).some((value) => !value);
+    }
+
+    if (hasEmptyValues(mainObject)) {
+      setLoading(false);
+      return toast({
+        title: "Error",
+        description: "Please Enter All the Values",
+        variant: "destructive",
+      });
+    }
 
     if (values.attendenceOption === "TimeIn") {
       mainObject.timeIn = currentDate.toLocaleTimeString();
@@ -85,14 +103,16 @@ const Attendence = () => {
       axios
         .post("/api/attendence", mainObject)
         .then((res) => {
-          console.log(res);
           toast({
             title: "TimeIn Message",
             description: res.data.message,
           });
+          setLoading(false);
+          router.push("/");
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
           toast({
             title: "Error Occured ",
             variant: "destructive",
@@ -103,13 +123,15 @@ const Attendence = () => {
       axios
         .patch("/api/attendence", mainObject)
         .then((res) => {
-          console.log(res);
           toast({
             title: "TimeOut Message",
             description: res.data.message,
           });
+          setLoading(false);
+          router.push("/");
         })
         .catch((err) => {
+          setLoading(false);
           toast({
             variant: "destructive",
             title: "Error Occured ",
@@ -165,7 +187,7 @@ const Attendence = () => {
             type="submit"
             className="w-full h-12 flex justify-center items-center bg-green-900 hover:bg-green-700 text-white"
           >
-            Submit
+            {loading ? <LoadingSpinner /> : "Submit"}
           </Button>
         </form>
       </Form>
