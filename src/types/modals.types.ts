@@ -90,3 +90,12 @@ export interface ILeaveData extends Document {
   remainingHalfdayLeave: number;
   remainingQuarterLeave: number;
 }
+
+export interface ITimer extends Document {
+  userId: Schema.Types.ObjectId;
+  date: Date;
+  time: string;
+  workingHourStatus: boolean;
+  startTime: number | null;
+  elapsedTime: number;
+}

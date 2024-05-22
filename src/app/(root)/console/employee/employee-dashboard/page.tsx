@@ -1,31 +1,45 @@
 "use client";
-import DonutChart from "@/components/DonutChart";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-interface localStorageValue {
+interface LocalStorageValue {
   _id: string;
 }
 
+const fetchTime = async (
+  userId: string
+): Promise<{ currentTime: number; workingHourStatus: boolean }> => {
+  const response = await fetch("/api/timer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "get-time", userId }),
+  });
+  const data = await response.json();
+  return data.responseBody; // This should return the correct elapsed time in milliseconds and workingHourStatus
+};
+
 const Employee_Dashboard = () => {
-  const arr = [1, 2, 3, 4, 5];
+  const arr = [1, 2, 3, 4, 5, 56, 7];
   const [leaveData, setLeaveData] = useState<number[] | null>(null);
+  const [time, setTime] = useState<number>(0);
+  const [running, setRunning] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedData = localStorage.getItem("Employee_Info");
       if (storedData) {
-        const employeeInfo: localStorageValue = JSON.parse(storedData);
+        const employeeInfo: LocalStorageValue = JSON.parse(storedData);
+        setUserId(employeeInfo._id);
         axios
           .get(`/api/leave-applications/${employeeInfo._id}`)
           .then((res) => {
@@ -37,7 +51,6 @@ const Employee_Dashboard = () => {
               res.data.responseBody.remainingPrivilegeLeave,
               res.data.responseBody.remainingQuarterLeave,
             ];
-
             setLeaveData(val);
           })
           .catch((err) => {
@@ -47,43 +60,121 @@ const Employee_Dashboard = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const initializeTimer = async () => {
+      if (userId) {
+        const { currentTime, workingHourStatus } = await fetchTime(userId);
+        setTime(currentTime);
+        setRunning(workingHourStatus);
+      }
+    };
+
+    initializeTimer();
+  }, [userId]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined;
+
+    const updateElapsedTime = async () => {
+      try {
+        if (userId) {
+          const { currentTime } = await fetchTime(userId);
+          setTime(currentTime);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (running) {
+      interval = setInterval(updateElapsedTime, 1000);
+    } else if (interval) {
+      clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [running, userId]);
+
+  const handleStart = async () => {
+    if (userId) {
+      const response = await fetch("/api/timer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "start", userId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setRunning(true);
+      }
+    }
+  };
+
+  const handleStop = async () => {
+    if (userId) {
+      const response = await fetch("/api/timer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "stop", userId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setRunning(false);
+      }
+    }
+  };
+
+  const handleResume = async () => {
+    if (userId) {
+      const response = await fetch("/api/timer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "resume", userId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setRunning(true);
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
       <div className="bg-[#89deff] m-5 p-5 rounded-md">
-        {/* CHART IMPLEMENTATION START FROM HERE  */}
-        {/* <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
-          <div className="w-2/5">
-            <h1 className="text-[2rem] font-bold">Total Leaves</h1>
-            <DonutChart
-              label={[
-                "Sick Leave",
-                "Causal Leave",
-                "Compensate leave",
-                "Half-Day Leave",
-                "Privilage Leave",
-                "Quater Leave",
-              ]}
-              numberData={[6, 12, 12, 5, 15, 3]}
-            />
-          </div>
-          <div className="w-2/5">
-            <h1 className="text-[2rem] font-bold">Leaves Left</h1>
-            <DonutChart
-              label={[
-                "Sick Leave",
-                "Causal Leave",
-                "Compensate leave",
-                "Half-Day Leave",
-                "Privilage Leave",
-                "Quater Leave",
-              ]}
-              numberData={
-                leaveData === null ? [6, 12, 12, 5, 15, 3] : leaveData
-              }
-            />
-          </div>
-        </div> */}
+        <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
+          <h1 className="text-[2rem] font-bold">Timer of Today</h1>
+          <p className="border rounded p-3 font-bold">
+            {time >= 0
+              ? new Date(time).toISOString().substr(11, 8)
+              : "00:00:00"}
+          </p>
+          {!running && time === 0 ? (
+            <button
+              onClick={handleStart}
+              className="border p-2 rounded bg-green-400"
+            >
+              Start
+            </button>
+          ) : running ? (
+            <button
+              onClick={handleStop}
+              className="border p-2 rounded bg-red-400"
+            >
+              Stop
+            </button>
+          ) : time > 0 && !running ? (
+            <button
+              onClick={handleResume}
+              className="border p-2 rounded bg-green-400"
+            >
+              Resume
+            </button>
+          ) : null}
+        </div>
         <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
           <div>
             <h1 className="text-[2rem] font-bold mb-5">Leave Table</h1>
@@ -173,6 +264,7 @@ const Employee_Dashboard = () => {
             </Table>
           </div>
         </div>
+
         <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">
           <div className="border bg-white p-5 h-96 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
             <h1 className="font-bold ">Notification</h1>
