@@ -1,5 +1,6 @@
 import { connect } from "@/db/db";
 import leaveModel from "@/model/leave-application.model";
+import EmployeeModel from "@/model/employee.model";
 import leaveDataModel from "@/model/leave-data.model";
 import { ILeaveData } from "@/types/modals.types";
 import { NextResponse } from "next/server";
@@ -16,12 +17,35 @@ export async function POST(request: Request) {
       userId: body.userId,
     });
 
+    let fintUserById = await EmployeeModel.findOne({
+      userId: body.userId,
+    });
+
     // IF USER DATA DOESN'T EXIST IN THE DATABASE
     if (!findLeaveDataById) {
-      findLeaveDataById = new leaveDataModel({
-        userId: body.userId,
-      });
-      await findLeaveDataById.save();
+      if (fintUserById?.office === "Bangalore") {
+        findLeaveDataById = new leaveDataModel({
+          userId: body.userId,
+          remainingCompensateLeave: 12,
+          remainingSickLeave: 6,
+          remainingCausalLeave: 6,
+          remainingPrivilegeLeave: 15,
+          remainingHalfdayLeave: 5,
+          remainingQuarterLeave: 3,
+        });
+      } else {
+        findLeaveDataById = new leaveDataModel({
+          userId: body.userId,
+          remainingCompensateLeave: 12,
+          remainingSickLeave: 6,
+          remainingCausalLeave: 6,
+          remainingPrivilegeLeave: 15,
+          remainingHalfdayLeave: 5,
+          remainingQuarterLeave: 3,
+        });
+      }
+
+      await findLeaveDataById?.save();
     }
 
     // Mapping of leave types to their corresponding fields

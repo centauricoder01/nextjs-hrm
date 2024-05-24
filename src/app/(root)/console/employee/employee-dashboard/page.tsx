@@ -24,15 +24,15 @@ const fetchTime = async (
     body: JSON.stringify({ action: "get-time", userId }),
   });
   const data = await response.json();
-  return data.responseBody; // This should return the correct elapsed time in milliseconds and workingHourStatus
+  return data.responseBody;
 };
 
 const Employee_Dashboard = () => {
-  const arr = [1, 2, 3, 4, 5, 56, 7];
   const [leaveData, setLeaveData] = useState<number[] | null>(null);
   const [time, setTime] = useState<number>(0);
   const [running, setRunning] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [workingHourStatus, setWorkingHourStatus] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -65,7 +65,8 @@ const Employee_Dashboard = () => {
       if (userId) {
         const { currentTime, workingHourStatus } = await fetchTime(userId);
         setTime(currentTime);
-        setRunning(workingHourStatus);
+        setRunning(currentTime > 0 && !workingHourStatus); // Ensure the timer is set to running if it's supposed to be
+        setWorkingHourStatus(workingHourStatus);
       }
     };
 
@@ -74,12 +75,12 @@ const Employee_Dashboard = () => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
-
     const updateElapsedTime = async () => {
       try {
         if (userId) {
-          const { currentTime } = await fetchTime(userId);
+          const { currentTime, workingHourStatus } = await fetchTime(userId);
           setTime(currentTime);
+          setWorkingHourStatus(workingHourStatus);
         }
       } catch (error) {
         console.error(error);
@@ -107,8 +108,11 @@ const Employee_Dashboard = () => {
         body: JSON.stringify({ action: "start", userId }),
       });
       const data = await response.json();
+      console.log(data, "This is Data");
+
       if (data.success) {
         setRunning(true);
+        setTime(0); // Reset time when starting
       }
     }
   };
@@ -121,8 +125,11 @@ const Employee_Dashboard = () => {
         body: JSON.stringify({ action: "stop", userId }),
       });
       const data = await response.json();
+      console.log(data, "This is Data");
+
       if (data.success) {
         setRunning(false);
+        setWorkingHourStatus(data.responseBody >= 7.75 * 60 * 60 * 1000);
       }
     }
   };
@@ -135,6 +142,7 @@ const Employee_Dashboard = () => {
         body: JSON.stringify({ action: "resume", userId }),
       });
       const data = await response.json();
+      console.log(data, "This is Data");
       if (data.success) {
         setRunning(true);
       }
@@ -151,6 +159,9 @@ const Employee_Dashboard = () => {
             {time >= 0
               ? new Date(time).toISOString().substr(11, 8)
               : "00:00:00"}
+          </p>
+          <p className="border rounded p-3 font-bold">
+            {workingHourStatus ? "True" : "False"}
           </p>
           {!running && time === 0 ? (
             <button
@@ -174,6 +185,12 @@ const Employee_Dashboard = () => {
               Resume
             </button>
           ) : null}
+          {/* <button
+            onClick={handleResume}
+            className="border p-2 rounded bg-green-400"
+          >
+            Resume
+          </button> */}
         </div>
         <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
           <div>
@@ -268,19 +285,18 @@ const Employee_Dashboard = () => {
         <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">
           <div className="border bg-white p-5 h-96 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
             <h1 className="font-bold ">Notification</h1>
-            {arr.map((e) => (
-              <div className="mt-2 shadow-lg p-2 rounded-sm" key={e}>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  praesentium vero atque natus repellendus beatae repellat
-                  consequuntur iure alias reprehenderit?
-                </p>
-                <div className="flex justify-between mt-5">
-                  <p>HR-Admin</p>
-                  <p>12 May 2024</p>
-                </div>
+
+            <div className="mt-2 shadow-lg p-2 rounded-sm" key={"e"}>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
+                praesentium vero atque natus repellendus beatae repellat
+                consequuntur iure alias reprehenderit?
+              </p>
+              <div className="flex justify-between mt-5">
+                <p>HR-Admin</p>
+                <p>12 May 2024</p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

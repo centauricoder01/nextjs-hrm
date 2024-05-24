@@ -1,10 +1,6 @@
 import { connect } from "@/db/db";
 import { NextResponse } from "next/server";
 import Timer from "@/model/timer.model";
-import { ObjectId } from "mongoose";
-
-let startTime: number | null = null;
-let elapsedTime = 0;
 
 export async function POST(request: Request) {
   try {
@@ -14,9 +10,8 @@ export async function POST(request: Request) {
 
     const today = new Date().toISOString().slice(0, 10);
 
-    // Check if a timer already exists for the user on the current day
     let timer = await Timer.findOne({
-      userId: new Object(userId),
+      userId: userId,
       date: today,
     });
 
@@ -29,13 +24,13 @@ export async function POST(request: Request) {
             responseBody: null,
           });
         } else {
-          startTime = Date.now();
-          elapsedTime = 0;
+          const startTime = Date.now();
           timer = await Timer.create({
-            userId: new Object(userId),
+            userId,
             date: today,
-            time: elapsedTime.toString(),
-            workingHourStatus: true,
+            startTime,
+            elapsedTime: 0,
+            workingHourStatus: false,
           });
           return NextResponse.json({
             success: true,
@@ -45,47 +40,53 @@ export async function POST(request: Request) {
         }
 
       case "stop":
-        if (startTime !== null) {
-          elapsedTime += Date.now() - startTime;
-          startTime = null;
-        }
-        if (timer) {
-          timer.time = elapsedTime.toString();
-          timer.workingHourStatus = false;
+        if (timer && timer.startTime) {
+          const elapsedTime =
+            timer.elapsedTime + (Date.now() - timer.startTime);
+          timer.elapsedTime = elapsedTime;
+          timer.startTime = null;
+          timer.workingHourStatus = elapsedTime >= 7.75 * 60 * 60 * 1000;
           await timer.save();
+          return NextResponse.json({
+            success: true,
+            message: "stopped",
+            responseBody: elapsedTime,
+          });
         }
         return NextResponse.json({
-          success: true,
-          message: "stopped",
-          responseBody: elapsedTime,
+          success: false,
+          message: "No timer to stop",
+          responseBody: null,
         });
 
       case "resume":
-        if (startTime === null) {
-          startTime = Date.now();
-        }
-        if (timer) {
-          timer.workingHourStatus = true;
+        if (timer && !timer.startTime) {
+          timer.startTime = Date.now();
           await timer.save();
+          return NextResponse.json({
+            success: true,
+            message: "resumed",
+            responseBody: null,
+          });
         }
         return NextResponse.json({
-          success: true,
-          message: "resumed",
+          success: false,
+          message: "No timer to resume",
           responseBody: null,
         });
 
       case "get-time":
-        const storedElapsedTime = timer?.time ? parseInt(timer.time, 10) : 0;
-        const currentTime =
-          startTime !== null
-            ? storedElapsedTime + (Date.now() - startTime)
-            : storedElapsedTime;
+        const storedElapsedTime = timer?.elapsedTime || 0;
+        const currentTime = timer?.startTime
+          ? storedElapsedTime + (Date.now() - timer.startTime)
+          : storedElapsedTime;
+        const workingHourStatus = currentTime >= 7.75 * 60 * 60 * 1000;
         return NextResponse.json({
           success: true,
           message: "Your Current Time",
           responseBody: {
             currentTime,
-            workingHourStatus: timer?.workingHourStatus,
+            workingHourStatus,
           },
         });
 

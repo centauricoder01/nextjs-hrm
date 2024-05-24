@@ -129,7 +129,7 @@ export default function Home() {
           onClick={() => router.push("/attendence")}
           className="border p-4 cursor-pointer rounded-lg bg-cyan-800 w-[100%]"
         >
-          <p>Employee Attdence </p>
+          <p>Employee Attendance </p>
         </div>
       </div>
     </main>
