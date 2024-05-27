@@ -94,8 +94,12 @@ export interface ILeaveData extends Document {
 export interface ITimer extends Document {
   userId: Schema.Types.ObjectId;
   date: Date;
-  time: string;
-  workingHourStatus: boolean;
-  startTime: number | null;
+  startTime: number;
+  endTime: number;
+  breaks: {
+    start?: number;
+    end?: number;
+  }[];
+  isOnBreak: boolean;
   elapsedTime: number;
 }

@@ -17,7 +17,7 @@ interface LocalStorageValue {
 
 const fetchTime = async (
   userId: string
-): Promise<{ currentTime: number; workingHourStatus: boolean }> => {
+): Promise<{ currentTime: number; isOnBreak: boolean }> => {
   const response = await fetch("/api/timer", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -32,7 +32,7 @@ const Employee_Dashboard = () => {
   const [time, setTime] = useState<number>(0);
   const [running, setRunning] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [workingHourStatus, setWorkingHourStatus] = useState<boolean>(false);
+  const [workingStatus, setWorkingStatus] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -63,24 +63,24 @@ const Employee_Dashboard = () => {
   useEffect(() => {
     const initializeTimer = async () => {
       if (userId) {
-        const { currentTime, workingHourStatus } = await fetchTime(userId);
+        const { currentTime, isOnBreak } = await fetchTime(userId);
         setTime(currentTime);
-        setRunning(currentTime > 0 && !workingHourStatus); // Ensure the timer is set to running if it's supposed to be
-        setWorkingHourStatus(workingHourStatus);
+        setRunning(currentTime > 0 && !workingStatus); // Ensure the timer is set to running if it's supposed to be
+        setWorkingStatus(isOnBreak);
       }
     };
 
     initializeTimer();
-  }, [userId]);
+  }, [userId, workingStatus]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
     const updateElapsedTime = async () => {
       try {
         if (userId) {
-          const { currentTime, workingHourStatus } = await fetchTime(userId);
+          const { currentTime, isOnBreak } = await fetchTime(userId);
           setTime(currentTime);
-          setWorkingHourStatus(workingHourStatus);
+          setWorkingStatus(isOnBreak);
         }
       } catch (error) {
         console.error(error);
@@ -122,14 +122,14 @@ const Employee_Dashboard = () => {
       const response = await fetch("/api/timer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "stop", userId }),
+        body: JSON.stringify({ action: "break", userId }),
       });
       const data = await response.json();
       console.log(data, "This is Data");
 
       if (data.success) {
         setRunning(false);
-        setWorkingHourStatus(data.responseBody >= 7.75 * 60 * 60 * 1000);
+        setWorkingStatus(data.responseBody >= 7.75 * 60 * 60 * 1000);
       }
     }
   };
@@ -139,7 +139,7 @@ const Employee_Dashboard = () => {
       const response = await fetch("/api/timer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "resume", userId }),
+        body: JSON.stringify({ action: "continue", userId }),
       });
       const data = await response.json();
       console.log(data, "This is Data");
@@ -148,6 +148,8 @@ const Employee_Dashboard = () => {
       }
     }
   };
+
+  console.log(workingStatus, time);
 
   return (
     <>
@@ -160,9 +162,7 @@ const Employee_Dashboard = () => {
               ? new Date(time).toISOString().substr(11, 8)
               : "00:00:00"}
           </p>
-          <p className="border rounded p-3 font-bold">
-            {workingHourStatus ? "True" : "False"}
-          </p>
+
           {!running && time === 0 ? (
             <button
               onClick={handleStart}
@@ -175,14 +175,14 @@ const Employee_Dashboard = () => {
               onClick={handleStop}
               className="border p-2 rounded bg-red-400"
             >
-              Stop
+              Break
             </button>
           ) : time > 0 && !running ? (
             <button
               onClick={handleResume}
               className="border p-2 rounded bg-green-400"
             >
-              Resume
+              Continue
             </button>
           ) : null}
           {/* <button

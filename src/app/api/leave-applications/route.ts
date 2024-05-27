@@ -29,7 +29,7 @@ export async function POST(request: Request) {
           remainingCompensateLeave: 12,
           remainingSickLeave: 6,
           remainingCausalLeave: 6,
-          remainingPrivilegeLeave: 15,
+          // remainingPrivilegeLeave: 15,
           remainingHalfdayLeave: 5,
           remainingQuarterLeave: 3,
         });
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
           remainingCompensateLeave: 12,
           remainingSickLeave: 6,
           remainingCausalLeave: 6,
-          remainingPrivilegeLeave: 15,
+          // remainingPrivilegeLeave: 15,
           remainingHalfdayLeave: 5,
           remainingQuarterLeave: 3,
         });
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: true,
-          message: `Leave Cannot be Granted, You have Taken or You are Taking more  ${body.leaveType} than you should take.`,
+          message: `Leave Cannot be Granted, You have consumed or You are Taking more  ${body.leaveType} than you should take.`,
           responseBody: null,
         },
         { status: 200 }

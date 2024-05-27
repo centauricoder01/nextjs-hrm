@@ -25,71 +25,90 @@ export async function POST(request: Request) {
           });
         } else {
           const startTime = Date.now();
-          timer = await Timer.create({
+          await Timer.create({
             userId,
             date: today,
             startTime,
-            elapsedTime: 0,
-            workingHourStatus: false,
           });
+        }
+        return NextResponse.json({
+          success: true,
+          message: "started",
+          responseBody: null,
+        });
+      case "break":
+        if (timer && timer.startTime) {
+          const breakTime = Date.now();
+          const changeElapsedTime =
+            timer.elapsedTime + (Date.now() - timer.startTime);
+          timer.elapsedTime = changeElapsedTime;
+          timer.startTime = 0;
+          timer.elapsedTime = changeElapsedTime;
+          timer.breaks.push({ start: breakTime });
+          timer.isOnBreak = true;
+          await timer.save();
           return NextResponse.json({
             success: true,
-            message: "started",
+            message: "Break Has been added",
             responseBody: null,
           });
         }
-
+        return NextResponse.json({
+          success: false,
+          message: "No Timer to break",
+          responseBody: null,
+        });
+      case "continue":
+        if (timer && !timer.startTime) {
+          const continueTime = Date.now();
+          for (let i = 0; i < timer.breaks.length; i++) {
+            if (timer.breaks[i].end === 0) {
+              timer.breaks[i].end = continueTime;
+              break;
+            }
+          }
+          timer.startTime = Date.now();
+          timer.isOnBreak = false;
+          await timer.save();
+          return NextResponse.json({
+            success: true,
+            message: "Timer Has been Continued",
+            responseBody: null,
+          });
+        }
+        return NextResponse.json({
+          success: false,
+          message: "No Timer to Continue",
+          responseBody: null,
+        });
       case "stop":
         if (timer && timer.startTime) {
-          const elapsedTime =
-            timer.elapsedTime + (Date.now() - timer.startTime);
-          timer.elapsedTime = elapsedTime;
-          timer.startTime = null;
-          timer.workingHourStatus = elapsedTime >= 7.75 * 60 * 60 * 1000;
-          await timer.save();
+          timer.endTime = Date.now();
+          timer.save();
           return NextResponse.json({
             success: true,
-            message: "stopped",
-            responseBody: elapsedTime,
-          });
-        }
-        return NextResponse.json({
-          success: false,
-          message: "No timer to stop",
-          responseBody: null,
-        });
-
-      case "resume":
-        if (timer && !timer.startTime) {
-          timer.startTime = Date.now();
-          await timer.save();
-          return NextResponse.json({
-            success: true,
-            message: "resumed",
+            message: "Timer Has been stopped",
             responseBody: null,
           });
         }
         return NextResponse.json({
           success: false,
-          message: "No timer to resume",
+          message: "No Timer to Stop",
           responseBody: null,
         });
-
       case "get-time":
         const storedElapsedTime = timer?.elapsedTime || 0;
         const currentTime = timer?.startTime
           ? storedElapsedTime + (Date.now() - timer.startTime)
           : storedElapsedTime;
-        const workingHourStatus = currentTime >= 7.75 * 60 * 60 * 1000;
         return NextResponse.json({
           success: true,
           message: "Your Current Time",
           responseBody: {
             currentTime,
-            workingHourStatus,
+            isOnBreak: timer?.isOnBreak,
           },
         });
-
       default:
         return NextResponse.json(
           {
