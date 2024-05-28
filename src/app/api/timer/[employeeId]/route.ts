@@ -1,25 +1,29 @@
 import { connect } from "@/db/db";
 import { NextResponse } from "next/server";
-import leaveApplicationModel from "@/model/leave-application.model";
+import Timer from "@/model/timer.model";
 
 interface Params {
-  employeeid: string;
+  employeeId: string;
 }
 
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await connect();
-    const id = params.employeeid;
-    const findLeaveApplicationsById = await leaveApplicationModel.find({
-      userId: id,
+    const id = params.employeeId;
+    const findTimerById = await Timer.find({ userId: id }).populate({
+      path: "userId",
+      select: "fullName profileImage designation",
     });
 
-    if (!findLeaveApplicationsById) {
+    const filteredLeaveApplications = findTimerById.filter(
+      (timer) => timer.userId !== null
+    );
+    if (!filteredLeaveApplications) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "Please Provide Correct EmployeeID Or Leave Application is Not Available",
+            "Please Provide Correct EmployeeID Or Timer is Not Available",
           responseBody: null,
         },
         { status: 200 }
@@ -29,13 +33,13 @@ export async function GET(request: Request, { params }: { params: Params }) {
     return NextResponse.json(
       {
         success: true,
-        message: `Application Detail of the Employee.`,
-        responseBody: findLeaveApplicationsById,
+        message: `Timer Details of the Employee.`,
+        responseBody: findTimerById,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in the Leave Application response:", error);
+    console.error("Error in the Timer response for GET:", error);
     return NextResponse.json(
       {
         success: false,

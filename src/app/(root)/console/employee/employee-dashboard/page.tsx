@@ -15,6 +15,20 @@ interface LocalStorageValue {
   _id: string;
 }
 
+interface showTimerData {
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  elapsedTime: number;
+  userId: {
+    fullName: string;
+  };
+  breaks: {
+    start: number;
+    end: number;
+  }[];
+}
+
 const fetchTime = async (
   userId: string
 ): Promise<{ currentTime: number; isOnBreak: boolean }> => {
@@ -33,6 +47,7 @@ const Employee_Dashboard = () => {
   const [running, setRunning] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [workingStatus, setWorkingStatus] = useState<boolean>(false);
+  const [timerData, setTimerData] = useState<showTimerData[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -100,6 +115,17 @@ const Employee_Dashboard = () => {
     };
   }, [running, userId]);
 
+  useEffect(() => {
+    axios
+      .get(`/api/timer/${userId}`)
+      .then((res) => {
+        setTimerData(res.data.responseBody);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userId]);
+
   const handleStart = async () => {
     if (userId) {
       const response = await fetch("/api/timer", {
@@ -149,8 +175,6 @@ const Employee_Dashboard = () => {
     }
   };
 
-  console.log(workingStatus, time);
-
   return (
     <>
       <Navbar />
@@ -185,12 +209,6 @@ const Employee_Dashboard = () => {
               Continue
             </button>
           ) : null}
-          {/* <button
-            onClick={handleResume}
-            className="border p-2 rounded bg-green-400"
-          >
-            Resume
-          </button> */}
         </div>
         <div className="flex justify-between items-center gap-10 w-full bg-white mt-10 p-5 rounded">
           <div>
@@ -283,19 +301,77 @@ const Employee_Dashboard = () => {
         </div>
 
         <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">
-          <div className="border bg-white p-5 h-96 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
-            <h1 className="font-bold ">Notification</h1>
+          <div className="border bg-white min-h-[1000px] max-h-[1000px] p-5 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
+            <h1 className="font-bold text-[2rem]">Timer Details</h1>
+            <div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>S.no</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Start Time</TableHead>
+                    <TableHead>End Time</TableHead>
+                    <TableHead>Total Break</TableHead>
+                    <TableHead>Working Hours</TableHead>
+                    <TableHead>Breaks</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {timerData?.length > 0
+                    ? timerData.map((ele, i) => {
+                        let changeDate = new Date(ele.date)
+                          .toISOString()
+                          .slice(0, 10);
+                        let changeStartTime = new Date()
+                          .toLocaleTimeString()
+                          .slice(0, 8);
+                        let changeEndTime = new Date()
+                          .toLocaleTimeString()
+                          .slice(0, 8);
+                        let totalTime = new Date(ele.elapsedTime)
+                          .toISOString()
+                          .substr(11, 8);
 
-            <div className="mt-2 shadow-lg p-2 rounded-sm" key={"e"}>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                praesentium vero atque natus repellendus beatae repellat
-                consequuntur iure alias reprehenderit?
-              </p>
-              <div className="flex justify-between mt-5">
-                <p>HR-Admin</p>
-                <p>12 May 2024</p>
-              </div>
+                        return (
+                          <TableRow key={i}>
+                            <TableCell>{i + 1}</TableCell>
+                            <TableCell>{ele.userId.fullName}</TableCell>
+                            <TableCell>{changeDate}</TableCell>
+                            <TableCell>{changeStartTime}</TableCell>
+                            <TableCell>{changeEndTime}</TableCell>
+                            <TableCell>{ele.breaks.length}</TableCell>
+                            <TableCell>{totalTime}</TableCell>
+                            <TableCell>
+                              {ele.breaks.map((ele, i) => {
+                                const options: Intl.DateTimeFormatOptions = {
+                                  hour: "2-digit" as "2-digit",
+                                  minute: "2-digit" as "2-digit",
+                                  second: "2-digit" as "2-digit",
+                                  timeZone: "Asia/Kolkata",
+                                };
+
+                                const breakStartTime = new Date(
+                                  ele.start
+                                ).toLocaleTimeString("en-IN", options);
+                                const breakEndTime = new Date(
+                                  ele.end
+                                ).toLocaleTimeString("en-IN", options);
+
+                                return (
+                                  <p key={i}>
+                                    Start Time - {breakStartTime} &#160; &#160;
+                                    End Time - {breakEndTime}
+                                  </p>
+                                );
+                              })}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    : null}
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>
