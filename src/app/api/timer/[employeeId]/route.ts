@@ -10,6 +10,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await connect();
     const id = params.employeeId;
+
     const findTimerById = await Timer.find({ userId: id }).populate({
       path: "userId",
       select: "fullName profileImage designation",

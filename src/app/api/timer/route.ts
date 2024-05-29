@@ -29,6 +29,7 @@ export async function POST(request: Request) {
             userId,
             date: today,
             startTime,
+            captureStart: Date.now(),
           });
         }
         return NextResponse.json({
@@ -83,7 +84,12 @@ export async function POST(request: Request) {
         });
       case "stop":
         if (timer && timer.startTime) {
-          timer.endTime = Date.now();
+          timer.captureEnd = Date.now();
+          const changeElapsedTime =
+            timer.elapsedTime + (Date.now() - timer.startTime);
+          timer.elapsedTime = changeElapsedTime;
+          timer.startTime = 0;
+          timer.elapsedTime = changeElapsedTime;
           timer.save();
           return NextResponse.json({
             success: true,
@@ -131,6 +137,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-
-

@@ -93,9 +93,10 @@ export interface ILeaveData extends Document {
 
 export interface ITimer extends Document {
   userId: Schema.Types.ObjectId;
+  captureStart: number;
   date: Date;
   startTime: number;
-  endTime: number;
+  captureEnd: number;
   breaks: {
     start?: number;
     end?: number;

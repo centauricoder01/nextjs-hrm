@@ -75,9 +75,9 @@ export default function Home() {
   }
 
   return (
-    <main className="dark flex min-h-screen flex-col items-center  justify-center gap-4 p-2 bg-[url('../../public/e.jpg')] fixed inset-0 bg-no-repeat bg-cover bg-center text-zinc-50">
+    <main className="dark flex min-h-screen flex-col items-center  justify-center gap-4 p-2 bg-[url('../../public/e.png')] fixed inset-0 bg-no-repeat bg-cover bg-center text-zinc-50">
       <div>
-        <Image src={planEduImage} alt="PlanEdu Image" width={200} />
+        <Image src={planEduImage} alt="PlanEdu Image" width={200}/>
       </div>
       <Form {...form}>
         <form

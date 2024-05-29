@@ -49,6 +49,7 @@ const Employee_Dashboard = () => {
   const [workingStatus, setWorkingStatus] = useState<boolean>(false);
   const [timerData, setTimerData] = useState<showTimerData[]>([]);
 
+  // FOR LEAVE DATA THAT IS COMING FROM TEH BACKEND
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedData = localStorage.getItem("Employee_Info");
@@ -75,6 +76,7 @@ const Employee_Dashboard = () => {
     }
   }, []);
 
+  // TO INITIALIZE THE TIMER
   useEffect(() => {
     const initializeTimer = async () => {
       if (userId) {
@@ -88,6 +90,7 @@ const Employee_Dashboard = () => {
     initializeTimer();
   }, [userId, workingStatus]);
 
+  // UPDATE THE TIMER ON EACH AND EVER SECOND
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
     const updateElapsedTime = async () => {
@@ -115,15 +118,18 @@ const Employee_Dashboard = () => {
     };
   }, [running, userId]);
 
+  // GET THE BREAK DATA FORM THE BACKEND
   useEffect(() => {
-    axios
-      .get(`/api/timer/${userId}`)
-      .then((res) => {
-        setTimerData(res.data.responseBody);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (userId !== null) {
+      axios
+        .get(`/api/timer/${userId}`)
+        .then((res) => {
+          setTimerData(res.data.responseBody);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [userId]);
 
   const handleStart = async () => {
@@ -360,8 +366,19 @@ const Employee_Dashboard = () => {
 
                                 return (
                                   <p key={i}>
-                                    Start Time - {breakStartTime} &#160; &#160;
-                                    End Time - {breakEndTime}
+                                    <span className="font-bold">
+                                      Start Time
+                                    </span>{" "}
+                                    - {breakStartTime} &#160; &#160;{" "}
+                                    <span className="font-bold">End Time</span>{" "}
+                                    -{" "}
+                                    {ele.end === 0 ? (
+                                      <span className="font-bold">
+                                        On break
+                                      </span>
+                                    ) : (
+                                      breakEndTime
+                                    )}
                                   </p>
                                 );
                               })}
