@@ -90,6 +90,7 @@ export async function POST(request: Request) {
           timer.elapsedTime = changeElapsedTime;
           timer.startTime = 0;
           timer.elapsedTime = changeElapsedTime;
+          timer.isOnBreak = true;
           timer.save();
           return NextResponse.json({
             success: true,

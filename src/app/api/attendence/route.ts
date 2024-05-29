@@ -121,14 +121,34 @@ export async function POST(request: Request) {
 
     const attendence = new AttendenceModel(saveEmployeeAttendence);
     await attendence.save();
-    return NextResponse.json(
-      {
-        success: true,
-        message: `${findEmployee.fullName} has logged in for today`,
-        responseBody: null,
-      },
-      { status: 200 }
-    );
+
+    const response = await fetch("http://localhost:3000/api/timer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "start", userId: findEmployee._id }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      return NextResponse.json(
+        {
+          success: true,
+          message: `${findEmployee.fullName} has logged in for today and Timer has been started.`,
+          responseBody: null,
+        },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        {
+          success: true,
+          message: `${findEmployee.fullName} has logged in for today But Timer didn't started`,
+          responseBody: null,
+        },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.error("Error came in the attendence response:", error);
     return Response.json(
@@ -235,14 +255,33 @@ export async function PATCH(request: Request) {
       );
     }
 
-    return Response.json(
-      {
-        success: true,
-        message: `${findEmployee.fullName}, Logout Successfull For Today`,
-        responseBody: updatedDocument,
-      },
-      { status: 200 }
-    );
+    const response = await fetch("http://localhost:3000/api/timer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "stop", userId: findEmployee._id }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      return Response.json(
+        {
+          success: true,
+          message: `${findEmployee.fullName}, Logout Successfull For Today and Timer has been stopped`,
+          responseBody: updatedDocument,
+        },
+        { status: 200 }
+      );
+    } else {
+      return Response.json(
+        {
+          success: true,
+          message: `${findEmployee.fullName}, Logout Successfull For Today But Timer has not been stopped`,
+          responseBody: updatedDocument,
+        },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.error("Error came in the attendence response:", error);
     return Response.json(

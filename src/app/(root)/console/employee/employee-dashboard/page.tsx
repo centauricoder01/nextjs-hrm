@@ -20,6 +20,8 @@ interface showTimerData {
   startTime: Date;
   endTime: Date;
   elapsedTime: number;
+  captureStart: number;
+  captureEnd: number;
   userId: {
     fullName: string;
   };
@@ -329,10 +331,10 @@ const Employee_Dashboard = () => {
                         let changeDate = new Date(ele.date)
                           .toISOString()
                           .slice(0, 10);
-                        let changeStartTime = new Date()
+                        let changeStartTime = new Date(ele.captureStart)
                           .toLocaleTimeString()
                           .slice(0, 8);
-                        let changeEndTime = new Date()
+                        let changeEndTime = new Date(ele.captureEnd)
                           .toLocaleTimeString()
                           .slice(0, 8);
                         let totalTime = new Date(ele.elapsedTime)
@@ -345,7 +347,13 @@ const Employee_Dashboard = () => {
                             <TableCell>{ele.userId.fullName}</TableCell>
                             <TableCell>{changeDate}</TableCell>
                             <TableCell>{changeStartTime}</TableCell>
-                            <TableCell>{changeEndTime}</TableCell>
+                            <TableCell>
+                              {ele.captureEnd === 0 ? (
+                                <span className="font-bold">Not Stopped</span>
+                              ) : (
+                                changeEndTime
+                              )}
+                            </TableCell>
                             <TableCell>{ele.breaks.length}</TableCell>
                             <TableCell>{totalTime}</TableCell>
                             <TableCell>
