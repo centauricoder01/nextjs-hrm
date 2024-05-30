@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         }
         return NextResponse.json({
           success: true,
-          message: "started",
+          message: "Timer has been started started",
           responseBody: null,
         });
       case "break":
