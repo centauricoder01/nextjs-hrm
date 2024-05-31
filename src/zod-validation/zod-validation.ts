@@ -21,7 +21,7 @@ export const employeeDetailValidation = z.object({
     message: "Address must be atleast 5 Character",
   }),
   joinDate: z.coerce.date(),
-  leaveDate: z.coerce.date(),
+  leaveDate: z.string(),
   reasonForExit: z.string(),
   department: z.string(),
   designation: z.string(),

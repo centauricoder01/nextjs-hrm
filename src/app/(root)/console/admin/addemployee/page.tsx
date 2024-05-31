@@ -12,6 +12,8 @@ import FormSelect from "@/components/FormSelect";
 import UploadImage from "@/components/UploadImage";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { useRouter } from "next/navigation";
 
 interface CloudinaryUploadWidgetInfo {
   public_id: string;
@@ -22,6 +24,8 @@ interface CloudinaryUploadWidgetInfo {
 
 const AddEmployee = () => {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const [profileImage, setProfileImage] = useState<
     CloudinaryUploadWidgetInfo | undefined
@@ -47,7 +51,7 @@ const AddEmployee = () => {
       mobileNumber: 0,
       fullAddress: "",
       joinDate: new Date(),
-      leaveDate: new Date(),
+      leaveDate: "",
       reasonForExit: "",
       department: "",
       designation: "",
@@ -69,6 +73,7 @@ const AddEmployee = () => {
   });
 
   function onSubmit(values: z.infer<typeof employeeDetailValidation>) {
+    setLoading(true);
     values.profileImage =
       profileImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
@@ -82,6 +87,10 @@ const AddEmployee = () => {
       relativeAadhaarImage?.secure_url ??
       "https://res.cloudinary.com/dkorzhbbk/image/upload/v1715246972/planedu-hrm/c7rpsbalxqk21s2ic67r.png";
 
+    if (values.leaveDate === "") {
+      values.leaveDate = "Null";
+    }
+
     axios
       .post("/api/employees", values)
       .then((res) => {
@@ -90,6 +99,8 @@ const AddEmployee = () => {
           description: res.data.message,
           variant: "default",
         });
+        setLoading(false);
+        router.push("/console/employee/employee-dashboard");
       })
       .catch((err) => {
         console.log(err);
@@ -98,6 +109,7 @@ const AddEmployee = () => {
           description: err.response.data.message,
           variant: "destructive",
         });
+        setLoading(false);
       });
   }
 
@@ -348,7 +360,7 @@ const AddEmployee = () => {
               type="submit"
               className="w-full h-12 flex justify-center items-center"
             >
-              Submit
+              {loading ? <LoadingSpinner /> : "Submit"}
             </Button>
           </form>
         </Form>

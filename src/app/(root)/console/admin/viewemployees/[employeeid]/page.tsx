@@ -100,6 +100,8 @@ const SingleEmployee = () => {
     day: "numeric",
   };
 
+  console.log(formData);
+
   return (
     <>
       <Navbar />
@@ -107,9 +109,9 @@ const SingleEmployee = () => {
         <Image
           src={singleEmployeeInfo.profileImage}
           width={200}
-          height={200}
-          className="rounded-full mb-2"
-          alt="Avatar"
+          height={100}
+          className="rounded-sm mb-2 h-[15rem]"
+          alt="employee-image"
         />
 
         {isEditing ? (
@@ -334,15 +336,17 @@ const SingleEmployee = () => {
                 </span>
               </p>
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-                Leave Date -{" "}
+                Exit Date -{" "}
                 <span className="font-bold">
                   {singleEmployeeInfo.leaveDate}
                 </span>
               </p>
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-                Reason For Leave -{" "}
+                Reason For Exit -{" "}
                 <span className="font-bold">
-                  {singleEmployeeInfo.reasonForExit}
+                  {singleEmployeeInfo.reasonForExit === ""
+                    ? "Null"
+                    : singleEmployeeInfo.reasonForExit}
                 </span>
               </p>
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">

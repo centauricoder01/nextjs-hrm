@@ -156,8 +156,8 @@ const Attendence = () => {
                       <TableCell>
                         <Image
                           src={ele.timeInSelfie}
-                          width={100}
-                          height={100}
+                          width={250}
+                          height={250}
                           className="rounded-sm"
                           alt="Avatar"
                         />
@@ -178,8 +178,8 @@ const Attendence = () => {
                         ) : (
                           <Image
                             src={ele.timeOutSelfie}
-                            width={100}
-                            height={100}
+                            width={250}
+                            height={250}
                             className="rounded-sm"
                             alt="Avatar"
                           />

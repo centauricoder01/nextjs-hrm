@@ -18,7 +18,7 @@ const ViewEmployees = () => {
   const [employees, setEmployees] = useState<EmployeeBluePrint[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [employeesPerPage] = useState(2);
+  const [employeesPerPage] = useState(10);
 
   useEffect(() => {
     axios
@@ -83,8 +83,8 @@ const ViewEmployees = () => {
             <Image
               src={employee.profileImage}
               width={70}
-              height={70}
-              className="rounded-full mb-2"
+              height={10}
+              className="rounded-full mb-2 h-[4rem]"
               alt="Avatar"
             />
 
