@@ -6,6 +6,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { IEmployee, IEmployeeWithEdits } from "@/types/modals.types";
+import UploadImage from "@/components/UploadImage";
+
+interface CloudinaryUploadWidgetInfo {
+  public_id: string;
+  secure_url: string;
+  url: string;
+  [key: string]: any;
+}
 
 const SingleEmployee = () => {
   const { employeeid } = useParams<{ employeeid: string }>();
@@ -13,6 +21,20 @@ const SingleEmployee = () => {
   const [singleEmployeeInfo, setSingleEmployeeInfo] =
     useState<IEmployee | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  // updating the images of the div
+  const [profileImage, setProfileImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [aadharImage, setAadharImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [panCardImage, setPanCardImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  const [relativeAadhaarImage, setRelativeAadhaarImage] = useState<
+    CloudinaryUploadWidgetInfo | undefined
+  >(undefined);
+  // form data updating part start from here
   const [formData, setFormData] = useState<IEmployeeWithEdits>({
     _id: "",
     profileImage: "",
@@ -38,6 +60,9 @@ const SingleEmployee = () => {
     gender: "",
     role: "",
     password: "",
+    aadhaarImage: "",
+    pancardImage: "",
+    relativeAadhaarImage: "",
   });
 
   useEffect(() => {
@@ -61,6 +86,19 @@ const SingleEmployee = () => {
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (profileImage !== undefined) {
+      formData.profileImage = profileImage.secure_url;
+    }
+    if (aadharImage !== undefined) {
+      formData.aadhaarImage = aadharImage.secure_url;
+    }
+    if (panCardImage !== undefined) {
+      formData.pancardImage = panCardImage.secure_url;
+    }
+    if (relativeAadhaarImage !== undefined) {
+      formData.relativeAadhaarImage = relativeAadhaarImage.secure_url;
+    }
+
     axios
       .patch(`/api/employees/${employeeid}`, formData)
       .then((res) => {
@@ -100,8 +138,6 @@ const SingleEmployee = () => {
     day: "numeric",
   };
 
-  console.log(formData);
-
   return (
     <>
       <Navbar />
@@ -119,6 +155,14 @@ const SingleEmployee = () => {
             className="w-full flex flex-wrap gap-2 justify-center items-center"
             onSubmit={handleEditSubmit}
           >
+            <UploadImage
+              buttonName={"Change profile Image"}
+              handleImage={setProfileImage}
+              classValue={
+                "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
+              }
+            />
+
             <input
               type="text"
               name="fullName"
@@ -280,6 +324,27 @@ const SingleEmployee = () => {
               className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
               placeholder="Emergency Contact Number"
             />
+            <UploadImage
+              buttonName={"Change Aadhaar Image"}
+              handleImage={setAadharImage}
+              classValue={
+                "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
+              }
+            />
+            <UploadImage
+              buttonName={"Change Pancard Image"}
+              handleImage={setPanCardImage}
+              classValue={
+                "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
+              }
+            />
+            <UploadImage
+              buttonName={"Change relative Aadhaar Image"}
+              handleImage={setRelativeAadhaarImage}
+              classValue={
+                "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
+              }
+            />
 
             <button
               type="submit"
@@ -420,7 +485,7 @@ const SingleEmployee = () => {
               <div className="text-center border-2 border-black rounded-sm">
                 <p>Personal Aadhaar card</p>
                 <Image
-                  src={singleEmployeeInfo.aadhaarImage}
+                  src={singleEmployeeInfo?.aadhaarImage}
                   alt="Aadhaar Image"
                   width={300}
                   height={150}
@@ -430,7 +495,7 @@ const SingleEmployee = () => {
               <div className="text-center border-2 border-black rounded-sm">
                 <p>Personal Pancard</p>
                 <Image
-                  src={singleEmployeeInfo.pancardImage}
+                  src={singleEmployeeInfo?.pancardImage}
                   alt="Pan Image"
                   width={300}
                   height={150}
@@ -440,7 +505,7 @@ const SingleEmployee = () => {
               <div className="text-center border-2 border-black rounded-sm">
                 <p>Relative Aadhaar Card</p>
                 <Image
-                  src={singleEmployeeInfo.relativeAadhaarImage}
+                  src={singleEmployeeInfo?.relativeAadhaarImage}
                   alt="Relative Aadhaar Image"
                   width={300}
                   height={150}

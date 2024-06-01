@@ -55,7 +55,10 @@ export default function Home() {
           "Employee_Info",
           JSON.stringify(res.data.responseBody)
         );
-        if (res.data.responseBody.role === "Employee" || "Manager") {
+        if (
+          res.data.responseBody.role === "Employee" ||
+          res.data.responseBody.role === "Manager"
+        ) {
           setLoading(false);
           router.push("/console/employee/employee-dashboard");
         } else {

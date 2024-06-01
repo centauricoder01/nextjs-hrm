@@ -54,6 +54,9 @@ export interface IEmployeeWithEdits {
   aadharNumber: number;
   state: string;
   emergencyContactNumber: number;
+  aadhaarImage: string;
+  pancardImage: string;
+  relativeAadhaarImage: string;
   gender: string;
   role: string;
   password: string;
