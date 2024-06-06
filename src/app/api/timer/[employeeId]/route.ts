@@ -51,3 +51,14 @@ export async function GET(request: Request, { params }: { params: Params }) {
     );
   }
 }
+
+export async function generateStaticParams() {
+  // Connect to the database
+  await connect();
+
+  // Fetch all employee IDs to generate static paths
+  const timers = await Timer.find({}, "userId").exec();
+  return timers.map((timer) => ({
+    employeeid: timer.userId.toString(),
+  }));
+}

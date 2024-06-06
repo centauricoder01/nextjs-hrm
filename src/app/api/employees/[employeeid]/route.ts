@@ -91,7 +91,6 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
     const id = params.employeeid;
     const updateEmployeeInfo = await request.json();
 
-
     const updateEmployee = await EmployeeModel.findByIdAndUpdate(
       id,
       { $set: updateEmployeeInfo },
@@ -128,4 +127,16 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
       { status: 500 }
     );
   }
+}
+
+// Define generateStaticParams function
+export async function generateStaticParams() {
+  // Connect to the database
+  await connect();
+
+  // Fetch all employee IDs to generate static paths
+  const employees = await EmployeeModel.find({}, "_id").exec();
+  return employees.map((employee) => ({
+    employeeid: employee._id.toString(),
+  }));
 }

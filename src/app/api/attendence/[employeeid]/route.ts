@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 interface Params {
   employeeid: string;
 }
+
 export async function GET(request: Request, { params }: { params: Params }) {
   // Connect to the database
   await connect();
@@ -31,4 +32,16 @@ export async function GET(request: Request, { params }: { params: Params }) {
       { status: 500 }
     );
   }
+}
+
+// Define generateStaticParams function
+export async function generateStaticParams() {
+  // Connect to the database
+  await connect();
+
+  // Fetch all employee IDs to generate static paths
+  const employees = await AttendenceModel.find({}, "userId").exec();
+  return employees.map((employee) => ({
+    employeeid: employee.userId.toString(),
+  }));
 }
