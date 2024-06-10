@@ -236,6 +236,13 @@ const AddEmployee = () => {
                   " Head-Of-Medical-Counselling&Training ",
                   " Head-of-Operation ",
                   " Web-Developer ",
+                  " Maid",
+                  " House keeping",
+                  " PPC specialist",
+                  " SEO",
+                  " Executive",
+                  " Receptionist",
+                  " Finance Manager",
                   " Team-Leader",
                 ]}
                 selectPlaceholder={"Choose Degisnation"}
