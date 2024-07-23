@@ -91,7 +91,6 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
     const id = params.employeeid;
     const updateEmployeeInfo = await request.json();
 
-
     const updateEmployee = await EmployeeModel.findByIdAndUpdate(
       id,
       { $set: updateEmployeeInfo },

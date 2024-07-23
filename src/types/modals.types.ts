@@ -26,6 +26,7 @@ export interface IEmployee {
   gender: string;
   role: string;
   password: string;
+  employeeExit: boolean;
   aadhaarImage: string;
   pancardImage: string;
   relativeAadhaarImage: string;
@@ -46,6 +47,7 @@ export interface IEmployeeWithEdits {
   leaveDate: string;
   reasonForExit: string;
   department: string;
+  employeeExit: boolean;
   email: string;
   bankAccountNumber: number;
   bankIFSCCode: string;
@@ -92,18 +94,4 @@ export interface ILeaveData extends Document {
   remainingPrivilegeLeave: number;
   remainingHalfdayLeave: number;
   remainingQuarterLeave: number;
-}
-
-export interface ITimer extends Document {
-  userId: Schema.Types.ObjectId;
-  captureStart: number;
-  date: Date;
-  startTime: number;
-  captureEnd: number;
-  breaks: {
-    start?: number;
-    end?: number;
-  }[];
-  isOnBreak: boolean;
-  elapsedTime: number;
 }

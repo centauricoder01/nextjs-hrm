@@ -9,7 +9,6 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     trim: true,
     unique: true,
   },
-
   profileImage: {
     type: String,
     required: [true, "Profile Image is required"],
@@ -22,6 +21,7 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     type: String,
     required: [true, "FullName is required"],
   },
+
   birthDate: {
     type: String,
   },
@@ -69,6 +69,10 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     required: [true, "Password is Required"],
     enum: ["Admin", "Manager", "Employee"],
   },
+  employeeExit: {
+    type: Boolean,
+    default: false,
+  },
   // BANK DETAILS START FROM HERE
   bankAccountNumber: {
     type: Number,
@@ -104,15 +108,15 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
   },
 });
 
-employeeSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
+// employeeSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
+//   this.password = await bcrypt.hash(this.password, 10);
+//   next();
+// });
 
-employeeSchema.methods.removeSensitiveFields = function () {
-  this.unset("password");
-};
+// employeeSchema.methods.removeSensitiveFields = function () {
+//   this.unset("password");
+// };
 
 const EmployeeModel =
   (mongoose.models.Employee as mongoose.Model<IEmployee>) ||
