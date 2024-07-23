@@ -46,3 +46,14 @@ export async function GET(request: Request, { params }: { params: Params }) {
     );
   }
 }
+
+export async function generateStaticParams() {
+  // Connect to the database
+  await connect();
+
+  // Fetch all employee IDs to generate static paths
+  const leaves = await leaveApplicationModel.find({}, "userId").exec();
+  return leaves.map((leave) => ({
+    employeeid: leave.userId.toString(),
+  }));
+}

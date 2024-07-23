@@ -36,7 +36,15 @@ const Employee_Dashboard = () => {
     IAttendence[] | null
   >(null);
 
-  // FOR LEAVE DATA THAT IS COMING FROM TEH BACKEND
+  const [filteredAttendence, setFilteredAttendence] = useState<
+    IAttendence[] | null
+  >(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [dateFilter, setDateFilter] = useState<string>("");
+
+  const recordsPerPage = 2;
+
+  // FOR LEAVE DATA THAT IS COMING FROM THE BACKEND
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedData = localStorage.getItem("Employee_Info");
@@ -69,6 +77,7 @@ const Employee_Dashboard = () => {
         .get(`/api/attendence/${userId}`)
         .then((res) => {
           setAttendenceReport(res.data.responseBody);
+          setFilteredAttendence(res.data.responseBody); // Initialize with all data
         })
         .catch((err) => {
           console.log(err);
@@ -76,7 +85,42 @@ const Employee_Dashboard = () => {
     }
   }, [userId]);
 
-  console.log(attendenceReport, "attendenceReport");
+  // Handle Pagination
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+
+  // Calculate the number of pages
+  const totalPages = attendenceReport
+    ? Math.ceil(attendenceReport.length / recordsPerPage)
+    : 0;
+
+  // Filtered and paginated data
+  const currentRecords = filteredAttendence
+    ? filteredAttendence.slice(indexOfFirstRecord, indexOfLastRecord)
+    : [];
+
+  // Handle page change
+  const handlePageChange = (direction: string) => {
+    if (direction === "next" && currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    } else if (direction === "prev" && currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  // Handle Date Filter
+  const handleDateFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = event.target.value;
+    setDateFilter(selectedDate);
+
+    if (attendenceReport) {
+      const filtered = attendenceReport.filter(
+        (record) => record.date === selectedDate
+      );
+      setFilteredAttendence(filtered);
+      setCurrentPage(1); // Reset to the first page when filter changes
+    }
+  };
 
   return (
     <>
@@ -88,7 +132,7 @@ const Employee_Dashboard = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[1000px] ">S.no</TableHead>
+                  <TableHead className="w-[1000px]">S.no</TableHead>
                   <TableHead className="w-[1000px]">Leave Type</TableHead>
                   <TableHead className="w-[1000px]">Total Leave</TableHead>
                   <TableHead className="w-[1000px]">Leave Left</TableHead>
@@ -172,90 +216,131 @@ const Employee_Dashboard = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center gap-5 rounded-md mt-10 ">
+        <div className="flex justify-between items-center gap-5 rounded-md mt-10">
           <div className="border bg-white min-h-[1000px] max-h-[1000px] p-5 w-[100%] overflow-y-scroll overflow-x-hidden rounded-sm">
-            <h1 className="font-bold text-[2rem]">Attendence Details</h1>
-            <div>
-              <Table>
-                <TableHeader>
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="font-bold text-[2rem]">Attendence Details</h1>
+
+              {/* Date Filter */}
+              <div className="bg-slate-300 w-[30%] flex justify-between items-center p-2 rounded">
+                <label className="mr-2 text-black font-extrabold">
+                  Filter by Date:
+                </label>
+                <input
+                  type="date"
+                  value={dateFilter}
+                  onChange={handleDateFilter}
+                  className="border rounded p-1"
+                />
+              </div>
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>S.no</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>TimeIn</TableHead>
+                  <TableHead>TimeOut</TableHead>
+                  <TableHead>TimeIn Selfie</TableHead>
+                  <TableHead>TimeIn Location</TableHead>
+                  <TableHead>Timeout Location</TableHead>
+                  <TableHead>TimeOut Selfie</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentRecords?.length !== 0 ? (
+                  currentRecords.map((ele, i) => (
+                    <TableRow key={i}>
+                      <TableCell>{indexOfFirstRecord + i + 1}</TableCell>
+                      <TableCell>{ele.name}</TableCell>
+                      <TableCell>{ele.date}</TableCell>
+                      <TableCell>
+                        {ele.timeIn === null ? (
+                          <b className="text-red-600">Not Time In</b>
+                        ) : (
+                          ele.timeIn
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ele.timeOut === null ? (
+                          <b className="text-red-600">Not Time Out</b>
+                        ) : (
+                          ele.timeOut
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ele.timeInSelfie === null ? (
+                          <b className="text-red-600">Not Time In</b>
+                        ) : (
+                          <Image
+                            src={ele.timeInSelfie}
+                            width={250}
+                            height={250}
+                            className="rounded-sm"
+                            alt="Avatar"
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ele.timeInLocation === null ? (
+                          <b className="text-red-600">Not Time In</b>
+                        ) : (
+                          ele.timeInLocation
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ele.timeOutSelfie === null ? (
+                          <b className="text-red-600">Not Time Out</b>
+                        ) : (
+                          <Image
+                            src={ele.timeOutSelfie}
+                            width={250}
+                            height={250}
+                            className="rounded-sm"
+                            alt="Avatar"
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ele.timeOutLocation === null ? (
+                          <b className="text-red-600">Not Time Out</b>
+                        ) : (
+                          ele.timeOutLocation
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
                   <TableRow>
-                    <TableHead>S.no</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>TimeIn</TableHead>
-                    <TableHead>TimeOut</TableHead>
-                    <TableHead>TimeIn Selfie</TableHead>
-                    <TableHead>TimeIn Location</TableHead>
-                    <TableHead>Timeout Location</TableHead>
-                    <TableHead>TimeOut Selfie</TableHead>
+                    <TableCell colSpan={9} className="text-center">
+                      No records found.
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {attendenceReport?.length !== 0
-                    ? attendenceReport?.map((ele, i) => (
-                        <TableRow key={i}>
-                          <TableCell>{i + 1}</TableCell>
-                          <TableCell>{ele.name}</TableCell>
-                          <TableCell>{ele.date}</TableCell>
-                          <TableCell>
-                            {ele.timeIn === null ? (
-                              <b className="text-red-600">Not Time In</b>
-                            ) : (
-                              ele.timeIn
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {ele.timeOut === null ? (
-                              <b className="text-red-600">Not Time Out</b>
-                            ) : (
-                              ele.timeOut
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {ele.timeInSelfie === null ? (
-                              <b className="text-red-600">Not Time In</b>
-                            ) : (
-                              <Image
-                                src={ele.timeInSelfie}
-                                width={250}
-                                height={250}
-                                className="rounded-sm"
-                                alt="Avatar"
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {ele.timeInLocation === null ? (
-                              <b className="text-red-600">Not Time In</b>
-                            ) : (
-                              ele.timeInLocation
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {ele.timeOutSelfie === null ? (
-                              <b className="text-red-600">Not Time Out</b>
-                            ) : (
-                              <Image
-                                src={ele.timeOutSelfie}
-                                width={250}
-                                height={250}
-                                className="rounded-sm"
-                                alt="Avatar"
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {ele.timeOutLocation === null ? (
-                              <b className="text-red-600">Not Time Out</b>
-                            ) : (
-                              ele.timeOutLocation
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    : null}
-                </TableBody>
-              </Table>
+                )}
+              </TableBody>
+            </Table>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-between mt-4 border items-center p-2 bg-slate-400 rounded">
+              <button
+                onClick={() => handlePageChange("prev")}
+                disabled={currentPage === 1}
+                className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-900"
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange("next")}
+                disabled={currentPage === totalPages}
+                className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-900"
+              >
+                Next
+              </button>
             </div>
           </div>
         </div>

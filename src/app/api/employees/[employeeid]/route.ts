@@ -128,3 +128,15 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
     );
   }
 }
+
+// Define generateStaticParams function
+export async function generateStaticParams() {
+  // Connect to the database
+  await connect();
+
+  // Fetch all employee IDs to generate static paths
+  const employees = await EmployeeModel.find({}, "_id").exec();
+  return employees.map((employee) => ({
+    employeeid: employee._id.toString(),
+  }));
+}
