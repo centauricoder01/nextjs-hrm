@@ -76,7 +76,7 @@ const Navbar = () => {
                   <Link href={"/console/admin/viewemployees"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <FaUsersViewfinder size={20} />
-                      View Employee
+                      View Employees
                     </p>
                   </Link>
                   <hr />
@@ -119,14 +119,6 @@ const Navbar = () => {
                     </p>
                   </Link>
                   <hr />
-
-                  <Link href={"/console/employee/view-attendence"}>
-                    <p className="flex justify-start items-center gap-2 ">
-                      <IoMdTimer size={20} />
-                      View Attendence
-                    </p>
-                  </Link>
-                  <hr />
                 </SheetHeader>
               )}
             </SheetContent>
@@ -139,8 +131,8 @@ const Navbar = () => {
               src={imageSource}
               alt="Profile Image"
               width={50}
-              height={50}
-              className="rounded-full"
+              height={0}
+              className="rounded-full object-cover object-top border h-[3rem]"
             />
           )}
 

@@ -277,8 +277,8 @@ const Employee_Dashboard = () => {
                           <Image
                             src={ele.timeInSelfie}
                             width={250}
-                            height={250}
-                            className="rounded-sm"
+                            height={150}
+                            className="rounded-sm h-[7rem] w-[10rem]"
                             alt="Avatar"
                           />
                         )}
@@ -297,8 +297,8 @@ const Employee_Dashboard = () => {
                           <Image
                             src={ele.timeOutSelfie}
                             width={250}
-                            height={250}
-                            className="rounded-sm"
+                            height={150}
+                            className="rounded-sm h-[7rem] w-[10rem"
                             alt="Avatar"
                           />
                         )}
