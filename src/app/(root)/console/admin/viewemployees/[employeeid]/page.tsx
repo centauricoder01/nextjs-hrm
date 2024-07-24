@@ -42,6 +42,7 @@ const SingleEmployee = () => {
     employeeId: "",
     designation: "",
     birthDate: "",
+    employeeExited: false,
     joinDate: "",
     maritalStatus: "",
     mobileNumber: 0,
@@ -69,6 +70,7 @@ const SingleEmployee = () => {
     axios
       .get(`/api/employees/${employeeid}`)
       .then((res) => {
+        console.log(res.data.responseBody, "This is Response Body");
         setSingleEmployeeInfo(res.data.responseBody);
         setFormData(res.data.responseBody);
       })
@@ -132,6 +134,7 @@ const SingleEmployee = () => {
 
   const birthDate = new Date(singleEmployeeInfo.birthDate);
   const joiningDate = new Date(singleEmployeeInfo.joinDate);
+  const leaveDate = new Date(singleEmployeeInfo.leaveDate);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -400,20 +403,28 @@ const SingleEmployee = () => {
                   {joiningDate.toLocaleDateString("en-US", options)}
                 </span>
               </p>
-              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-                Exit Date -{" "}
-                <span className="font-bold">
-                  {singleEmployeeInfo.leaveDate}
-                </span>
-              </p>
-              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-                Reason For Exit -{" "}
-                <span className="font-bold">
-                  {singleEmployeeInfo.reasonForExit === ""
-                    ? "Null"
-                    : singleEmployeeInfo.reasonForExit}
-                </span>
-              </p>
+              {!singleEmployeeInfo.employeeExited ? (
+                <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                  Employee status - <span className="font-bold">Working</span>
+                </p>
+              ) : (
+                <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                  Exit Date -{" "}
+                  <span className="font-bold">
+                    {leaveDate.toLocaleDateString("en-US", options)}
+                  </span>
+                </p>
+              )}
+
+              {singleEmployeeInfo.reasonForExit === "" ? null : (
+                <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                  Reason For Exit -{" "}
+                  <span className="font-bold">
+                    {singleEmployeeInfo.reasonForExit}
+                  </span>
+                </p>
+              )}
+
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
                 Department -{" "}
                 <span className="font-bold">

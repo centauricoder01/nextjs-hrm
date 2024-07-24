@@ -26,7 +26,7 @@ export interface IEmployee {
   gender: string;
   role: string;
   password: string;
-  employeeExit: boolean;
+  employeeExited: boolean;
   aadhaarImage: string;
   pancardImage: string;
   relativeAadhaarImage: string;
@@ -47,7 +47,7 @@ export interface IEmployeeWithEdits {
   leaveDate: string;
   reasonForExit: string;
   department: string;
-  employeeExit: boolean;
+  employeeExited: boolean;
   email: string;
   bankAccountNumber: number;
   bankIFSCCode: string;

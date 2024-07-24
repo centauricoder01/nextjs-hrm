@@ -69,7 +69,7 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     required: [true, "Password is Required"],
     enum: ["Admin", "Manager", "Employee"],
   },
-  employeeExit: {
+  employeeExited: {
     type: Boolean,
     default: false,
   },
