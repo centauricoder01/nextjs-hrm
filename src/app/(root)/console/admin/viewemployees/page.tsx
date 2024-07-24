@@ -12,11 +12,15 @@ interface EmployeeBluePrint {
   fullName: string;
   employeeId: string;
   designation: string;
+  department: string;
+  employeeExited: boolean;
 }
 
 const ViewEmployees = () => {
   const [employees, setEmployees] = useState<EmployeeBluePrint[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [employeesPerPage] = useState(10);
 
@@ -35,9 +39,22 @@ const ViewEmployees = () => {
     setCurrentPage(1); // Reset to first page on new search
   };
 
-  const filteredEmployees = employees.filter((employee) =>
-    employee.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDepartment(e.target.value);
+    setCurrentPage(1); // Reset to first page on new filter
+  };
+
+  const filteredEmployees = employees
+    .filter(
+      (employee) =>
+        employee.fullName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (selectedDepartment === "All" ||
+          employee.department === selectedDepartment) &&
+        (selectedStatus === "All" ||
+          (selectedStatus === "Working" && !employee.employeeExited) ||
+          (selectedStatus === "Exited" && employee.employeeExited))
+    )
+    .sort((a, b) => a.fullName.localeCompare(b.fullName));
 
   // Get current employees
   const indexOfLastEmployee = currentPage * employeesPerPage;
@@ -67,6 +84,34 @@ const ViewEmployees = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <select
+            className="w-full mb-5 mt-5 bg-white h-12 rounded"
+            value={selectedDepartment}
+            onChange={handleDepartmentChange}
+          >
+            <option value="All">All Departments</option>
+            <option value="IT/MARKETING">IT/MARKETING</option>
+            <option value="SUPPORTING-STAFF">SUPPORTING-STAFF</option>
+            <option value="HUMAN-RESOURCE">HUMAN-RESOURCE</option>
+            <option value="COUNSELLING/SALES">COUNSELLING/SALES</option>
+          </select>
+
+          <select
+            className="w-full mb-5 mt-5 bg-white h-12 rounded"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="All" className="bolder">
+              <strong>All Employees</strong>
+            </option>
+            <option value="Working">
+              <strong>Working</strong>
+            </option>
+            <option value="Exited">
+              <strong>Exited</strong>
+            </option>
+          </select>
+
           <button
             className="border bg-green-800 rounded-lg shadow-slate-500 text-white p-2.5 hover:bg-green-600"
             onClick={handleSearch}
@@ -90,6 +135,7 @@ const ViewEmployees = () => {
 
             <p className="font-bold mb-2">{employee.fullName}</p>
             <p className="font-bold mb-2">{employee.designation}</p>
+            <p className="font-bold mb-2">{employee.department}</p>
             <p className="font-bold mb-2">{employee.employeeId}</p>
             <Link
               href={`/console/admin/viewemployees/${employee._id}`}
