@@ -255,6 +255,14 @@ const SingleEmployee = () => {
               className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
               placeholder="Reason for Exit"
             />
+            {/* <input
+              type="text"
+              name="reasonForExit"
+              value={formData.employeeExited}
+              onChange={handleEditChange}
+              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
+              placeholder=""
+            /> */}
             <input
               type="date"
               name="joinDate"

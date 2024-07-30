@@ -10,6 +10,7 @@ const Location: React.FC<LocationProps> = ({ takelocation }) => {
   const [location, setLocation] = useState("");
   const geocoding_Api = process.env.NEXT_PUBLIC_GEOCODING_API;
   const geocoding_Link = process.env.NEXT_PUBLIC_GEOCODING_LINK;
+  // const olaGeocoding_Link = process.env.OLA_MAP_GEOCODING_API; // OLA MAP URL LINK
 
   const handleCheck = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -18,10 +19,14 @@ const Location: React.FC<LocationProps> = ({ takelocation }) => {
           const query = `${position.coords.latitude},${position.coords.longitude}`;
           const apiUrl = `${geocoding_Link}?key=${geocoding_Api}&q=${query}`;
 
+          // THIS WAS EXPERIMENTAL OLA-API PART
+          // const apiUrl = `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${query}&api_key=9LBd1N4nze75FOfS1Lraqa3qnrsReVXIUjqe09mN`;
+
           try {
             axios
               .get(apiUrl)
               .then((res) => {
+                console.log(res.data);
                 setLocation(res.data.results[0].formatted);
                 takelocation(res.data.results[0].formatted);
               })
