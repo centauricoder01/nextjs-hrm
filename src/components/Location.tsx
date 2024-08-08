@@ -29,7 +29,7 @@ const Location: React.FC<LocationProps> = ({ takelocation }) => {
                 console.log(res.data);
                 setLocation(res.data.results[0].formatted);
                 takelocation(res.data.results[0].formatted);
-              })
+              }) 
               .catch((err) => {
                 console.log(err);
               });

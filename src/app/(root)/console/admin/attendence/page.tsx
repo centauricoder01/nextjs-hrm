@@ -158,7 +158,7 @@ const Attendence = () => {
                           src={ele.timeInSelfie}
                           width={250}
                           height={250}
-                          className="rounded-sm h-[7rem] w-[10rem"
+                          className="rounded-sm h-[7rem] w-[20rem]"
                           alt="Avatar"
                         />
                       </TableCell>
@@ -180,7 +180,7 @@ const Attendence = () => {
                             src={ele.timeOutSelfie}
                             width={250}
                             height={250}
-                            className="rounded-sm h-[7rem] w-[10rem]"
+                            className="rounded-sm h-[7rem] w-[20rem]"
                             alt="Avatar"
                           />
                         )}
