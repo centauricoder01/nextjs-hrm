@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import AttendenceModel from "@/model/attendence.model";
 
 export async function GET(request: Request) {
-  // Connect to the database
   await connect();
   try {
     const totalEmployee = await EmployeeModel.find();
@@ -12,7 +11,7 @@ export async function GET(request: Request) {
     const totalAttendence = await AttendenceModel.find({ date: todayDate });
     return NextResponse.json(
       {
-        success: false,
+        success: true,
         message: "All Data Fetched Successfully",
         responseBody: {
           totalEmployee: totalEmployee.length,
@@ -22,7 +21,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in the all Data response:", error);
     return NextResponse.json(
       {
         success: false,

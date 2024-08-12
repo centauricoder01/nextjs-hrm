@@ -16,6 +16,11 @@ const UploadImage: React.FC<uploadProps> = ({
     <>
       <CldUploadWidget
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+        options={{
+          sources: ["camera"],
+          cropping: false,
+          multiple: false,
+        }}
         onSuccess={(result, { widget }) => {
           if (typeof result?.info === "object") {
             handleImage(result?.info);
