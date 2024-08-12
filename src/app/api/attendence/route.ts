@@ -50,8 +50,10 @@ export async function POST(request: Request) {
 
     // Finding the Employee
     const findEmployee = await EmployeeModel.findOne({
-      employeeId: body.employId,
+      employeeId: body.employId.toUpperCase(),
     });
+
+    console.log(findEmployee, "This is Employee");
 
     if (!findEmployee) {
       return NextResponse.json(
@@ -174,8 +176,10 @@ export async function PATCH(request: Request) {
 
     // Finding the Employee
     const findEmployee = await EmployeeModel.findOne({
-      employeeId: body.employId,
+      employeeId: body.employId.toUpperCase(),
     });
+
+    console.log(findEmployee, "This is Employee");
 
     if (!findEmployee) {
       return NextResponse.json(
