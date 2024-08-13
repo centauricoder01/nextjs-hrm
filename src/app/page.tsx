@@ -117,7 +117,7 @@ export default function Home() {
             )}
           />
           <Link href="/" as="/">
-            <p className="mt-5">Forget Your Id/Password!</p>
+            <p className="mt-5">Forgot Your Id/Password!</p>
           </Link>
           <Button
             type="submit"

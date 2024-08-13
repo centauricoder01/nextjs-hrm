@@ -8,6 +8,7 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     required: [true, "employeeId is required"],
     trim: true,
     unique: true,
+    index: true,
   },
   profileImage: {
     type: String,
@@ -108,15 +109,15 @@ const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
   },
 });
 
-// employeeSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// });
+employeeSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
-// employeeSchema.methods.removeSensitiveFields = function () {
-//   this.unset("password");
-// };
+employeeSchema.methods.removeSensitiveFields = function () {
+  this.unset("password");
+};
 
 const EmployeeModel =
   (mongoose.models.Employee as mongoose.Model<IEmployee>) ||

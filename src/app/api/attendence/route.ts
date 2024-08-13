@@ -53,13 +53,11 @@ export async function POST(request: Request) {
       employeeId: body.employId.toUpperCase(),
     });
 
-    console.log(findEmployee, "This is Employee");
-
     if (!findEmployee) {
       return NextResponse.json(
         {
           success: false,
-          message: "EmploeeId Does'nt Exist in Your database ",
+          message: "EmploeeId doesn't exist in your database ",
           responseBody: null,
         },
         { status: 404 }
@@ -67,19 +65,14 @@ export async function POST(request: Request) {
     }
 
     // Get the current date
-    const currentDate = new Date();
-    const formattedCurrentDate = currentDate.toISOString().split("T")[0];
+    const formattedCurrentDate = new Date().toISOString().split("T")[0];
 
-    const getTodayAttendence = await AttendenceModel.find({
-      date: formattedCurrentDate, // Only search for today's date
+    const existingAttendance = await AttendenceModel.findOne({
+      date: formattedCurrentDate,
+      employeId: body.employId,
     });
 
-    const employeeExists =
-      getTodayAttendence.find(
-        (employee) => employee.employeId === body.employId
-      ) !== undefined;
-
-    if (employeeExists) {
+    if (existingAttendance) {
       return NextResponse.json(
         {
           success: false,
@@ -108,6 +101,8 @@ export async function POST(request: Request) {
     const isEmpty = Object.values(saveEmployeeAttendence).some((value) => {
       return value === undefined || value === null || value === "";
     });
+
+    console.log(isEmpty);
 
     if (isEmpty) {
       return NextResponse.json(
@@ -179,8 +174,6 @@ export async function PATCH(request: Request) {
       employeeId: body.employId.toUpperCase(),
     });
 
-    console.log(findEmployee, "This is Employee");
-
     if (!findEmployee) {
       return NextResponse.json(
         {
@@ -192,79 +185,55 @@ export async function PATCH(request: Request) {
       );
     }
     // Get start of today in UTC timezone
-    // Get the current date
-    const currentDate = new Date();
-    const formattedCurrentDate = currentDate.toISOString().split("T")[0];
+    const CurrentDate = new Date().toISOString().split("T")[0];
 
-    const getTodayAttendence = await AttendenceModel.find({
-      date: formattedCurrentDate, // Only search for today's date
+    const todayAttendance = await AttendenceModel.findOne({
+      date: CurrentDate,
+      employeId: body.employId,
     });
 
-    const employeeExists = getTodayAttendence.some(
-      (employee) => employee.employeId === body.employId
-    );
-
-    if (!employeeExists) {
+    if (!todayAttendance) {
       return NextResponse.json(
         {
           success: false,
-          message: `${findEmployee.fullName} You have Not Logged in Today`,
+          message: `${findEmployee.fullName}, You have Not Logged in Today`,
           responseBody: null,
         },
         { status: 404 }
       );
     }
 
-    const foundObject = getTodayAttendence.find(
-      (obj) => obj.employeId === body.employId
-    );
-
-    if (foundObject?.timeOut !== null) {
+    if (todayAttendance.timeOut) {
       return NextResponse.json(
         {
           success: false,
-          message: `${findEmployee.fullName} You have already Logged Out Today`,
+          message: `${findEmployee.fullName}, You have already Logged Out Today`,
           responseBody: null,
         },
-        { status: 404 }
-      );
-    }
-    // Find the document with the matching employeId
-    const updatedDocument = await AttendenceModel.findByIdAndUpdate(
-      { _id: foundObject._id },
-      {
-        timeOutLocation: body.location,
-        timeOutSelfie: body.selfie,
-        timeOut: body.timeOut,
-      },
-      { new: true }
-    );
-
-    if (!updatedDocument) {
-      return Response.json(
-        {
-          success: false,
-          message: "Could not Timed out, Please try again.",
-          responseBody: null,
-        },
-        { status: 200 }
+        { status: 400 }
       );
     }
 
-    return Response.json(
+    todayAttendance.timeOutLocation = body.location;
+    todayAttendance.timeOutSelfie = body.selfie;
+    todayAttendance.timeOut = body.timeOut;
+
+    await todayAttendance.save();
+
+    return NextResponse.json(
       {
         success: true,
-        message: `${findEmployee.fullName}, Logout Successfull For Today.`,
-        responseBody: updatedDocument,
+        message: `${findEmployee.fullName}, Logout Successful For Today.`,
+        responseBody: todayAttendance,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error came in the attendence response:", error);
-    return Response.json(
+    return NextResponse.json(
       {
         success: false,
-        message: error,
+        message: "Server Error",
+        responseBody: error,
       },
       { status: 500 }
     );

@@ -53,12 +53,13 @@ const Attendence = () => {
       const matchesName = filterName
         ? item.name.toLowerCase().includes(filterName.toLowerCase())
         : true;
+      console.log(filterDate);
       const matchesDate = filterDate ? item.date === filterDate : true;
       return matchesName && matchesDate;
     });
 
     setAttendenceData(filteredData);
-    setCurrentPage(1); // Reset to the first page after filtering
+    setCurrentPage(1);
   };
 
   const handleResetButton = () => {
