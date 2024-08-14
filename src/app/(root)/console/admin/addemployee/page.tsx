@@ -22,7 +22,7 @@ interface CloudinaryUploadWidgetInfo {
   [key: string]: any;
 }
 
-const AddEmployee = () => {  
+const AddEmployee = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -100,7 +100,7 @@ const AddEmployee = () => {
           variant: "default",
         });
         setLoading(false);
-        router.push("/console/employee/employee-dashboard");
+        router.push("/console/admin/viewemployees");
       })
       .catch((err) => {
         console.log(err);
@@ -264,7 +264,7 @@ const AddEmployee = () => {
                 width={"w-80"}
               />
               <FormSelect
-                control={form.control} 
+                control={form.control}
                 name={"role"}
                 formlabel={"Role"}
                 selectValue={["Admin", "Manager", "Employee"]}

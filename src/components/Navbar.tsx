@@ -5,7 +5,7 @@ import { TfiDashboard } from "react-icons/tfi";
 import { FcLeave } from "react-icons/fc";
 import { IoMdTimer, IoIosHome } from "react-icons/io";
 import {
-  MdOutlineMessage,
+  MdOutlinePassword,
   MdOutlineCollections,
   MdTimeToLeave,
 } from "react-icons/md";
@@ -116,6 +116,13 @@ const Navbar = () => {
                     <p className="flex justify-start items-center gap-2">
                       <IoBookmarks size={20} />
                       Leave Applications
+                    </p>
+                  </Link>
+                  <hr />
+                  <Link href={"/console/employee/change-password"}>
+                    <p className="flex justify-start items-center gap-2">
+                      <MdOutlinePassword size={20} />
+                      Change Password
                     </p>
                   </Link>
                   <hr />

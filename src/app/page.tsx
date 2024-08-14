@@ -70,7 +70,7 @@ export default function Home() {
         setLoading(false);
         toast({
           variant: "destructive",
-          title: "Login Successfull",
+          title: "Server Error",
           description: `Sorry Sir/Mam, You got an Error. Please enter Correct Info`,
         });
         console.log(err);

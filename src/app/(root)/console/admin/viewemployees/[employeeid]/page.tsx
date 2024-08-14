@@ -141,6 +141,7 @@ const SingleEmployee = () => {
     day: "numeric",
   };
 
+  console.log(singleEmployeeInfo);
   return (
     <>
       <Navbar />
@@ -450,7 +451,8 @@ const SingleEmployee = () => {
                 <span className="font-bold">{singleEmployeeInfo.email}</span>
               </p>
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-                Password - <span className="font-bold">null</span>
+                Password -{" "}
+                <span className="font-bold">{singleEmployeeInfo.password}</span>
               </p>
             </div>
             <h1 className="font-bold text-left m-5 text-[1.5rem]">

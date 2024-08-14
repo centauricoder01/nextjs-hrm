@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   await connect();
   try {
     const { email, password } = await request.json();
+    console.log(email, password);
     if (!email && !password) {
       return NextResponse.json(
         {
@@ -30,12 +31,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      findByEmail.password
-    );
-
-    if (!isPasswordValid) {
+    if (findByEmail.password !== password) {
       return NextResponse.json(
         {
           success: false,
