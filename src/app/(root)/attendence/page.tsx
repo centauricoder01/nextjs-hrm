@@ -19,18 +19,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import FormSelect from "@/components/FormSelect";
-import UploadImage from "@/components/UploadImage";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import ImageCapture from "@/components/ImageCapture";
+import Image from "next/image";
 
 // TYPE INFERENCES
-interface CloudinaryUploadWidgetInfo {
-  public_id: string;
-  secure_url: string;
-  url: string;
-  [key: string]: any;
-}
-
 interface MainObject {
   date: string;
   employId: string | number;
@@ -51,11 +45,14 @@ const formSchema = z.object({
 
 // MAIN FUNCTION
 const Attendence = () => {
-  const [resource, setResource] = useState<
-    CloudinaryUploadWidgetInfo | undefined
-  >(undefined);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  const handleImageUpload = (url: string) => {
+    setImageUrl(url); // Set the image URL received from the child component
+  };
 
   const { toast } = useToast();
 
@@ -70,13 +67,14 @@ const Attendence = () => {
   const [getLocation, setGetLocation] = useState<string | undefined>(undefined);
 
   const currentDate = new Date();
-  function onSubmit(values: z.infer<typeof formSchema>) {
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     const mainObject: MainObject = {
       date: currentDate.toISOString().split("T")[0],
       employId: values.employeeId,
       location: getLocation,
-      selfie: resource?.url,
+      selfie: imageUrl,
       attendanceOption: values.attendenceOption,
     };
 
@@ -99,45 +97,28 @@ const Attendence = () => {
       mainObject.timeOut = currentDate.toLocaleTimeString();
     }
 
-    if (values.attendenceOption === "TimeIn") {
-      axios
-        .post("/api/attendence", mainObject)
-        .then((res) => {
-          toast({
-            title: "TimeIn Message",
-            description: res.data.message,
-          });
-          setLoading(false);
-          router.push("/");
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-          toast({
-            title: "Error Occured ",
-            variant: "destructive",
-            description: err.response.data.message,
-          });
-        });
-    } else {
-      axios
-        .patch("/api/attendence", mainObject)
-        .then((res) => {
-          toast({
-            title: "TimeOut Message",
-            description: res.data.message,
-          });
-          setLoading(false);
-          router.push("/");
-        })
-        .catch((err) => {
-          setLoading(false);
-          toast({
-            variant: "destructive",
-            title: "Error Occured ",
-            description: err.response.data.message,
-          });
-        });
+    try {
+      const endpoint = values.attendenceOption === "TimeIn" ? "post" : "patch";
+      const response = await axios[endpoint]("/api/attendence", mainObject);
+
+      toast({
+        title:
+          values.attendenceOption === "TimeIn"
+            ? "TimeIn Message"
+            : "TimeOut Message",
+        description: response.data.message,
+      });
+
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error Occurred",
+        variant: "destructive",
+        description: "An error occurred",
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -176,13 +157,15 @@ const Attendence = () => {
             )}
           />
           <Location takelocation={setGetLocation} />
-          <UploadImage
+          {/* <UploadImage
             buttonName={"Upload Image"}
             handleImage={setResource}
             classValue={
               "border p-2 font-bold bg-blue-500 text-white rounded-sm w-full"
             }
-          />
+          /> */}
+          <ImageCapture setImage={handleImageUpload} />
+
           <Button
             type="submit"
             className="w-full h-12 flex justify-center items-center bg-green-900 hover:bg-green-700 text-white"
