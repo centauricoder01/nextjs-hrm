@@ -191,7 +191,7 @@ const Attendence = () => {
                         <TableCell>{ele.employeId}</TableCell>
                         <TableCell>{ele.timeIn}</TableCell>
                         <TableCell>
-                          <Image
+                          <img
                             src={modifyImagePath(ele.timeInSelfie)}
                             width={250}
                             height={250}
@@ -213,7 +213,7 @@ const Attendence = () => {
                           {ele.timeOutSelfie === null ? (
                             <p className="font-bold text-red-700">Not Logout</p>
                           ) : (
-                            <Image
+                            <img
                               src={modifyImagePath(ele.timeOutSelfie)}
                               width={250}
                               height={250}

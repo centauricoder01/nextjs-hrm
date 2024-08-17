@@ -258,106 +258,118 @@ const Employee_Dashboard = () => {
             </div>
 
             <div className="overflow-x-auto">
-  <Table className="min-w-[1500px]"> {/* Increase the min-width for a larger table */}
-    <TableHeader>
-      <TableRow>
-        <TableHead className="min-w-[50px]">S.no</TableHead>
-        <TableHead className="min-w-[150px]">Name</TableHead>
-        <TableHead className="min-w-[150px]">Date</TableHead>
-        <TableHead className="min-w-[120px]">TimeIn</TableHead>
-        <TableHead className="min-w-[120px]">TimeOut</TableHead>
-        <TableHead className="min-w-[200px]">TimeIn Selfie</TableHead>
-        <TableHead className="min-w-[200px]">TimeIn Location</TableHead>
-        <TableHead className="min-w-[200px]">TimeOut Selfie</TableHead>
-        <TableHead className="min-w-[200px]">Timeout Location</TableHead>
-        <TableHead className="min-w-[200px]">Remarks</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {currentRecords?.length !== 0 ? (
-        currentRecords.map((ele, i) => (
-          <TableRow key={i}>
-            <TableCell>{indexOfFirstRecord + i + 1}</TableCell>
-            <TableCell>{ele.name}</TableCell>
-            <TableCell>{ele.date}</TableCell>
-            <TableCell>
-              {ele.timeIn === null ? (
-                <b className="text-red-600">Not Time In</b>
-              ) : (
-                ele.timeIn
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeOut === null ? (
-                <b className="text-red-600">Not Time Out</b>
-              ) : (
-                ele.timeOut
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeInSelfie === null ? (
-                <b className="text-red-600">Not Time In</b>
-              ) : (
-                <Image
-                  src={modifyImagePath(ele.timeInSelfie)}
-                  width={250}
-                  height={150}
-                  className="rounded-sm h-[7rem] w-[10rem]"
-                  alt="Avatar"
-                />
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeInLocation === null ? (
-                <b className="text-red-600">Not Time In</b>
-              ) : (
-                ele.timeInLocation
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeOutSelfie === null ? (
-                <b className="text-red-600">Not Time Out</b>
-              ) : (
-                <Image
-                  src={modifyImagePath(ele.timeOutSelfie)}
-                  width={250}
-                  height={150}
-                  className="rounded-sm h-[7rem] w-[10rem]"
-                  alt="Avatar"
-                />
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeOutLocation === null ? (
-                <b className="text-red-600">Not Time Out</b>
-              ) : (
-                ele.timeOutLocation
-              )}
-            </TableCell>
-            <TableCell>
-              {ele.timeOut === null ? (
-                <p className="font-extrabold text-red-700">Not Logout</p>
-              ) : calculateHoursWorked(ele.timeIn, ele.timeOut) >= 9 ? (
-                <p className="text-green-500">Completed 9 hours</p>
-              ) : (
-                <p className="text-red-500 font-extrabold">
-                  Not complete 9 hours
-                </p>
-              )}
-            </TableCell>
-          </TableRow>
-        ))
-      ) : (
-        <TableRow>
-          <TableCell colSpan={9} className="text-center">
-            No records found.
-          </TableCell>
-        </TableRow>
-      )}
-    </TableBody>
-  </Table>
-</div>
-
+              <Table className="min-w-[1500px]">
+                {" "}
+                {/* Increase the min-width for a larger table */}
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="min-w-[50px]">S.no</TableHead>
+                    <TableHead className="min-w-[150px]">Name</TableHead>
+                    <TableHead className="min-w-[150px]">Date</TableHead>
+                    <TableHead className="min-w-[120px]">TimeIn</TableHead>
+                    <TableHead className="min-w-[120px]">TimeOut</TableHead>
+                    <TableHead className="min-w-[200px]">
+                      TimeIn Selfie
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">
+                      TimeIn Location
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">
+                      TimeOut Selfie
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">
+                      Timeout Location
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">Remarks</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentRecords?.length !== 0 ? (
+                    currentRecords.map((ele, i) => (
+                      <TableRow key={i}>
+                        <TableCell>{indexOfFirstRecord + i + 1}</TableCell>
+                        <TableCell>{ele.name}</TableCell>
+                        <TableCell>{ele.date}</TableCell>
+                        <TableCell>
+                          {ele.timeIn === null ? (
+                            <b className="text-red-600">Not Time In</b>
+                          ) : (
+                            ele.timeIn
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeOut === null ? (
+                            <b className="text-red-600">Not Time Out</b>
+                          ) : (
+                            ele.timeOut
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeInSelfie === null ? (
+                            <b className="text-red-600">Not Time In</b>
+                          ) : (
+                            <img
+                              src={modifyImagePath(ele.timeInSelfie)}
+                              width={250}
+                              height={150}
+                              className="rounded-sm h-[7rem] w-[10rem]"
+                              alt="Avatar"
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeInLocation === null ? (
+                            <b className="text-red-600">Not Time In</b>
+                          ) : (
+                            ele.timeInLocation
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeOutSelfie === null ? (
+                            <b className="text-red-600">Not Time Out</b>
+                          ) : (
+                            <img
+                              src={modifyImagePath(ele.timeOutSelfie)}
+                              width={250}
+                              height={150}
+                              className="rounded-sm h-[7rem] w-[10rem]"
+                              alt="Avatar"
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeOutLocation === null ? (
+                            <b className="text-red-600">Not Time Out</b>
+                          ) : (
+                            ele.timeOutLocation
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {ele.timeOut === null ? (
+                            <p className="font-extrabold text-red-700">
+                              Not Logout
+                            </p>
+                          ) : calculateHoursWorked(ele.timeIn, ele.timeOut) >=
+                            9 ? (
+                            <p className="text-green-500">Completed 9 hours</p>
+                          ) : (
+                            <p className="text-red-500 font-extrabold">
+                              Not complete 9 hours
+                            </p>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center">
+                        No records found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
             {/* Pagination Controls */}
             <div className="flex justify-between mt-4 border items-center p-2 bg-slate-400 rounded">
