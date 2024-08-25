@@ -28,6 +28,7 @@ const Profile = () => {
       }
     }
   }, []);
+
   return (
     <>
       <Navbar />
@@ -59,9 +60,7 @@ const Profile = () => {
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Marital Status -{" "}
-            <span className="font-bold">
-              {userValue?.maritalStatus ? "Married" : "Unmarried"}
-            </span>
+            <span className="font-bold">{userValue?.maritalStatus}</span>
           </p>
           <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
             Mobile Number -{" "}

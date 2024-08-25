@@ -42,7 +42,7 @@ const Employee_Dashboard = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [dateFilter, setDateFilter] = useState<string>("");
 
-  const recordsPerPage = 2;
+  const recordsPerPage = 30;
 
   // Modigy the image path
   const modifyImagePath = (path: string) => {

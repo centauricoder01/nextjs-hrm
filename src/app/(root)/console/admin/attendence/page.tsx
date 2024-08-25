@@ -38,7 +38,7 @@ const Attendence = () => {
   const [filterDate, setFilterDate] = useState("");
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 50;
 
   const handleFilterButton = () => {
     if (filterDate === "" && filterName === "") {
