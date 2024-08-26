@@ -110,12 +110,11 @@ const Attendence = () => {
       });
 
       router.push("/");
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
       toast({
         title: "Error Occurred",
         variant: "destructive",
-        description: "An error occurred",
+        description: err.response.data.message,
       });
     } finally {
       setLoading(false);

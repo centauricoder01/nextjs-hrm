@@ -78,18 +78,18 @@ const Console = () => {
             <p className="font-bold text-[1.1rem]">{totalEmployee}</p>
           </div>
           <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
+            <h1 className="font-bold text-[1.2rem] text-blue-800">
+              Today&apos;s Attendance
+            </h1>
+            <p className="font-bold text-[1.1rem]">{totalAttendence}</p>
+          </div>
+          <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
             <h1 className="font-bold text-[1.2rem] text-red-800">
               Employees on Leave
             </h1>
             <p className="font-bold text-[1.1rem]">
               {leaveApplication?.length}
             </p>
-          </div>
-          <div className="w-[30%] bg-white shadow-[0_0_36px_-3px_#00000026] rounded-sm p-3">
-            <h1 className="font-bold text-[1.2rem] text-blue-800">
-              Today&apos;s Attendance
-            </h1>
-            <p className="font-bold text-[1.1rem]">{totalAttendence}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-4 md:gap-10 justify-center items-center">

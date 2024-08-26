@@ -8,6 +8,8 @@ export async function POST(req: NextRequest) {
     // Parse the incoming request body
     const body = await req.json();
     const { image } = body;
+
+    
     if (!image) {
       return NextResponse.json(
         { success: false, message: "No image provided" },
