@@ -8,11 +8,8 @@ export async function GET(request: Request) {
   try {
     const totalEmployee = await EmployeeModel.find();
     const todayDate = new Date().toISOString().split("T")[0];
-    const totalAttendence = await AttendenceModel.find({
-      date: {
-        $regex: `^${todayDate}`, // Matches any timestamp on this day
-      },
-    });
+    const totalAttendence = await AttendenceModel.find({ date: todayDate });
+
     return NextResponse.json(
       {
         success: true,
