@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
     const existingAttendance = await AttendenceModel.findOne({
       date: formattedCurrentDate,
-      employeId: body.employId,
+      employeId: body.employId.toUpperCase(),
     });
 
     if (existingAttendance) {
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     const saveEmployeeAttendence: MainObject = {
       date: body.date,
       name: findEmployee.fullName,
-      employeId: body.employId,
+      employeId: body.employId.toUpperCase(),
       userId: new mongoose.Types.ObjectId(findEmployee._id),
       timeInLocation: body.location,
       timeInSelfie: body.selfie,
@@ -101,8 +101,6 @@ export async function POST(request: Request) {
     const isEmpty = Object.values(saveEmployeeAttendence).some((value) => {
       return value === undefined || value === null || value === "";
     });
-
-    console.log(isEmpty);
 
     if (isEmpty) {
       return NextResponse.json(
@@ -189,7 +187,7 @@ export async function PATCH(request: Request) {
 
     const todayAttendance = await AttendenceModel.findOne({
       date: CurrentDate,
-      employeId: body.employId,
+      employeId: body.employId.toUpperCase(),
     });
 
     if (!todayAttendance) {
@@ -243,9 +241,8 @@ export async function PATCH(request: Request) {
 export async function GET(request: Request) {
   // Connect to the database
   await connect();
-
   try {
-    const attendanceRecords = await AttendenceModel.find();
+    const attendanceRecords = await AttendenceModel.find().sort({ date: -1 });
 
     return NextResponse.json(
       {
