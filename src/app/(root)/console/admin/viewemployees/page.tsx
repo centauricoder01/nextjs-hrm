@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface EmployeeBluePrint {
   _id: string;
@@ -34,6 +35,7 @@ const ViewEmployees = () => {
         console.log(err);
       });
   }, []);
+
 
   const handleSearch = () => {
     setCurrentPage(1); // Reset to first page on new search
@@ -69,92 +71,94 @@ const ViewEmployees = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
-        <div className="sm:text-left text-center">
-          <h1 className="font-bold mb-5 text-[2rem]">
-            All Employees {filteredEmployees.length}
-          </h1>
-        </div>
-
-        <div className="flex justify-between items-center gap-5">
-          <Input
-            className="w-full mb-5 mt-5 bg-white"
-            placeholder="Search Employee"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <select
-            className="w-full mb-5 mt-5 bg-white h-12 rounded"
-            value={selectedDepartment}
-            onChange={handleDepartmentChange}
-          >
-            <option value="All">All Departments</option>
-            <option value="IT/MARKETING">IT/MARKETING</option>
-            <option value="SUPPORTING-STAFF">SUPPORTING-STAFF</option>
-            <option value="HUMAN-RESOURCE">HUMAN-RESOURCE</option>
-            <option value="COUNSELLING/SALES">COUNSELLING/SALES</option>
-          </select>
-
-          <select
-            className="w-full mb-5 mt-5 bg-white h-12 rounded"
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-          >
-            <option value="All" className="bolder">
-              <strong>All Employees</strong>
-            </option>
-            <option value="Working">
-              <strong>Working</strong>
-            </option>
-            <option value="Exited">
-              <strong>Exited</strong>
-            </option>
-          </select>
-
-          <button
-            className="border bg-green-800 rounded-lg shadow-slate-500 text-white p-2.5 hover:bg-green-600"
-            onClick={handleSearch}
-          >
-            Search
-          </button>
-        </div>
-
-        {currentEmployees.map((employee, i) => (
-          <div
-            key={i}
-            className="border flex flex-col justify-between sm:flex-row items-center p-2 rounded-md bg-white shadow-2xl mb-4"
-          >
-            <Image
-              src={employee.profileImage}
-              width={70}
-              height={10}
-              className="rounded-full mb-2 h-[4rem]"
-              alt="Avatar"
-            />
-
-            <p className="font-bold mb-2">{employee.fullName}</p>
-            <p className="font-bold mb-2">{employee.designation}</p>
-            <p className="font-bold mb-2">{employee.department}</p>
-            <p className="font-bold mb-2">{employee.employeeId}</p>
-            <Link
-              href={`/console/admin/viewemployees/${employee._id}`}
-              passHref
-            >
-              <p className="font-bold text-blue-500 hover:underline">
-                View Full Detail
-              </p>
-            </Link>
+      <ProtectedRoute allowedRoles={["Admin"]}>
+        <Navbar />
+        <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
+          <div className="sm:text-left text-center">
+            <h1 className="font-bold mb-5 text-[2rem]">
+              All Employees {filteredEmployees.length}
+            </h1>
           </div>
-        ))}
 
-        <Pagination
-          employeesPerPage={employeesPerPage}
-          totalEmployees={filteredEmployees.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      </div>
+          <div className="flex justify-between items-center gap-5">
+            <Input
+              className="w-full mb-5 mt-5 bg-white"
+              placeholder="Search Employee"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <select
+              className="w-full mb-5 mt-5 bg-white h-12 rounded"
+              value={selectedDepartment}
+              onChange={handleDepartmentChange}
+            >
+              <option value="All">All Departments</option>
+              <option value="IT/MARKETING">IT/MARKETING</option>
+              <option value="SUPPORTING-STAFF">SUPPORTING-STAFF</option>
+              <option value="HUMAN-RESOURCE">HUMAN-RESOURCE</option>
+              <option value="COUNSELLING/SALES">COUNSELLING/SALES</option>
+            </select>
+
+            <select
+              className="w-full mb-5 mt-5 bg-white h-12 rounded"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              <option value="All" className="bolder">
+                <strong>All Employees</strong>
+              </option>
+              <option value="Working">
+                <strong>Working</strong>
+              </option>
+              <option value="Exited">
+                <strong>Exited</strong>
+              </option>
+            </select>
+
+            <button
+              className="border bg-green-800 rounded-lg shadow-slate-500 text-white p-2.5 hover:bg-green-600"
+              onClick={handleSearch}
+            >
+              Search
+            </button>
+          </div>
+
+          {currentEmployees.map((employee, i) => (
+            <div
+              key={i}
+              className="border flex flex-col justify-between sm:flex-row items-center p-2 rounded-md bg-white shadow-2xl mb-4"
+            >
+              <Image
+                src={employee.profileImage}
+                width={70}
+                height={10}
+                className="rounded-full mb-2 h-[4rem]"
+                alt="Avatar"
+              />
+
+              <p className="font-bold mb-2">{employee.fullName}</p>
+              <p className="font-bold mb-2">{employee.designation}</p>
+              <p className="font-bold mb-2">{employee.department}</p>
+              <p className="font-bold mb-2">{employee.employeeId}</p>
+              <Link
+                href={`/console/admin/viewemployees/${employee._id}`}
+                passHref
+              >
+                <p className="font-bold text-blue-500 hover:underline">
+                  View Full Detail
+                </p>
+              </Link>
+            </div>
+          ))}
+
+          <Pagination
+            employeesPerPage={employeesPerPage}
+            totalEmployees={filteredEmployees.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
+      </ProtectedRoute>
     </>
   );
 };

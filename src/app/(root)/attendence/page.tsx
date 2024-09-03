@@ -156,18 +156,13 @@ const Attendence = () => {
             )}
           />
           <Location takelocation={setGetLocation} />
-          {/* <UploadImage
-            buttonName={"Upload Image"}
-            handleImage={setResource}
-            classValue={
-              "border p-2 font-bold bg-blue-500 text-white rounded-sm w-full"
-            }
-          /> */}
+
           <ImageCapture setImage={handleImageUpload} />
 
           <Button
             type="submit"
             className="w-full h-12 flex justify-center items-center bg-green-900 hover:bg-green-700 text-white"
+            disabled={loading}
           >
             {loading ? <LoadingSpinner /> : "Submit"}
           </Button>

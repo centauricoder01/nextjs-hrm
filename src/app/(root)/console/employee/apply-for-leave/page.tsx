@@ -10,9 +10,10 @@ import FormSelect from "@/components/FormSelect";
 import FormInput from "@/components/FormInput";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface localStorageValue {
-  _id: string;
+  id: string;
 }
 
 const formSchema = z.object({
@@ -74,6 +75,8 @@ const Leave_Application = () => {
         variant: "destructive",
       });
     }
+
+    console.log(values);
     axios
       .post("/api/leave-applications", values)
       .then((res) => {
@@ -100,13 +103,13 @@ const Leave_Application = () => {
       const storedData = localStorage.getItem("Employee_Info");
       if (storedData) {
         const employeeInfo: localStorageValue = JSON.parse(storedData);
-        setEmployeeUserId(employeeInfo._id);
+        setEmployeeUserId(employeeInfo.id);
       }
     }
   }, []);
 
   return (
-    <>
+    <ProtectedRoute allowedRoles={["Employee", "Manager"]}>
       <Navbar />
       <main className=" flex mt-2 flex-col items-center  justify-center gap-4 p-2 ">
         <Form {...form}>
@@ -165,7 +168,7 @@ const Leave_Application = () => {
           </form>
         </Form>
       </main>
-    </>
+    </ProtectedRoute>
   );
 };
 

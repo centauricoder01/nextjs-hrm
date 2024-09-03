@@ -1,7 +1,5 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -12,8 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface Iattendencedata {
   _id: string;
@@ -34,6 +33,8 @@ const Attendence = () => {
   const [originalAttendenceData, setOriginalAttendenceData] = useState<
     Iattendencedata[]
   >([]);
+  const router = useRouter();
+
   const [filterName, setFilterName] = useState("");
   const [filterDate, setFilterDate] = useState("");
   const { toast } = useToast();
@@ -110,169 +111,181 @@ const Attendence = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
-        <div className="sm:text-left text-center">
-          <h1 className="font-bold mb-5 text-[2rem]">Attendance Details</h1>
-        </div>
-        <div className="flex justify-between items-center w-full border p-2 mb-10 bg-white rounded">
-          <div className="flex gap-5 items-center w-[30%]">
-            <label>Filter by Name</label>
-            <input
-              type="text"
-              placeholder="Name"
-              className="bg-blue-300 p-2 rounded w-[68%]"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
-            />
+      <ProtectedRoute allowedRoles={["Admin"]}>
+        <Navbar />
+        <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
+          <div className="sm:text-left text-center">
+            <h1 className="font-bold mb-5 text-[2rem]">Attendance Details</h1>
           </div>
-          <div className="flex gap-5 items-center w-[30%]">
-            <label>Filter by Date</label>
-            <input
-              type="date"
-              className="bg-blue-300 p-2 rounded w-[70%]"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-            />
+          <div className="flex justify-between items-center w-full border p-2 mb-10 bg-white rounded">
+            <div className="flex gap-5 items-center w-[30%]">
+              <label>Filter by Name</label>
+              <input
+                type="text"
+                placeholder="Name"
+                className="bg-blue-300 p-2 rounded w-[68%]"
+                value={filterName}
+                onChange={(e) => setFilterName(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-5 items-center w-[30%]">
+              <label>Filter by Date</label>
+              <input
+                type="date"
+                className="bg-blue-300 p-2 rounded w-[70%]"
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+              />
+            </div>
+            <button
+              className="w-[20%] bg-blue-700 text-white rounded p-2"
+              onClick={handleFilterButton}
+            >
+              Submit
+            </button>
+            <button
+              className="w-[10%] bg-green-700 text-white rounded p-2"
+              onClick={handleResetButton}
+            >
+              Reset Filter
+            </button>
           </div>
-          <button
-            className="w-[20%] bg-blue-700 text-white rounded p-2"
-            onClick={handleFilterButton}
-          >
-            Submit
-          </button>
-          <button
-            className="w-[10%] bg-green-700 text-white rounded p-2"
-            onClick={handleResetButton}
-          >
-            Reset Filter
-          </button>
-        </div>
-        <div>
-          {attendenceData.length === 0 ? (
-            <p>No Data Available</p>
-          ) : (
-            <>
-              <div className="overflow-x-auto w-full">
-                <Table className="min-w-[1000px]">
-                  {" "}
-                  {/* Adjust min-w as per your content */}
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="min-w-[100px]">Date</TableHead>
-                      <TableHead className="min-w-[150px]">Name</TableHead>
-                      <TableHead className="min-w-[150px]">
-                        EmployeeId
-                      </TableHead>
-                      <TableHead className="min-w-[120px]">Time In</TableHead>
-                      <TableHead className="min-w-[200px]">
-                        Time-in Selfie
-                      </TableHead>
-                      <TableHead className="min-w-[200px]">
-                        Time-in Location
-                      </TableHead>
-                      <TableHead className="min-w-[120px]">Time Out</TableHead>
-                      <TableHead className="min-w-[200px]">
-                        Time-Out Selfie
-                      </TableHead>
-                      <TableHead className="min-w-[200px]">
-                        Time-Out Location
-                      </TableHead>
-                      <TableHead className="min-w-[150px]">
-                        Total Time
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentItems.map((ele, i) => (
-                      <TableRow key={i}>
-                        <TableCell>{ele.date}</TableCell>
-                        <TableCell>{ele.name}</TableCell>
-                        <TableCell>{ele.employeId}</TableCell>
-                        <TableCell>{ele.timeIn}</TableCell>
-                        <TableCell>
-                          <img
-                            src={modifyImagePath(ele.timeInSelfie)}
-                            width={250}
-                            height={250}
-                            className="rounded-sm h-[7rem] w-[12rem]"
-                            alt="Avatar"
-                          />
-                        </TableCell>
-                        <TableCell className="w-[20rem]">
-                          {ele.timeInLocation}
-                        </TableCell>
-                        <TableCell>
-                          {ele.timeOut === null ? (
-                            <p className="font-bold text-red-700">Not Logout</p>
-                          ) : (
-                            ele.timeOut
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {ele.timeOutSelfie === null ? (
-                            <p className="font-bold text-red-700">Not Logout</p>
-                          ) : (
+          <div>
+            {attendenceData.length === 0 ? (
+              <p>No Data Available</p>
+            ) : (
+              <>
+                <div className="overflow-x-auto w-full">
+                  <Table className="min-w-[1000px]">
+                    {" "}
+                    {/* Adjust min-w as per your content */}
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="min-w-[100px]">Date</TableHead>
+                        <TableHead className="min-w-[150px]">Name</TableHead>
+                        <TableHead className="min-w-[150px]">
+                          EmployeeId
+                        </TableHead>
+                        <TableHead className="min-w-[120px]">Time In</TableHead>
+                        <TableHead className="min-w-[200px]">
+                          Time-in Selfie
+                        </TableHead>
+                        <TableHead className="min-w-[200px]">
+                          Time-in Location
+                        </TableHead>
+                        <TableHead className="min-w-[120px]">
+                          Time Out
+                        </TableHead>
+                        <TableHead className="min-w-[200px]">
+                          Time-Out Selfie
+                        </TableHead>
+                        <TableHead className="min-w-[200px]">
+                          Time-Out Location
+                        </TableHead>
+                        <TableHead className="min-w-[150px]">
+                          Total Time
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {currentItems.map((ele, i) => (
+                        <TableRow key={i}>
+                          <TableCell>{ele.date}</TableCell>
+                          <TableCell>{ele.name}</TableCell>
+                          <TableCell>{ele.employeId}</TableCell>
+                          <TableCell>{ele.timeIn}</TableCell>
+                          <TableCell>
                             <img
-                              src={modifyImagePath(ele.timeOutSelfie)}
+                              src={modifyImagePath(ele.timeInSelfie)}
                               width={250}
                               height={250}
-                              className="rounded-sm h-[7rem] w-[20rem]"
+                              className="rounded-sm h-[7rem] w-[12rem]"
                               alt="Avatar"
                             />
-                          )}
-                        </TableCell>
-                        <TableCell className="w-[20rem]">
-                          {ele.timeOutLocation === null ? (
-                            <p className="font-bold text-red-700">Not Logout</p>
-                          ) : (
-                            ele.timeOutLocation
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {ele.timeOut === null ? (
-                            <p className="font-extrabold text-red-700">
-                              Not Logout
-                            </p>
-                          ) : calculateHoursWorked(ele.timeIn, ele.timeOut) >=
-                            9 ? (
-                            <p className="text-green-500">Completed 9 hours</p>
-                          ) : (
-                            <p className="text-red-500 font-extrabold">
-                              Not complete 9 hours
-                            </p>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              <div className="flex justify-center mt-4">
-                <button
-                  className="px-3 py-1 mx-1 bg-blue-700 text-white rounded"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <span className="px-3 py-1 mx-1">{`${currentPage} of ${totalPages}`}</span>
-                <button
-                  className="px-3 py-1 mx-1 bg-blue-700 text-white rounded"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          )}
+                          </TableCell>
+                          <TableCell className="w-[20rem]">
+                            {ele.timeInLocation}
+                          </TableCell>
+                          <TableCell>
+                            {ele.timeOut === null ? (
+                              <p className="font-bold text-red-700">
+                                Not Logout
+                              </p>
+                            ) : (
+                              ele.timeOut
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {ele.timeOutSelfie === null ? (
+                              <p className="font-bold text-red-700">
+                                Not Logout
+                              </p>
+                            ) : (
+                              <img
+                                src={modifyImagePath(ele.timeOutSelfie)}
+                                width={250}
+                                height={250}
+                                className="rounded-sm h-[7rem] w-[20rem]"
+                                alt="Avatar"
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell className="w-[20rem]">
+                            {ele.timeOutLocation === null ? (
+                              <p className="font-bold text-red-700">
+                                Not Logout
+                              </p>
+                            ) : (
+                              ele.timeOutLocation
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {ele.timeOut === null ? (
+                              <p className="font-extrabold text-red-700">
+                                Not Logout
+                              </p>
+                            ) : calculateHoursWorked(ele.timeIn, ele.timeOut) >=
+                              9 ? (
+                              <p className="text-green-500">
+                                Completed 9 hours
+                              </p>
+                            ) : (
+                              <p className="text-red-500 font-extrabold">
+                                Not complete 9 hours
+                              </p>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="px-3 py-1 mx-1 bg-blue-700 text-white rounded"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <span className="px-3 py-1 mx-1">{`${currentPage} of ${totalPages}`}</span>
+                  <button
+                    className="px-3 py-1 mx-1 bg-blue-700 text-white rounded"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </ProtectedRoute>
     </>
   );
 };

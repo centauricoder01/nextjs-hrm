@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import planEduImage from "../../public/planedu.png";
 import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -30,6 +29,8 @@ const formSchema = z.object({
   }),
 });
 
+
+
 export default function Home() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,9 @@ export default function Home() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     axios
-      .post("/api/authtication", values)
+      .post("/api/authtication", values, {
+        withCredentials: true,
+      })
       .then((res) => {
         toast({
           title: "Login Successfull",
@@ -80,7 +83,12 @@ export default function Home() {
   return (
     <main className="dark flex min-h-screen flex-col items-center  justify-center gap-4 p-2 bg-[url('../../public/e.png')] inset-0 bg-no-repeat bg-cover bg-center text-zinc-50">
       <div>
-        <Image src={planEduImage} alt="PlanEdu Image" width={200} />
+        <Image
+          src={"/planedu.png"}
+          alt="PlanEdu Image"
+          width={200}
+          height={200}
+        />
       </div>
       <Form {...form}>
         <form

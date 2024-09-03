@@ -4,6 +4,8 @@ import EmployeeModel from "@/model/employee.model";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import mongoose from "mongoose";
+import { verify } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 const schema = z.object({
   date: z.string(),
@@ -29,6 +31,8 @@ interface MainObject {
   timeIn?: Date;
   timeOut?: Date;
 }
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY || "your-secret-key";
 
 export async function POST(request: Request) {
   // Connect to the database
@@ -240,6 +244,52 @@ export async function PATCH(request: Request) {
 
 export async function GET(request: Request) {
   // Connect to the database
+
+  const authCookie = cookies().get("authToken");
+
+  if (!authCookie) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized: No token provided",
+      },
+      { status: 401 }
+    );
+  }
+
+  const decoded = verify(authCookie.value, SECRET_KEY) as {
+    _id: string;
+    email: string;
+    role: string;
+    fullName: string;
+    exp: number;
+  };
+
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  if (decoded.exp < currentTime) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized: Token has expired",
+      },
+      { status: 401 }
+    );
+  }
+
+  const { role } = decoded;
+
+  if (role === "Employee") {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized : You are not Unauthorized",
+        responseBody: null,
+      },
+      { status: 401 }
+    );
+  }
+
   await connect();
   try {
     const attendanceRecords = await AttendenceModel.find().sort({ date: -1 });

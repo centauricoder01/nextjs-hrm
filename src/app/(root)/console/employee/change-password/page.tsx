@@ -9,9 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/FormInput";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface localStorageValue {
-  _id: string;
+  id: string;
 }
 
 const formSchema = z.object({
@@ -77,49 +78,51 @@ const ChangePassword = () => {
       const storedData = localStorage.getItem("Employee_Info");
       if (storedData) {
         const employeeInfo: localStorageValue = JSON.parse(storedData);
-        setEmployeeId(employeeInfo._id);
+        setEmployeeId(employeeInfo.id);
       }
     }
   }, []);
 
   return (
     <>
-      <Navbar />
-      <main className="flex mt-2 flex-col items-center justify-center gap-4 p-2">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 p-4 rounded-md backdrop-blur h-auto shadow-2xl m-1 w-full md:w-1/2 lg:w-1/3"
-          >
-            <div>
-              <p className="text-[2rem] font-bold text-center w-full">
-                Create New Password
-              </p>
-            </div>
-
-            <FormInput
-              control={form.control}
-              name={"currentPassword"}
-              formlabel={"Current Password"}
-              type="text"
-              width={"w-full"}
-            />
-            <FormInput
-              control={form.control}
-              name={"password"}
-              formlabel={"New Password"}
-              type="text"
-              width={"w-full"}
-            />
-            <Button
-              type="submit"
-              className="w-full h-12 flex justify-center items-center"
+      <ProtectedRoute allowedRoles={["Employee", "Manager"]}>
+        <Navbar />
+        <main className="flex mt-2 flex-col items-center justify-center gap-4 p-2">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 p-4 rounded-md backdrop-blur h-auto shadow-2xl m-1 w-full md:w-1/2 lg:w-1/3"
             >
-              Submit
-            </Button>
-          </form>
-        </Form>
-      </main>
+              <div>
+                <p className="text-[2rem] font-bold text-center w-full">
+                  Create New Password
+                </p>
+              </div>
+
+              <FormInput
+                control={form.control}
+                name={"currentPassword"}
+                formlabel={"Current Password"}
+                type="text"
+                width={"w-full"}
+              />
+              <FormInput
+                control={form.control}
+                name={"password"}
+                formlabel={"New Password"}
+                type="text"
+                width={"w-full"}
+              />
+              <Button
+                type="submit"
+                className="w-full h-12 flex justify-center items-center"
+              >
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </main>
+      </ProtectedRoute>
     </>
   );
 };

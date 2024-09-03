@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface IUser {
   profileImage: string;
@@ -70,84 +71,86 @@ const Leaves = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
-        <div className="sm:text-left text-center">
-          <h1 className="font-bold mb-5 text-[2rem]">Leaves Requests</h1>
-        </div>
-        <div>
-          {leaveApplication?.length === 0 ? (
-            <p>No Leave Request are there...</p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>From</TableHead>
-                  <TableHead>To</TableHead>
-                  <TableHead>Reason</TableHead>
-                  <TableHead>Leave Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-center">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {leaveApplication?.map((ele, i) => {
-                  const startingDate = ele.startingDate.split("T")[0];
-                  const endingDate = ele.endingDate.split("T")[0];
+      <ProtectedRoute allowedRoles={["Admin"]}>
+        <Navbar />
+        <div className="bg-[#c3eeff] m-5 p-5 rounded-md">
+          <div className="sm:text-left text-center">
+            <h1 className="font-bold mb-5 text-[2rem]">Leaves Requests</h1>
+          </div>
+          <div>
+            {leaveApplication?.length === 0 ? (
+              <p>No Leave Request are there...</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Image</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>From</TableHead>
+                    <TableHead>To</TableHead>
+                    <TableHead>Reason</TableHead>
+                    <TableHead>Leave Type</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-center">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {leaveApplication?.map((ele, i) => {
+                    const startingDate = ele.startingDate.split("T")[0];
+                    const endingDate = ele.endingDate.split("T")[0];
 
-                  return (
-                    <TableRow key={i}>
-                      <TableCell className="font-medium">
-                        <Image
-                          src={ele?.userId?.profileImage}
-                          width={70}
-                          height={70}
-                          className="rounded-full mb-2"
-                          alt="Avatar"
-                        />
-                      </TableCell>
-                      <TableCell>{ele?.userId?.fullName}</TableCell>
-                      <TableCell>{startingDate}</TableCell>
-                      <TableCell>{endingDate}</TableCell>
-                      <TableCell>{ele.reason}</TableCell>
-                      <TableCell>{ele.leaveType}</TableCell>
-                      <TableCell>{ele.leaveStatus}</TableCell>
-                      <TableCell className="text-center">
-                        {ele.leaveStatus === "Pending" ? (
-                          <>
-                            <Button
-                              className="mr-3 bg-orange-700"
-                              onClick={() =>
-                                updateLeaveStatus(ele._id, "Approved")
-                              }
-                            >
-                              Approve
+                    return (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">
+                          <Image
+                            src={ele?.userId?.profileImage}
+                            width={70}
+                            height={70}
+                            className="rounded-full mb-2"
+                            alt="Avatar"
+                          />
+                        </TableCell>
+                        <TableCell>{ele?.userId?.fullName}</TableCell>
+                        <TableCell>{startingDate}</TableCell>
+                        <TableCell>{endingDate}</TableCell>
+                        <TableCell>{ele.reason}</TableCell>
+                        <TableCell>{ele.leaveType}</TableCell>
+                        <TableCell>{ele.leaveStatus}</TableCell>
+                        <TableCell className="text-center">
+                          {ele.leaveStatus === "Pending" ? (
+                            <>
+                              <Button
+                                className="mr-3 bg-orange-700"
+                                onClick={() =>
+                                  updateLeaveStatus(ele._id, "Approved")
+                                }
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                className="mr-3 bg-green-700"
+                                onClick={() =>
+                                  updateLeaveStatus(ele._id, "Rejected")
+                                }
+                              >
+                                Reject
+                              </Button>
+                            </>
+                          ) : (
+                            <Button className="mr-3 bg-black text-white">
+                              No Action Needed
                             </Button>
-                            <Button
-                              className="mr-3 bg-green-700"
-                              onClick={() =>
-                                updateLeaveStatus(ele._id, "Rejected")
-                              }
-                            >
-                              Reject
-                            </Button>
-                          </>
-                        ) : (
-                          <Button className="mr-3 bg-black text-white">
-                            No Action Needed
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          )}
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            )}
+          </div>
         </div>
-      </div>
+      </ProtectedRoute>
     </>
   );
 };

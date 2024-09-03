@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { IEmployee } from "@/types/modals.types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Navbar = () => {
   const [userValue, setUserValue] = useState<IEmployee>();
@@ -145,8 +146,9 @@ const Navbar = () => {
 
           <p className="text-white">{userValue?.fullName}</p>
           <Button
-            onClick={() => {
+            onClick={async () => {
               localStorage.removeItem("Employee_Info");
+              await axios.get("/api/logout");
               router.push("/");
             }}
           >
