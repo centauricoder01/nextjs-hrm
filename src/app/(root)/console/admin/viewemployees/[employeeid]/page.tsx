@@ -18,6 +18,7 @@ interface CloudinaryUploadWidgetInfo {
 
 const SingleEmployee = () => {
   const { employeeid } = useParams<{ employeeid: string }>();
+  const [exited, setexited] = useState("");
   const router = useRouter();
   const [singleEmployeeInfo, setSingleEmployeeInfo] =
     useState<IEmployee | null>(null);
@@ -81,7 +82,9 @@ const SingleEmployee = () => {
   }, [employeeid]);
 
   const handleEditChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -102,6 +105,11 @@ const SingleEmployee = () => {
       formData.relativeAadhaarImage = relativeAadhaarImage.secure_url;
     }
 
+    if (exited === "exit") {
+      formData.employeeExited = true;
+    } else {
+      formData.employeeExited = false;
+    }
     axios
       .patch(`/api/employees/${employeeid}`, formData)
       .then((res) => {
@@ -157,207 +165,362 @@ const SingleEmployee = () => {
 
           {isEditing ? (
             <form
-              className="w-full flex flex-wrap gap-2 justify-center items-center"
+              className="w-full flex flex-wrap gap-2 justify-center items-center "
               onSubmit={handleEditSubmit}
             >
-              <UploadImage
-                buttonName={"Change profile Image"}
-                handleImage={setProfileImage}
-                classValue={
-                  "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
-                }
-              />
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Image</label>
+                <UploadImage
+                  buttonName={"Change profile Image"}
+                  handleImage={setProfileImage}
+                  classValue={
+                    "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] w-full"
+                  }
+                />
+              </div>
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Full Name"
+                />
+              </div>
 
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Full Name"
-              />
-              <input
-                type="text"
-                name="designation"
-                value={formData.designation}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Designation"
-              />
-              <input
-                type="text"
-                name="fullAddress"
-                value={formData.fullAddress}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Full Address"
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Email"
-              />
-              <input
-                type="text"
-                name="department"
-                value={formData.department}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Department"
-              />
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Designation</label>
+                <select
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                >
+                  <option value="Academic-Counsellor">
+                    Academic-Counsellor
+                  </option>
+                  <option value="Administrator">Administrator</option>
+                  <option value="Business-Development-Associate">
+                    Business-Development-Associate
+                  </option>
+                  <option value="Content-Creator">Content-Creator</option>
+                  <option value="Content-Writer">Content-Writer</option>
+                  <option value="Data-Analyst">Data-Analyst</option>
+                  <option value="Director-Of-Admission & Marketing">
+                    Director-Of-Admission & Marketing
+                  </option>
+                  <option value="Field-Executive">Field-Executive</option>
+                  <option value="Graphic Designer & Content Creator">
+                    Graphic Designer & Content Creator
+                  </option>
+                  <option value="Head-Of-Medical-Counselling&Training">
+                    Head-Of-Medical-Counselling&Training
+                  </option>
+                  <option value="Motion Graphic Designer">
+                    Motion Graphic Designer
+                  </option>
+                  <option value="Content Marketing">Content Marketing</option>
+                  <option value="Head-of-Operation">Head-of-Operation</option>
+                  <option value="Web-Developer">Web-Developer</option>
+                  <option value="Maid">Maid</option>
+                  <option value="House keeping">House keeping</option>
+                  <option value="PPC specialist">PPC specialist</option>
+                  <option value="SEO Executive">SEO Executive</option>
+                  <option value="Executive">Executive</option>
+                  <option value="Receptionist">Receptionist</option>
+                  <option value="Finance Manager">Finance Manager</option>
+                  <option value="Team-Leader">Team-Leader</option>
+                </select>
+              </div>
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Address</label>
+                <input
+                  type="text"
+                  name="fullAddress"
+                  value={formData.fullAddress}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Full Address"
+                />
+              </div>
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Email"
+                />
+              </div>
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Department</label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  className="border p-4 w-full bg-white rounded-md"
+                  onChange={handleEditChange}
+                >
+                  <option value="COUNSELLING/SALES">COUNSELLING/SALES</option>
+                  <option value="HUMAN-RESOURCE">HUMAN-RESOURCE</option>
+                  <option value="IT/MARKETING">IT/MARKETING</option>
+                  <option value="SUPPORTING-STAFF">SUPPORTING-STAFF</option>
+                </select>
+              </div>
+
               {/* Add other input fields similarly */}
-              <input
-                type="text"
-                name="employeeId"
-                value={formData.employeeId}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Employee ID"
-              />
-              <input
-                type="text"
-                name="gender"
-                value={formData.gender}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Gender"
-              />
-              <input
-                type="date"
-                name="birthDate"
-                value={formData.birthDate}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Birth Date"
-              />
-              <input
-                type="text"
-                name="maritalStatus"
-                value={formData.maritalStatus}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Marital Status"
-              />
-              <input
-                type="number"
-                name="mobileNumber"
-                value={formData.mobileNumber}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Mobile Number"
-              />
-              <input
-                type="text"
-                name="reasonForExit"
-                value={formData.reasonForExit}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Reason for Exit"
-              />
-              {/* <input
-              type="text"
-              name="reasonForExit"
-              value={formData.employeeExited}
-              onChange={handleEditChange}
-              className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-              placeholder=""
-            /> */}
-              <input
-                type="date"
-                name="joinDate"
-                value={formData.joinDate}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Joining Date"
-              />
-              <input
-                type="date"
-                name="leaveDate"
-                value={formData.leaveDate}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Leave Date"
-              />
-              <input
-                type="number"
-                name="bankAccountNumber"
-                value={formData.bankAccountNumber}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Bank Account Number"
-              />
-              <input
-                type="text"
-                name="bankIFSCCode"
-                value={formData.bankIFSCCode}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Bank IFSC Code"
-              />
-              <input
-                type="text"
-                name="bankName"
-                value={formData.bankName}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Bank Name"
-              />
-              <input
-                type="text"
-                name="panNumber"
-                value={formData.panNumber}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="PAN Number"
-              />
-              <input
-                type="number"
-                name="aadharNumber"
-                value={formData.aadharNumber}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Aadhar Number"
-              />
-              <input
-                type="text"
-                name="state"
-                value={formData.state}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="State"
-              />
-              <input
-                type="number"
-                name="emergencyContactNumber"
-                value={formData.emergencyContactNumber}
-                onChange={handleEditChange}
-                className="border p-4 w-full sm:w-[30%] bg-white rounded-md"
-                placeholder="Emergency Contact Number"
-              />
-              <UploadImage
-                buttonName={"Change Aadhaar Image"}
-                handleImage={setAadharImage}
-                classValue={
-                  "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
-                }
-              />
-              <UploadImage
-                buttonName={"Change Pancard Image"}
-                handleImage={setPanCardImage}
-                classValue={
-                  "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
-                }
-              />
-              <UploadImage
-                buttonName={"Change relative Aadhaar Image"}
-                handleImage={setRelativeAadhaarImage}
-                classValue={
-                  "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem] sm:w-[30%]"
-                }
-              />
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change EmployeeID</label>
+                <input
+                  type="text"
+                  name="employeeId"
+                  value={formData.employeeId}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Employee ID"
+                />
+              </div>
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Gender</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  className="border p-4 w-full bg-white rounded-md"
+                  onChange={handleEditChange}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div className="flex justify-center  gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Birthday</label>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={
+                    formData.birthDate
+                      ? new Date(formData.birthDate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={handleEditChange}
+                  className="border p-4 w-full  bg-white rounded-md"
+                  placeholder="Birth Date"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change maritalStatus</label>
+                <select
+                  name="maritalStatus"
+                  value={formData.maritalStatus}
+                  className="border p-4 w-full bg-white rounded-md"
+                  onChange={handleEditChange}
+                >
+                  <option value="Married">Married</option>
+                  <option value="Unmarried">Unmarried</option>
+                </select>
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change mobile Number</label>
+                <input
+                  type="number"
+                  name="mobileNumber"
+                  value={formData.mobileNumber}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Mobile Number"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Reason for Exit</label>
+                <input
+                  type="text"
+                  name="reasonForExit"
+                  value={formData.reasonForExit}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Reason for Exit"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Joining Date</label>
+                <input
+                  type="date"
+                  name="joinDate"
+                  value={
+                    formData.joinDate
+                      ? new Date(formData.joinDate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Joining Date"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Leave Date</label>
+                <input
+                  type="date"
+                  name="leaveDate"
+                  value={
+                    formData.leaveDate &&
+                    formData.leaveDate.toLowerCase() !== "null"
+                      ? new Date(formData.leaveDate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Leave Date"
+                />
+              </div>
+
+              {/* <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change working status</label>
+                <select
+                  name="employeeExited"
+                  value={formData.employeeExited ? "exit" : "working"}
+                  className="border p-4 w-full bg-white rounded-md"
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      employeeExited: e.target.value === "exit" ? true : false,
+                    });
+                  }}
+                >
+                  <option value="exit">Exit</option>
+                  <option value="working">Working</option>
+                </select>
+              </div> */}
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Bank Account Number</label>
+
+                <input
+                  type="number"
+                  name="bankAccountNumber"
+                  value={formData.bankAccountNumber}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Bank Account Number"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change bankIFSCCode</label>
+                <input
+                  type="text"
+                  name="bankIFSCCode"
+                  value={formData.bankIFSCCode}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Bank IFSC Code"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change bankName</label>
+                <input
+                  type="text"
+                  name="bankName"
+                  value={formData.bankName}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Bank Name"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Pan Number</label>
+                <input
+                  type="text"
+                  name="panNumber"
+                  value={formData.panNumber}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="PAN Number"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Aadhar Number</label>
+                <input
+                  type="number"
+                  name="aadharNumber"
+                  value={formData.aadharNumber}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Aadhar Number"
+                />
+              </div>
+
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change State</label>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="State"
+                />
+              </div>
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change E.Contact Number</label>
+                <input
+                  type="number"
+                  name="emergencyContactNumber"
+                  value={formData.emergencyContactNumber}
+                  onChange={handleEditChange}
+                  className="border p-4 w-full bg-white rounded-md"
+                  placeholder="Emergency Contact Number"
+                />
+              </div>
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Aadhaar Image</label>
+                <UploadImage
+                  buttonName={"Change Aadhaar Image"}
+                  handleImage={setAadharImage}
+                  classValue={
+                    "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem]"
+                  }
+                />
+              </div>
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">Change Pancard Image</label>
+                <UploadImage
+                  buttonName={"Change Pancard Image"}
+                  handleImage={setPanCardImage}
+                  classValue={
+                    "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem]"
+                  }
+                />
+              </div>
+              <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
+                <label className="font-bold">
+                  Change Relateive Aadhaar Image
+                </label>
+                <UploadImage
+                  buttonName={"Change relative Aadhaar Image"}
+                  handleImage={setRelativeAadhaarImage}
+                  classValue={
+                    "border p-2 bg-white text-left text-black rounded-sm h-[3.5rem]"
+                  }
+                />
+              </div>
 
               <button
                 type="submit"
