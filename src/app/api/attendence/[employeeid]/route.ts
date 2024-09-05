@@ -12,7 +12,9 @@ export async function GET(request: Request, { params }: { params: Params }) {
 
   try {
     const id = params.employeeid;
-    const getAttendenceById = await AttendenceModel.find({ userId: id });
+    const getAttendenceById = await AttendenceModel.find({ userId: id })
+      .find()
+      .sort({ date: -1 });
     return NextResponse.json(
       {
         success: true,
