@@ -18,7 +18,6 @@ interface CloudinaryUploadWidgetInfo {
 
 const SingleEmployee = () => {
   const { employeeid } = useParams<{ employeeid: string }>();
-  const [exited, setexited] = useState(false);
   const router = useRouter();
   const [singleEmployeeInfo, setSingleEmployeeInfo] =
     useState<IEmployee | null>(null);
@@ -36,6 +35,8 @@ const SingleEmployee = () => {
   const [relativeAadhaarImage, setRelativeAadhaarImage] = useState<
     CloudinaryUploadWidgetInfo | undefined
   >(undefined);
+  const [exited, setexited] = useState(singleEmployeeInfo?.employeeExited);
+
   // form data updating part start from here
   const [formData, setFormData] = useState<IEmployeeWithEdits>({
     _id: "",
@@ -698,12 +699,12 @@ const SingleEmployee = () => {
               {isEditing ? "Cancel" : "Edit"}
             </Button>
             <Button
-              className="bg-gradient-to-r from-transparent to-blue-500 hover:bg-red-900 text-white text-[1.2rem] w-40 p-5"
+              className="bg-gradient-to-r from-transparent to-blue-500 hover:bg-red-900 text-white text-[1.2rem] w-60 p-5"
               onClick={() => {
                 setexited(!exited), exitedEmployee();
               }}
             >
-              Exit Employee
+              {exited ? "Rejoin" : "Exit"} Employee
             </Button>
           </div>
         </div>

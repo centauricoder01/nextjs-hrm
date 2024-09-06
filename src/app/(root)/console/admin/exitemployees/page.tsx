@@ -17,7 +17,7 @@ interface EmployeeBluePrint {
   employeeExited: boolean;
 }
 
-const ViewEmployees = () => {
+const ExitedEmployee = () => {
   const [employees, setEmployees] = useState<EmployeeBluePrint[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
@@ -50,7 +50,7 @@ const ViewEmployees = () => {
         employee.fullName.toLowerCase().includes(searchQuery.toLowerCase()) &&
         (selectedDepartment === "All" ||
           employee.department === selectedDepartment) &&
-        !employee.employeeExited // Only include working employees
+        employee.employeeExited // Only include working employees
     )
     .sort((a, b) => a.fullName.localeCompare(b.fullName));
 
@@ -193,4 +193,4 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-export default ViewEmployees;
+export default ExitedEmployee;

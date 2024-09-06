@@ -4,6 +4,8 @@ import { IoPerson, IoBookmarks } from "react-icons/io5";
 import { TfiDashboard } from "react-icons/tfi";
 import { FcLeave } from "react-icons/fc";
 import { IoMdTimer, IoIosHome } from "react-icons/io";
+import { FaPersonCircleXmark } from "react-icons/fa6";
+
 import {
   MdOutlinePassword,
   MdOutlineCollections,
@@ -70,7 +72,7 @@ const Navbar = () => {
                   <Link href={"/console/admin/addemployee"}>
                     <p className="flex justify-start items-center gap-2 ">
                       <IoPerson size={20} />
-                      Add Employee
+                      Add Employees
                     </p>
                   </Link>
                   <hr />
@@ -78,6 +80,13 @@ const Navbar = () => {
                     <p className="flex justify-start items-center gap-2 ">
                       <FaUsersViewfinder size={20} />
                       View Employees
+                    </p>
+                  </Link>
+                  <hr />
+                  <Link href={"/console/admin/exitemployees"}>
+                    <p className="flex justify-start items-center gap-2 ">
+                      <FaPersonCircleXmark size={20} />
+                      Exited Employees
                     </p>
                   </Link>
                   <hr />
