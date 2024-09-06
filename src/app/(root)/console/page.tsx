@@ -57,7 +57,6 @@ const Console = () => {
     axios
       .get("/api/all-data")
       .then((res) => {
-        console.log(res.data.responseBody);
         setTotalEmployees(res.data.responseBody.totalEmployee);
         setTotalAttendence(res.data.responseBody.totalAttendence);
       })

@@ -76,7 +76,6 @@ const Leave_Application = () => {
       });
     }
 
-    console.log(values);
     axios
       .post("/api/leave-applications", values)
       .then((res) => {

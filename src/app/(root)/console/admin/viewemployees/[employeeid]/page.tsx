@@ -18,7 +18,7 @@ interface CloudinaryUploadWidgetInfo {
 
 const SingleEmployee = () => {
   const { employeeid } = useParams<{ employeeid: string }>();
-  const [exited, setexited] = useState("");
+  const [exited, setexited] = useState(false);
   const router = useRouter();
   const [singleEmployeeInfo, setSingleEmployeeInfo] =
     useState<IEmployee | null>(null);
@@ -72,7 +72,6 @@ const SingleEmployee = () => {
     axios
       .get(`/api/employees/${employeeid}`)
       .then((res) => {
-        console.log(res.data.responseBody, "This is Response Body");
         setSingleEmployeeInfo(res.data.responseBody);
         setFormData(res.data.responseBody);
       })
@@ -105,11 +104,6 @@ const SingleEmployee = () => {
       formData.relativeAadhaarImage = relativeAadhaarImage.secure_url;
     }
 
-    if (exited === "exit") {
-      formData.employeeExited = true;
-    } else {
-      formData.employeeExited = false;
-    }
     axios
       .patch(`/api/employees/${employeeid}`, formData)
       .then((res) => {
@@ -121,15 +115,23 @@ const SingleEmployee = () => {
       });
   };
 
-  const handleDelete = () => {
+  const exitedEmployee = () => {
     const confirmDelete = confirm(
-      "Are you sure you want to delete this employee?"
+      `Are you sure, you want to ${exited ? "Rejoin" : "Exit"} this employee?`
     );
+
+    if (exited) {
+      formData.employeeExited = false;
+    } else {
+      formData.employeeExited = true;
+    }
+
     if (confirmDelete) {
       axios
-        .delete(`/api/employees/${employeeid}`)
-        .then(() => {
-          router.push("/console/admin/viewemployees");
+        .patch(`/api/employees/${employeeid}`, formData)
+        .then((res) => {
+          setSingleEmployeeInfo(res.data.responseBody);
+          setIsEditing(false);
         })
         .catch((err) => {
           console.log(err);
@@ -387,24 +389,6 @@ const SingleEmployee = () => {
                   placeholder="Leave Date"
                 />
               </div>
-
-              {/* <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
-                <label className="font-bold">Change working status</label>
-                <select
-                  name="employeeExited"
-                  value={formData.employeeExited ? "exit" : "working"}
-                  className="border p-4 w-full bg-white rounded-md"
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      employeeExited: e.target.value === "exit" ? true : false,
-                    });
-                  }}
-                >
-                  <option value="exit">Exit</option>
-                  <option value="working">Working</option>
-                </select>
-              </div> */}
 
               <div className="flex justify-center gap-2 sm:w-[30%] flex-col">
                 <label className="font-bold">Change Bank Account Number</label>
@@ -708,16 +692,18 @@ const SingleEmployee = () => {
           )}
           <div className="flex justify-center items-center gap-5 mt-10">
             <Button
-              className="bg-green-600 hover:bg-green-900 text-white text-[1.2rem] w-40 p-5"
+              className="bg-gradient-to-r from-transparent to-green-500 hover:bg-green-900 text-white text-[1.2rem] w-40 p-5"
               onClick={() => setIsEditing(!isEditing)}
             >
               {isEditing ? "Cancel" : "Edit"}
             </Button>
             <Button
-              className="bg-red-600 hover:bg-red-900 text-white text-[1.2rem] w-40 p-5"
-              onClick={handleDelete}
+              className="bg-gradient-to-r from-transparent to-blue-500 hover:bg-red-900 text-white text-[1.2rem] w-40 p-5"
+              onClick={() => {
+                setexited(!exited), exitedEmployee();
+              }}
             >
-              Delete
+              Exit Employee
             </Button>
           </div>
         </div>

@@ -54,7 +54,6 @@ const Attendence = () => {
       const matchesName = filterName
         ? item.name.toLowerCase().includes(filterName.toLowerCase())
         : true;
-      console.log(filterDate);
       const matchesDate = filterDate ? item.date === filterDate : true;
       return matchesName && matchesDate;
     });
@@ -94,7 +93,6 @@ const Attendence = () => {
     axios
       .get(`/api/attendence`)
       .then((res) => {
-        console.log(res.data.responseBody);
         setAttendenceData(res.data.responseBody);
         setOriginalAttendenceData(res.data.responseBody);
       })

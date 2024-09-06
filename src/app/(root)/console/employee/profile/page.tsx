@@ -85,12 +85,14 @@ const Profile = () => {
               Joining Date -{" "}
               <span className="font-bold">{userValue?.joinDate}</span>
             </p>
-            <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
-              Leave Date -{" "}
-              <span className="font-bold">
-                {userValue?.leaveDate ? userValue?.leaveDate : "Null"}
-              </span>
-            </p>
+
+            {userValue?.employeeExited ? (
+              <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
+                Leave Date -{" "}
+                <span className="font-bold">{userValue?.leaveDate}</span>
+              </p>
+            ) : null}
+
             {userValue?.reasonForExit ? (
               <p className="border p-4 w-full sm:w-[30%] bg-white rounded-md">
                 Reave For Leave -{" "}
