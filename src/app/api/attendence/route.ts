@@ -88,13 +88,13 @@ export async function POST(request: Request) {
     }
 
     const randomTime = [
-      "09:32:13 AM",
-      "09:35:27 AM",
-      "09:38:48 AM",
-      "09:52:39 AM",
-      "09:46:59 AM",
-      "09:24:21 AM",
-      "09:57:20 AM",
+      "09:02:13 AM",
+      "09:05:27 AM",
+      "09:01:48 AM",
+      "09:08:39 AM",
+      "09:06:59 AM",
+      "09:09:21 AM",
+      "09:15:20 AM",
     ];
 
     const getRandomTime = () => {
@@ -245,13 +245,13 @@ export async function PATCH(request: Request) {
     }
 
     const randomTime = [
-      "07:02:31 PM",
-      "07:05:02 PM",
-      "07:30:48 PM",
-      "07:13:29 PM",
-      "07:22:59 PM",
-      "07:24:11 PM",
-      "07:07:32 PM",
+      "06:32:31 PM",
+      "06:34:02 PM",
+      "06:37:48 PM",
+      "06:29:29 PM",
+      "06:31:59 PM",
+      "06:40:11 PM",
+      "06:30:32 PM",
     ];
 
     const getRandomTime = () => {
@@ -260,8 +260,9 @@ export async function PATCH(request: Request) {
     };
 
     const randomLocation = [
-      "Vijan Mahal, Mandla, Jabalpur - 482001, MP, India",
-      "unnamed road, Mandla, Jabalpur - 482001, MP, India",
+      "Vijan Mahal, Mandla, Jabalpur - 482001, Madhya Pradesh, India",
+      "unnamed road, Mandla, Jabalpur - 482001, Madhya Pradesh, India",
+      "unnamed road, Jabalpur, Jabalpur - 482001, Madhya Pradesh, India",
     ];
 
     const getRandomLocation = () => {
