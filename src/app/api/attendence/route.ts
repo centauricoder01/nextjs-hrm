@@ -87,31 +87,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const randomTime = [
-      "09:02:13 AM",
-      "09:05:27 AM",
-      "09:01:48 AM",
-      "09:08:39 AM",
-      "09:06:59 AM",
-      "09:09:21 AM",
-      "09:15:20 AM",
-    ];
-
-    const getRandomTime = () => {
-      const randomIndex = Math.floor(Math.random() * randomTime.length);
-      return randomTime[randomIndex];
-    };
-
-    const randomLocation = [
-      "Vijan Mahal, Mandla, Jabalpur - 482001, MP, India",
-      "unnamed road, Mandla, Jabalpur - 482001, MP, India",
-    ];
-
-    const getRandomLocation = () => {
-      const randomIndex = Math.floor(Math.random() * randomLocation.length);
-      return randomLocation[randomIndex];
-    };
-
     // Creating the object to save the data
 
     const saveEmployeeAttendence: MainObject = {
@@ -119,14 +94,12 @@ export async function POST(request: Request) {
       name: findEmployee.fullName,
       employeId: body.employId.toUpperCase(),
       userId: new mongoose.Types.ObjectId(findEmployee._id),
-      timeInLocation:
-        body.employId === "pe10164" ? getRandomLocation() : body.location,
+      timeInLocation: body.location,
       timeInSelfie: body.selfie,
     };
 
     if (body.attendanceOption === "TimeIn") {
-      saveEmployeeAttendence.timeIn =
-        body.employId === "pe10164" ? getRandomTime() : body.timeIn;
+      saveEmployeeAttendence.timeIn = body.timeIn;
     }
 
     // Validating the object so that, Not even a single object is Empty
@@ -244,37 +217,9 @@ export async function PATCH(request: Request) {
       );
     }
 
-    const randomTime = [
-      "06:32:31 PM",
-      "06:34:02 PM",
-      "06:37:48 PM",
-      "06:29:29 PM",
-      "06:31:59 PM",
-      "06:40:11 PM",
-      "06:30:32 PM",
-    ];
-
-    const getRandomTime = () => {
-      const randomIndex = Math.floor(Math.random() * randomTime.length);
-      return randomTime[randomIndex];
-    };
-
-    const randomLocation = [
-      "Vijan Mahal, Mandla, Jabalpur - 482001, Madhya Pradesh, India",
-      "unnamed road, Mandla, Jabalpur - 482001, Madhya Pradesh, India",
-      "unnamed road, Jabalpur, Jabalpur - 482001, Madhya Pradesh, India",
-    ];
-
-    const getRandomLocation = () => {
-      const randomIndex = Math.floor(Math.random() * randomLocation.length);
-      return randomLocation[randomIndex];
-    };
-
-    todayAttendance.timeOutLocation =
-      body.employId === "pe10164" ? getRandomLocation() : body.location;
+    todayAttendance.timeOutLocation = body.location;
     todayAttendance.timeOutSelfie = body.selfie;
-    todayAttendance.timeOut =
-      body.employId === "pe10164" ? getRandomTime() : body.timeOut;
+    todayAttendance.timeOut = body.timeOut;
 
     await todayAttendance.save();
 
