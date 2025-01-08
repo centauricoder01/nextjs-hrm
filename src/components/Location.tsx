@@ -14,7 +14,7 @@ const Location: React.FC<LocationProps> = ({ takelocation }) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           const query = `${position.coords.latitude},${position.coords.longitude}`;
-          const apiUrl = `https://api.opencagedata.com/geocode/v1/json?key=9e38372904c045e58cfd9eef1113bf92&q=${query}`;
+          const apiUrl = `https://api.opencagedata.com/geocode/v1/json?key=de4c1aab60f542b5b30aad1d75c53463&q=${query}`;
 
           try {
             axios
